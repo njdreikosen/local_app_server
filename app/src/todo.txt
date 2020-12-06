@@ -1,0 +1,13 @@
+TODOS:
+ - Add functionality to 'Upload File' button
+ - Add functionality to 'Download' button
+    b) Functionality for zipped Folder
+ - Add functionality to 'Move' button
+ - Fix file-panel-bottom file data
+ - Move file size and date processing to backend
+
+FUTURE TODOS:
+1) Expand app to have home page
+  a) Add React Routing
+2) Make icon block button to go to home page
+3) Add calendar app
