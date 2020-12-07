@@ -98,7 +98,28 @@ function getFiles(directoryPath) {
         try {
             stats = fs.statSync(filePath);
             if (typeof stats !== "undefined") {
-                let birthtime = stats.birthtime.getMonth + "/" + stats.birthtime.getDay + "/" + stats.birthtime.getFullYear;
+                let hours;
+                let minutes;
+                let period;
+                if (stats.birthtime.getHours() > 12) {
+                    hours = stats.birthtime.getHours() - 12;
+                    period = "PM";
+                } else {
+                    if (stats.birthtime.getHours() === 0) {
+                        hours = 12;
+                    }
+                    else {
+                        hours = stats.birthtime.getHours();
+                    }
+                    period = "AM";
+                }
+                if (stats.birthtime.getMinutes() < 10) {
+                    minutes = "0" + stats.birthtime.getMinutes();
+                } else {
+                    minutes = stats.birthtime.getMinutes();
+                }
+                let birthdate = stats.birthtime.getMonth() + "/" + stats.birthtime.getDay() + "/" + stats.birthtime.getFullYear();
+                let birthtime = birthdate + "   " + hours + ":" + minutes + period;
                 if (!stats.isDirectory()) {
                     console.log("FOUND A FILE!!");
                     let fsize;
