@@ -283,8 +283,7 @@ class Interface extends React.Component {
     // Define drives in case an error occurs
     let drives;
     // Get drives on remote server
-    //axios.get('http://192.168.1.14:4000/getDrives')
-    axios.get('http://localhost:4000/getDrives').then(res => {
+    axios.get('http://192.168.1.100:4000/getDrives').then(res => {
       drives = res.data;
       this.setState({
         contents: drives,
@@ -298,8 +297,7 @@ class Interface extends React.Component {
   handleCrumbClick(depth) {
     if (depth === -1) {
       let drives;
-      //axios.get('http://192.168.1.14:4000/getFiles', {
-      axios.get('http://localhost:4000/getDrives').then(res => {
+      axios.get('http://192.168.1.100:4000/getDrives').then(res => {
         drives = res.data;
         this.setState({
           filePath: [],
@@ -319,8 +317,7 @@ class Interface extends React.Component {
       let newFilePath = filePath.slice(0, depth+1);
       let fp = newFilePath.join('/');
       let files;
-      //axios.get('http://192.168.1.14:4000/getFiles', {
-      axios.get('http://localhost:4000/getFiles', {
+      axios.get('http://192.168.1.100:4000/getFiles', {
         params: {
           folder: fp
         }
@@ -348,8 +345,7 @@ class Interface extends React.Component {
     filePath.push(folder.name);
     let fp = filePath.join('/');
     let files;
-    //axios.get('http://192.168.1.14:4000/getFiles', {
-    axios.get('http://localhost:4000/getFiles', {
+    axios.get('http://192.168.1.100:4000/getFiles', {
       params: {
         folder: fp
       }
@@ -432,8 +428,7 @@ class Interface extends React.Component {
       let filePath = this.state.filePath;
       console.log("fp: " + filePath);
       console.log("fn: " + currFile.name);
-      //axios.get('http://192.168.1.14:4000/getFiles', {
-      axios.get('http://localhost:4000/downloadFile', {
+      axios.get('http://192.168.1.100:4000/downloadFile', {
         responseType: 'blob',
         params: {
           path: filePath,
@@ -520,8 +515,7 @@ class Interface extends React.Component {
     if (pop === "new-folder") {
       // If the popup is for a new folder, try to make one
       let filePath = this.state.filePath;
-      //axios.get('http://192.168.1.14:4000/getFiles', {
-      axios.get('http://localhost:4000/createFolder', {
+      axios.get('http://192.168.1.100:4000/createFolder', {
         params: {
           filePath: filePath,
           folderName: e.target.folderName.value,
@@ -557,8 +551,7 @@ class Interface extends React.Component {
         filePath = this.state.filePath;
         newFilePath = filePath;
       }
-      //axios.get('http://192.168.1.14:4000/getFiles', {
-      axios.get('http://localhost:4000/renameFile', {
+      axios.get('http://192.168.1.100:4000/renameFile', {
         params: {
           filePath: filePath,
           newFilePath: newFilePath,
@@ -600,8 +593,7 @@ class Interface extends React.Component {
       } else {
         filePath = this.state.filePath;
       }
-      //axios.get('http://192.168.1.14:4000/getFiles', {
-      axios.get('http://localhost:4000/deleteFile', {
+      axios.get('http://192.168.1.1000:4000/deleteFile', {
         params: {
           filePath: filePath,
           fileName: currFile.name,
