@@ -98,11 +98,22 @@ function getFiles(directoryPath) {
         try {
             stats = fs.statSync(filePath);
             if (typeof stats !== "undefined") {
+                let birthtime = stats.birthtime.getMonth + "/" + stats.birthtime.getDay + "/" + stats.birthtime.getFullYear;
                 if (!stats.isDirectory()) {
                     console.log("FOUND A FILE!!");
-                    files.push({name: file, isFolder: false, birth: stats.birthtime, size: stats.size});
+                    let fsize;
+                    if (stats.size < 1024) {
+                        fsize = stats.size + " B";
+                    } else if (stats.size < (1024*1024)) {
+                        fsize = (Math.round(stats.size/1024*100)/100) + " KB";
+                    } else if (stats.size < (1024*1024*1024)) {
+                        fsize = (Math.round(stats.size/(1024*1024)*100)/100) + " MB";
+                    } else {
+                        fsize = (Math.round(stats.size/(1024*1024*1024)*100)/100) + " GB";
+                    }
+                    files.push({name: file, isFolder: false, birth: birthtime, size: fsize});
                 } else {
-                    files.push({name: file, isFolder: true, birth: stats.birthtime});
+                    files.push({name: file, isFolder: true, birth: birthtime});
                 }
             }
         } catch(err) {

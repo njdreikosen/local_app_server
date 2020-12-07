@@ -114,20 +114,11 @@ class FilePanel extends React.Component {
     }
     const files = fileList.map((file) => {
       let fname = file.name;
-      if (fname.length > 20) {
-        fname = file.name.substring(0, 20);
+      if (fname.length > 15) {
+        fname = file.name.substring(0, 15);
       }
       
-      let fsize;
-      if (file.size < 1024) {
-        fsize = file.size + " B";
-      } else if (file.size < (1024*1024)) {
-        fsize = (Math.round(file.size/1024*100)/100) + " KB";
-      } else if (file.size < (1024*1024*1024)) {
-        fsize = (Math.round(file.size/(1024*1024)*100)/100) + " MB";
-      } else {
-        fsize = (Math.round(file.size/(1024*1024*1024)*100)/100) + " GB";
-      }
+      let fsize = file.size;
       return (
         <button
           className='file'
