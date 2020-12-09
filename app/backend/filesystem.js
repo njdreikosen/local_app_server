@@ -98,28 +98,27 @@ function getFiles(directoryPath) {
         try {
             stats = fs.statSync(filePath);
             if (typeof stats !== "undefined") {
+                let modDate = stats.mtime.toString().split(" ");
+                let month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].indexOf(modDate[1]) + 1;
+                let day = modDate[2];
+                let year = modDate[3];
+                let modTime = modDate[4].split(":");
                 let hours;
-                let minutes;
                 let period;
-                if (stats.birthtime.getHours() > 12) {
-                    hours = stats.birthtime.getHours() - 12;
+                if (parseInt(modTime[0]) > 12) {
+                    hours = parseInt(modTime[0]) - 12;
                     period = "PM";
                 } else {
-                    if (stats.birthtime.getHours() === 0) {
+                    if (parseInt(modTime[0]) === 0) {
                         hours = 12;
                     }
                     else {
-                        hours = stats.birthtime.getHours();
+                        hours = modTime[0];
                     }
                     period = "AM";
                 }
-                if (stats.birthtime.getMinutes() < 10) {
-                    minutes = "0" + stats.birthtime.getMinutes();
-                } else {
-                    minutes = stats.birthtime.getMinutes();
-                }
-                let birthdate = stats.birthtime.getMonth() + "/" + stats.birthtime.getDay() + "/" + stats.birthtime.getFullYear();
-                let birthtime = birthdate + "   " + hours + ":" + minutes + period;
+                let minutes = modTime[1];
+                let modDateTime = month + "/" + day + "/" + year + "     " + hours + ":" + minutes + period;
                 if (!stats.isDirectory()) {
                     console.log("FOUND A FILE!!");
                     let fsize;
@@ -132,9 +131,9 @@ function getFiles(directoryPath) {
                     } else {
                         fsize = (Math.round(stats.size/(1024*1024*1024)*100)/100) + " GB";
                     }
-                    files.push({name: file, isFolder: false, birth: birthtime, size: fsize});
+                    files.push({name: file, isFolder: false, birth: modDateTime, size: fsize});
                 } else {
-                    files.push({name: file, isFolder: true, birth: birthtime});
+                    files.push({name: file, isFolder: true, birth: modDateTime});
                 }
             }
         } catch(err) {
