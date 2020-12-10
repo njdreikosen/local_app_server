@@ -435,15 +435,15 @@ class Interface extends React.Component {
 
   /* Handler for the 'Delete' button being clicked */
   handleDelete() {
-    const currFile = this.state.currFile.name;
+    const currFile = this.state.currFile;
     const filePath = this.state.filePath;
     // If there is not a current file, then the user is at the 'root' level,
     // and still needs to select a file
-    if (currFile === "") {
+    if (currFile.name === "") {
       this.setState({
         popup: "You must select a file or folder to delete."
       })
-    } else if (filePath.length < 2) {
+    } else if (filePath.length < 2 && currFile.isFolder) {
       this.setState({
         popup: "You cannot delete a hard drive."
       })
@@ -456,15 +456,15 @@ class Interface extends React.Component {
 
   /* Handler for the 'Rename' button being clicked */
   handleRename() {
-    const currFile = this.state.currFile.name;
+    const currFile = this.state.currFile;
     const filePath = this.state.filePath;
     // If there is not a current file, then the user is at the 'root' level,
     // and still needs to select a file
-    if (currFile === "") {
+    if (currFile.name === "") {
       this.setState({
         popup: "You must select a file or folder to rename."
       })
-    } else if (filePath.length < 2) {
+    } else if (filePath.length < 2 && currFile.isFolder) {
       this.setState({
         popup: "You cannot rename a hard drive."
       })
@@ -485,7 +485,7 @@ class Interface extends React.Component {
       this.setState({
         popup: "You must select a file or folder to move."
       })
-    } else if (filePath.length < 2) {
+    } else if (filePath.length < 2 && currFile.isFolder) {
       this.setState({
         popup: "You cannot move a hard drive."
       })
