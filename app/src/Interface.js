@@ -622,7 +622,7 @@ class Interface extends React.Component {
       let filePath;
       let newFilePathParts = e.target.absPath.value.split("/");
       let newFilePath = newFilePathParts.slice(0, newFilePathParts.length-1);
-      let newName = newFilePathParts[newFilePathParts-1];
+      let newName = newFilePathParts[newFilePathParts.length-1];
       if (currFile.isFolder) {
         filePath = this.state.filePath.slice(0, this.state.filePath.length-1);
       } else {
@@ -637,12 +637,11 @@ class Interface extends React.Component {
         }
       }).then(res => {
         let files = res.data;
-        console.log("f: " + files);
         if (typeof files !== "string") {
           this.setState({
             filePath: newFilePath,
             contents: files,
-            popup: "Successfully moved: " + e.target.newName.value,
+            popup: "Successfully moved: " + e.target.absPath.value,
             currFile: {
               name: newFilePath[newFilePath.length-1],
               isFolder: true,
