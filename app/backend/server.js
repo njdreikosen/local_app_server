@@ -39,7 +39,7 @@ rfsRoutes.route('/deleteFile').get(function(req, res) {
 });
 
 rfsRoutes.route('/moveFile').get(function(req, res) {
-    let newFiles = filesystem.moveFile(req.query.filePath, req.query.newFilePath, req.query.oldName, req.query.newName);
+    let newFiles = filesystem.moveFile(req.query.filePath, req.query.oldName, req.query.newFilePath);
     res.json(newFiles);
 });
 

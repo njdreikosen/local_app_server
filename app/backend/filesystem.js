@@ -60,10 +60,9 @@ function deleteFile(filePath, fileName, isFolder) {
     }
 }
 
-function moveFile(filePath, newFilePath, oldName, newName) {
-    let originalPath = newFilePath.join('/');
+function moveFile(filePath, oldName, newFilePath) {
+    let originalPath = filePath.join('/');
     let oldPath = filePath.concat(oldName).join('/');
-    let newPath = filePath.concat(newName).join('/');
     try {
         if (!fs.existsSync(newPath)) {
             fs.renameSync(oldPath, newPath);

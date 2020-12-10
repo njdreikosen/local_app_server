@@ -620,9 +620,7 @@ class Interface extends React.Component {
     } else if (pop === "move") {
       let currFile = this.state.currFile;
       let filePath;
-      let newFilePathParts = e.target.absPath.value.split("/");
-      let newFilePath = newFilePathParts.slice(0, newFilePathParts.length-1);
-      let newName = newFilePathParts[newFilePathParts.length-1];
+      let newFilePath = e.target.absPath.value;
       if (currFile.isFolder) {
         filePath = this.state.filePath.slice(0, this.state.filePath.length-1);
       } else {
@@ -631,19 +629,23 @@ class Interface extends React.Component {
       axios.get('http://192.168.1.100:4000/moveFile', {
         params: {
           filePath: filePath,
-          newFilePath: newFilePath,
           oldName: currFile.name,
-          newName: newName,
+          newFilePath: newFilePath,
         }
       }).then(res => {
         let files = res.data;
+        let nfp = newFilePath.split("/");
+        if (nfp[0] === "") {
+          nfp[2] = nfp[1] + "/" + nfp[2];
+          nfp[1] = "";
+        }
         if (typeof files !== "string") {
           this.setState({
-            filePath: newFilePath,
+            filePath: nfp.slice(0, nfp.length-1),
             contents: files,
-            popup: "Successfully moved: " + e.target.absPath.value,
+            popup: "Successfully moved: " + currFile.name,
             currFile: {
-              name: newFilePath[newFilePath.length-1],
+              name: nfp[nfp.length-1],
               isFolder: true,
               size: "",
               birth: "",
