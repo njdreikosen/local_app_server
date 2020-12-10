@@ -634,18 +634,13 @@ class Interface extends React.Component {
         }
       }).then(res => {
         let files = res.data;
-        let nfp = newFilePath.split("/");
-        if (nfp[0] === "") {
-          nfp[2] = nfp[1] + "/" + nfp[2];
-          nfp[1] = "";
-        }
         if (typeof files !== "string") {
           this.setState({
-            filePath: nfp.slice(0, nfp.length-1),
+            filePath: filePath,
             contents: files,
             popup: "Successfully moved: " + currFile.name,
             currFile: {
-              name: nfp[nfp.length-1],
+              name: filePath[filePath.length-1],
               isFolder: true,
               size: "",
               birth: "",
