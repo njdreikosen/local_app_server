@@ -60,6 +60,23 @@ function deleteFile(filePath, fileName, isFolder) {
     }
 }
 
+function moveFile(filePath, newFilePath, oldName, newName) {
+    let originalPath = newFilePath.join('/');
+    let oldPath = filePath.concat(oldName).join('/');
+    let newPath = filePath.concat(newName).join('/');
+    try {
+        if (!fs.existsSync(newPath)) {
+            fs.renameSync(oldPath, newPath);
+            return getFiles(originalPath);
+        } else {
+            return "That file already exists at that location.";
+        }
+    } catch(err) {
+        console.log(err);
+        return "An unexpected error occured.";
+    }
+}
+
 async function getDrives() {
     let hddList = []
     const drives = await drivelist.list();
@@ -98,13 +115,18 @@ function getFiles(directoryPath) {
         try {
             stats = fs.statSync(filePath);
             if (typeof stats !== "undefined") {
+                // Get the last modified time, and convert it to a string, necessary for converting to correct timezone.
                 let modDate = stats.mtime.toString().split(" ");
+                // Set the month number
                 let month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].indexOf(modDate[1]) + 1;
+                // Set the day and year
                 let day = modDate[2];
                 let year = modDate[3];
+                // Get the time and split it into hours, minutes, and seconds
                 let modTime = modDate[4].split(":");
                 let hours;
                 let period;
+                // Conver from 24 hour clock to 12 hour with AM/PM
                 if (parseInt(modTime[0]) > 12) {
                     hours = parseInt(modTime[0]) - 12;
                     period = "PM";
@@ -118,9 +140,11 @@ function getFiles(directoryPath) {
                     period = "AM";
                 }
                 let minutes = modTime[1];
+                // Create mod time string to be returned
                 let modDateTime = month + "/" + day + "/" + year + "     " + hours + ":" + minutes + period;
+                // Convert file size data to bytes/kilobytes/megabytes/gigabytes
+                // Note: sizes may appear different than in on system file explorer if it uses kibi/mibi/gibibytes!
                 if (!stats.isDirectory()) {
-                    console.log("FOUND A FILE!!");
                     let fsize;
                     if (stats.size < 1024) {
                         fsize = stats.size + " B";
@@ -146,5 +170,6 @@ function getFiles(directoryPath) {
 exports.createFolder = createFolder;
 exports.renameFile = renameFile;
 exports.deleteFile = deleteFile;
+exports.moveFile = moveFile;
 exports.getDrives = getDrives;
 exports.getFiles = getFiles;

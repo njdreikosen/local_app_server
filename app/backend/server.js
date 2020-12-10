@@ -38,6 +38,11 @@ rfsRoutes.route('/deleteFile').get(function(req, res) {
     res.json(newFiles);
 });
 
+rfsRoutes.route('/moveFile').get(function(req, res) {
+    let newFiles = filesystem.moveFile(req.query.filePath, req.query.newFilePath, req.query.oldName, req.query.newName);
+    res.json(newFiles);
+});
+
 rfsRoutes.route('/getDrives').get(async function(req, res) {
     const drives = await filesystem.getDrives();
     console.log("DRIVES: " + drives);
@@ -52,8 +57,6 @@ rfsRoutes.route('/getFiles').get(function(req, res) {
 });
 
 rfsRoutes.route('/downloadFile').get(function(req, res) {
-    console.log("params1: " + req.query.path);
-    console.log("params2: " + req.query.file);
     let filePath = req.query.path;
     filePath.push(req.query.file);
     let fp = filePath.join('/');

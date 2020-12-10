@@ -2,9 +2,7 @@ TODOS:
  - Add functionality to 'Upload File' button
  - Add functionality to 'Download' button
     b) Functionality for zipped Folder
- - Add functionality to 'Move' button
  - Fix file-panel-bottom file data
- - Move file size and date processing to backend
 
 FUTURE TODOS:
 1) Expand app to have home page
