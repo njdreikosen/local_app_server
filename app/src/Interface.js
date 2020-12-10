@@ -264,7 +264,7 @@ class Interface extends React.Component {
         name: "",
         isFolder: false,
         size: "",
-        birth: "",
+        lastMod: "",
       },
     }
   }
@@ -297,7 +297,7 @@ class Interface extends React.Component {
             name: "",
             isFolder: false,
             size: "",
-            birth: "",
+            lastMod: "",
           }
         });
       }).catch(error => {
@@ -321,7 +321,7 @@ class Interface extends React.Component {
             name: newFilePath[newFilePath.length-1],
             isFolder: true,
             size: "",
-            birth: "",
+            lastMod: "",
           }
         });
       }).catch(error => {
@@ -349,7 +349,7 @@ class Interface extends React.Component {
           name: folder.name,
           isFolder: true,
           size: "",
-          birth: "",
+          lastMod: "",
         }
       });
     }).catch(error => {
@@ -367,7 +367,7 @@ class Interface extends React.Component {
         name: file.name,
         isFolder: false,
         size: file.size,
-        birth: file.birth,
+        lastMod: file.lastMod,
       }
     });
   }
@@ -561,7 +561,7 @@ class Interface extends React.Component {
               name: newFilePath[newFilePath.length-1],
               isFolder: true,
               size: "",
-              birth: "",
+              lastMod: "",
             },
           });
         } else {
@@ -584,7 +584,7 @@ class Interface extends React.Component {
       } else {
         filePath = this.state.filePath;
       }
-      axios.get('http://192.168.1.1000:4000/deleteFile', {
+      axios.get('http://192.168.1.100:4000/deleteFile', {
         params: {
           filePath: filePath,
           fileName: currFile.name,
@@ -602,7 +602,7 @@ class Interface extends React.Component {
               name: filePath[filePath.length-1],
               isFolder: true,
               size: "",
-              birth: "",
+              lastMod: "",
             },
           });
         } else {
@@ -643,7 +643,7 @@ class Interface extends React.Component {
               name: filePath[filePath.length-1],
               isFolder: true,
               size: "",
-              birth: "",
+              lastMod: "",
             },
           });
         } else {
@@ -714,18 +714,17 @@ class Interface extends React.Component {
     }
     let fileIcon;
     let fileSize;
-    let fileBirth;
-    if (file.type === "folder") {
+    let fileMod;
+    if (file.isFolder) {
       fileIcon = <FontAwesomeIcon icon={faFolder} size="5x" />
-      fileSize = "Size: Testing";
-      fileBirth = "Created: Testing";
+      fileMod = "Created: " + file.lastMod;
     } else {
       //let fileParts = file.name.split(".");
       //let fileExt = fileParts[fileParts.length(-1)];
       // TODO: Add logic for different file extensions
       fileIcon = <FontAwesomeIcon icon={faFile} size="4x" />;
       fileSize = "Size: " + file.size;
-      fileBirth = "Created: " + file.birth;
+      fileMod = "Created: " + file.lastMod;
     }
 
     return (
@@ -742,7 +741,7 @@ class Interface extends React.Component {
               {fileSize}
             </div>
             <div>
-              {fileBirth}
+              {fileMod}
             </div>
           </div>
         </div>

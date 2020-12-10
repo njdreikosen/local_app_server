@@ -44,14 +44,22 @@ function deleteFile(filePath, fileName, isFolder) {
         if (isFolder === "true") {
             console.log(isFolder);
             if (getFiles(path).length === 0) {
-                fs.chmodSync(path, 0o333);
+                try {
+                    fs.chmodSync(path, 0o333);
+                } catch(err) {
+                    console.log("EPERM: Could not run chmod.")
+                }
                 fs.rmdirSync(path);
             } else {
                 return "Folder must be empty to be deleted.";
             }
         } else {
-            fs.chmodSync(path, 0o333);
-            fs.rmSync(path);
+            try {
+                fs.chmodSync(path, 0o333);
+            } catch(err) {
+                console.log("EPERM: Could not run chmod.")
+            }
+            fs.unlinkSync(path);
         }
         return getFiles(originalPath);
     } catch(err) {
@@ -64,8 +72,8 @@ function moveFile(filePath, oldName, newFilePath) {
     let originalPath = filePath.join('/');
     let oldPath = filePath.concat(oldName).join('/');
     try {
-        if (!fs.existsSync(newPath)) {
-            fs.renameSync(oldPath, newPath);
+        if (!fs.existsSync(newFilePath)) {
+            fs.renameSync(oldPath, newFilePath);
             return getFiles(originalPath);
         } else {
             return "That file already exists at that location.";
@@ -154,9 +162,9 @@ function getFiles(directoryPath) {
                     } else {
                         fsize = (Math.round(stats.size/(1024*1024*1024)*100)/100) + " GB";
                     }
-                    files.push({name: file, isFolder: false, birth: modDateTime, size: fsize});
+                    files.push({name: file, isFolder: false, lastMod: modDateTime, size: fsize});
                 } else {
-                    files.push({name: file, isFolder: true, birth: modDateTime});
+                    files.push({name: file, isFolder: true, lastMod: modDateTime});
                 }
             }
         } catch(err) {
