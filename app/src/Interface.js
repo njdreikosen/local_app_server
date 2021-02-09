@@ -717,7 +717,7 @@ class Interface extends React.Component {
     let fileMod;
     if (file.isFolder) {
       fileIcon = <FontAwesomeIcon icon={faFolder} size="5x" />
-      fileMod = "Created: " + file.lastMod;
+      //fileMod = "Created: " + file.lastMod;
     } else {
       //let fileParts = file.name.split(".");
       //let fileExt = fileParts[fileParts.length(-1)];
