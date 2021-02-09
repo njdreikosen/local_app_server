@@ -398,9 +398,11 @@ class Interface extends React.Component {
         popup: "You must select a drive to upload a file."
       })
     } else {
-      this.setState({
-        popup: "upload-file",
-      });
+      //this.setState({
+      //  popup: "upload-file",
+      //});
+      console.log("Upload file");
+      //axios.post('http://192.168.1.100:4000/uploadFile',)
     }
   }
 
@@ -717,7 +719,7 @@ class Interface extends React.Component {
     let fileMod;
     if (file.isFolder) {
       fileIcon = <FontAwesomeIcon icon={faFolder} size="5x" />
-      fileMod = "Created: " + file.lastMod;
+      //fileMod = "Created: " + file.lastMod;
     } else {
       //let fileParts = file.name.split(".");
       //let fileExt = fileParts[fileParts.length(-1)];
@@ -749,6 +751,46 @@ class Interface extends React.Component {
     )
   }
 
+  /* Render the file upload button */
+  renderFileUpload() {
+
+    const uploadIcon = <FontAwesomeIcon icon={faCloudUploadAlt} size="1x" />
+    const hiddenFileUpload = React.useRef(null);
+    
+    const handleUploadFile = e => {
+      const currFile = this.state.currFile.name;
+      // If there is not a current file, then the user is at the 'root' level,
+      // and still needs to select a drive
+      if (currFile === "") {
+        this.setState({
+          popup: "You must select a drive to upload a file."
+        })
+      } else {
+        console.log("Upload file");
+        hiddenFileUpload.current.click();
+      }
+    }
+
+    const handleUploadChange = e => {
+      const upFile = e.target.files[0];
+      console.log(upFile);
+      //axios.post('http://192.168.1.100:4000/uploadFile',)
+    }
+
+    return (
+      <>
+        <button onClick={handleUploadFile}>
+          <div>{uploadIcon}</div>
+          <div>Upload File</div>
+        </button>
+        <input type='file'
+               ref={hiddenFileUpload}
+               onchange={handleUploadChange}
+               style={{display:'none'}}/>
+      </>
+    )
+  }
+
   /* Overall render method */
   render() {
     const folderIcon = <FontAwesomeIcon icon={faFolder} size="1x" />
@@ -760,6 +802,7 @@ class Interface extends React.Component {
     const filePath = this.state.filePath;
     const currFile = this.state.currFile;
     const absPath = filePath.concat(currFile.name).join('/');
+
     return (
       <div className='ui'>
         <UIHeader
@@ -780,10 +823,12 @@ class Interface extends React.Component {
               <div>{folderIcon}</div>
               <div>New Folder</div>
             </button>
-            <button onClick={this.handleUploadFile}>
+            {/*<button onClick={this.handleUploadFile}>
               <div>{uploadIcon}</div>
               <div>Upload File</div>
             </button>
+            <input type='file' style={{display:'none'}}/>*/
+            this.renderFileUpload()}
           </div>
           <div className='file-panel-bottom'>
             {this.renderFileData()}
