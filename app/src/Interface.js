@@ -274,7 +274,7 @@ const FileUpload = props => {
       </button>
       <input type='file'
              ref={hiddenFileUpload}
-             onchange={handleUploadChange}
+             onChange={handleUploadChange}
              style={{display:'none'}}/>
     </>
   )
@@ -288,7 +288,7 @@ class Interface extends React.Component {
     this.handleFolderClick = this.handleFolderClick.bind(this);
     this.handleFileClick = this.handleFileClick.bind(this);
     this.handleNewFolder = this.handleNewFolder.bind(this);
-    this.handleUploadFile = this.handleUploadFile.bind(this);
+    //this.handleUploadFile = this.handleUploadFile.bind(this);
     this.handleDownload = this.handleDownload.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleRename = this.handleRename.bind(this);
