@@ -241,6 +241,45 @@ class PopUp extends React.Component {
   }
 }
 
+const FileUpload = props => {
+
+  const uploadIcon = <FontAwesomeIcon icon={faCloudUploadAlt} size="1x" />
+  const hiddenFileUpload = React.useRef(null);
+  
+  const handleUploadFile = e => {
+    //const currFile = props.currFile.name;
+    // If there is not a current file, then the user is at the 'root' level,
+    // and still needs to select a drive
+    //if (currFile === "") {
+    //  this.setState({
+    //    popup: "You must select a drive to upload a file."
+    //  })
+    //} else {
+    console.log("Upload file");
+    hiddenFileUpload.current.click();
+    //}
+  }
+
+  const handleUploadChange = e => {
+    const upFile = e.target.files[0];
+    console.log(upFile);
+    //axios.post('http://192.168.1.100:4000/uploadFile',)
+  }
+
+  return (
+    <>
+      <button onClick={handleUploadFile}>
+        <div>{uploadIcon}</div>
+        <div>Upload File</div>
+      </button>
+      <input type='file'
+             ref={hiddenFileUpload}
+             onchange={handleUploadChange}
+             style={{display:'none'}}/>
+    </>
+  )
+}
+
 class Interface extends React.Component {
   /* Interface component constructor */
   constructor(props) {
@@ -389,7 +428,7 @@ class Interface extends React.Component {
   }
 
   /* Handler for the 'Upload File' button being clicked */
-  handleUploadFile() {
+  /*handleUploadFile() {
     const currFile = this.state.currFile.name;
     // If there is not a current file, then the user is at the 'root' level,
     // and still needs to select a drive
@@ -404,7 +443,7 @@ class Interface extends React.Component {
       console.log("Upload file");
       //axios.post('http://192.168.1.100:4000/uploadFile',)
     }
-  }
+  }*/
 
   /* Handler for the 'Download' button being clicked */
   handleDownload() {
@@ -751,46 +790,6 @@ class Interface extends React.Component {
     )
   }
 
-  /* Render the file upload button */
-  renderFileUpload() {
-
-    const uploadIcon = <FontAwesomeIcon icon={faCloudUploadAlt} size="1x" />
-    const hiddenFileUpload = React.useRef(null);
-    
-    const handleUploadFile = e => {
-      const currFile = this.state.currFile.name;
-      // If there is not a current file, then the user is at the 'root' level,
-      // and still needs to select a drive
-      if (currFile === "") {
-        this.setState({
-          popup: "You must select a drive to upload a file."
-        })
-      } else {
-        console.log("Upload file");
-        hiddenFileUpload.current.click();
-      }
-    }
-
-    const handleUploadChange = e => {
-      const upFile = e.target.files[0];
-      console.log(upFile);
-      //axios.post('http://192.168.1.100:4000/uploadFile',)
-    }
-
-    return (
-      <>
-        <button onClick={handleUploadFile}>
-          <div>{uploadIcon}</div>
-          <div>Upload File</div>
-        </button>
-        <input type='file'
-               ref={hiddenFileUpload}
-               onchange={handleUploadChange}
-               style={{display:'none'}}/>
-      </>
-    )
-  }
-
   /* Overall render method */
   render() {
     const folderIcon = <FontAwesomeIcon icon={faFolder} size="1x" />
@@ -827,8 +826,8 @@ class Interface extends React.Component {
               <div>{uploadIcon}</div>
               <div>Upload File</div>
             </button>
-            <input type='file' style={{display:'none'}}/>*/
-            this.renderFileUpload()}
+            <input type='file' style={{display:'none'}}/>*/}
+            <FileUpload />
           </div>
           <div className='file-panel-bottom'>
             {this.renderFileData()}
