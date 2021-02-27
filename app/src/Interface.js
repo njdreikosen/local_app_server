@@ -263,7 +263,11 @@ const FileUpload = props => {
   const handleUploadChange = e => {
     const upFile = e.target.files[0];
     console.log(upFile);
-    //axios.post('http://192.168.1.100:4000/uploadFile',)
+    const formData = new FormData();
+    formData.append('file', upFile)
+    axios.post('http://192.168.1.100:4000/uploadFile', formData).then(res => {
+      console.log("Uploaded file")
+    })
   }
 
   return (
@@ -426,24 +430,6 @@ class Interface extends React.Component {
       });
     }
   }
-
-  /* Handler for the 'Upload File' button being clicked */
-  /*handleUploadFile() {
-    const currFile = this.state.currFile.name;
-    // If there is not a current file, then the user is at the 'root' level,
-    // and still needs to select a drive
-    if (currFile === "") {
-      this.setState({
-        popup: "You must select a drive to upload a file."
-      })
-    } else {
-      //this.setState({
-      //  popup: "upload-file",
-      //});
-      console.log("Upload file");
-      //axios.post('http://192.168.1.100:4000/uploadFile',)
-    }
-  }*/
 
   /* Handler for the 'Download' button being clicked */
   handleDownload() {
