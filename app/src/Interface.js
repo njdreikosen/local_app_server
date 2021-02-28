@@ -243,6 +243,7 @@ class PopUp extends React.Component {
 
 const FileUpload = props => {
 
+  console.log("props:" + props);
   const uploadIcon = <FontAwesomeIcon icon={faCloudUploadAlt} size="1x" />
   const hiddenFileUpload = React.useRef(null);
   
@@ -262,7 +263,7 @@ const FileUpload = props => {
 
   const handleUploadChange = e => {
     let filePath = this.props.filePath;
-    console.log("handleUpload filePath: " + filePath);
+    console.log("handleUpload: " + filePath);
     const upFile = e.target.files[0];
     console.log(upFile);
     const formData = new FormData();
@@ -820,7 +821,7 @@ class Interface extends React.Component {
               <div>Upload File</div>
             </button>
             <input type='file' style={{display:'none'}}/>*/}
-            <FileUpload />
+            <FileUpload filePath={this.filePath}/>
           </div>
           <div className='file-panel-bottom'>
             {this.renderFileData()}
