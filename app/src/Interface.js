@@ -261,7 +261,7 @@ const FileUpload = props => {
     //}
   }
 
-  const handleUploadChange = e => {
+  const handleUploadChange = (props, e) => {
     let filePath = this.props.filePath;
     console.log("handleUpload: " + filePath);
     const upFile = e.target.files[0];
@@ -286,7 +286,7 @@ const FileUpload = props => {
       </button>
       <input type='file'
              ref={hiddenFileUpload}
-             onChange={handleUploadChange}
+             onChange={handleUploadChange(props)}
              style={{display:'none'}}/>
     </>
   )
