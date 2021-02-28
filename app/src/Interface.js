@@ -261,13 +261,20 @@ const FileUpload = props => {
   }
 
   const handleUploadChange = e => {
+    let filePath = this.props.filePath;
+    console.log("handleUpload filePath: " + filePath);
     const upFile = e.target.files[0];
     console.log(upFile);
     const formData = new FormData();
     formData.append('file', upFile)
-    axios.post('http://192.168.1.100:4000/uploadFile', formData).then(res => {
+    console.log(formData);
+    /*axios.post('http://192.168.1.100:4000/uploadFile', formData, {
+      params: {
+        folder: filePath
+      }
+    }).then(res => {
       console.log("Uploaded file")
-    })
+    })*/
   }
 
   return (

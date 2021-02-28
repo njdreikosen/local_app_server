@@ -1,8 +1,9 @@
 const express = require('express');
 const filesystem = require('./filesystem');
-const app = express();
 const bodyParser = require('body-parser');
+const multer = require('multer');
 const cors = require('cors');
+const app = express();
 const rfsRoutes = express.Router();
 //const mongoose = require('mongoose');
 const PORT = 4000;
@@ -18,6 +19,17 @@ app.use(bodyParser.json());
 //connection.once('open', function() {
 //    console.log("MongoDB database connection established successfully");
 //});
+
+var storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, "./");
+    },
+    filename: function(req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
+var uploadDisk = multer({ storage: storage });
+
 
 rfsRoutes.route('/').get(function(req, res) {
     res.json({});
@@ -62,6 +74,11 @@ rfsRoutes.route('/downloadFile').get(function(req, res) {
     let fp = filePath.join('/');
     console.log("fp: " + fp);
     res.download(fp, req.query.file);
+});
+
+rfsRoutes.route('/uploadFile').post(uploadDisk.single('file'), function(req, res) {
+    let newFilePath = req.query.filePath;
+    let fileName = req.query.fileName;
 });
 
 app.use('/', rfsRoutes);
