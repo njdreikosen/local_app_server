@@ -269,15 +269,25 @@ const FileUpload = currPath => {
     axios.post('http://192.168.1.100:4000/uploadFile', formData)
     .then(res => {
       console.log(res);
-      //axios.get('http://192.168.1.100:4000/moveFile',  {
-      //  params: {
-      //    filePath: './',
-      //    oldName: currFile.name,
-      //    newFilePath: fp,
-      //  }
-      //});
-    //}).then(res => {
-    //  console.log("Uploaded file")
+      if (res.data === "Success") {
+        axios.get('http://192.168.1.100:4000/moveFile',  {
+          params: {
+            filePath: './',
+            oldName: currFile.name,
+            newFilePath: fp,
+          }
+        });
+      } else {
+        axios.get('http://192.168.1.100:4000/deleteFile', {
+          params: {
+            filePath: filePath,
+            fileName: currFile.name,
+            isFolder: currFile.isFolder,
+          }
+        });
+      }
+    }).then(res => {
+      console.log("Uploaded file")
     });
   }
 
