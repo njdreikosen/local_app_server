@@ -75,11 +75,9 @@ rfsRoutes.route('/downloadFile').get(function(req, res) {
     res.download(fp, req.query.file);
 });
 
-rfsRoutes.route('/uploadFile').get(function(req, res) {
-    let newFilePath = req.query.currPath;
-    let fileName = req.query.fileName;
-    console.log("ufNFP: " + newFilePath);
-    console.log("ufFN: " + fileName);
+rfsRoutes.route('/uploadFile').post(uploadDisk.single('file'), function(req, res) {
+    console.log("File uploaded to disk")
+    res.send("Upload successful")
 });
 
 app.use('/', rfsRoutes);

@@ -247,10 +247,9 @@ const FileUpload = currPath => {
   const hiddenFileUpload = React.useRef(null);
   
   const handleUploadFile = e => {
-    const currFile = props.currFile.name;
     // If there is not a current file, then the user is at the 'root' level,
     // and still needs to select a drive
-    if (currPath.length() == 0) {
+    if (currPath.length == 0) {
       //this.setState({
       //  popup: "You must select a drive to upload a file."
       //})
@@ -267,14 +266,19 @@ const FileUpload = currPath => {
     console.log(upFile);
     const formData = new FormData();
     formData.append('file', upFile)
-    axios.post('http://192.168.1.100:4000/uploadFile', formData, {
-      params: {
-        currPath: fp,
-        fileName: upFile.name
-      }
-    }).then(res => {
-      console.log("Uploaded file")
-    })
+    axios.post('http://192.168.1.100:4000/uploadFile', formData)
+    .then(res => {
+      console.log(res);
+      //axios.get('http://192.168.1.100:4000/moveFile',  {
+      //  params: {
+      //    filePath: './',
+      //    oldName: currFile.name,
+      //    newFilePath: fp,
+      //  }
+      //});
+    //}).then(res => {
+    //  console.log("Uploaded file")
+    });
   }
 
   return (
