@@ -76,7 +76,10 @@ rfsRoutes.route('/downloadFile').get(function(req, res) {
 });
 
 rfsRoutes.route('/uploadFile').get(function(req, res) {
-    let files = req.query.filePath;
+    let newFilePath = req.query.currPath;
+    let fileName = req.query.fileName;
+    console.log("ufNFP: " + newFilePath);
+    console.log("ufFN: " + fileName);
 });
 
 app.use('/', rfsRoutes);

@@ -241,40 +241,40 @@ class PopUp extends React.Component {
   }
 }
 
-const FileUpload = props => {
+const FileUpload = currPath => {
 
-  console.log("props:" + props);
   const uploadIcon = <FontAwesomeIcon icon={faCloudUploadAlt} size="1x" />
   const hiddenFileUpload = React.useRef(null);
   
   const handleUploadFile = e => {
-    //const currFile = props.currFile.name;
+    const currFile = props.currFile.name;
     // If there is not a current file, then the user is at the 'root' level,
     // and still needs to select a drive
-    //if (currFile === "") {
-    //  this.setState({
-    //    popup: "You must select a drive to upload a file."
-    //  })
-    //} else {
-    console.log("Upload file");
-    hiddenFileUpload.current.click();
-    //}
+    if (currPath.length() == 0) {
+      //this.setState({
+      //  popup: "You must select a drive to upload a file."
+      //})
+      console.log("Popup for fail to upload.");
+    } else {
+      console.log("Upload file");
+      hiddenFileUpload.current.click();
+    }
   }
 
   const handleUploadChange = (fp, e) => {
-    console.log("handleUpload: " + fp);
+    console.log("handleUpload: " + JSON.stringify(fp));
     const upFile = e.target.files[0];
     console.log(upFile);
     const formData = new FormData();
     formData.append('file', upFile)
-    console.log(formData.file.name);
-    /*axios.post('http://192.168.1.100:4000/uploadFile', formData, {
+    axios.post('http://192.168.1.100:4000/uploadFile', formData, {
       params: {
-        folder: fp
+        currPath: fp,
+        fileName: upFile.name
       }
     }).then(res => {
       console.log("Uploaded file")
-    })*/
+    })
   }
 
   return (
@@ -285,7 +285,7 @@ const FileUpload = props => {
       </button>
       <input type='file'
              ref={hiddenFileUpload}
-             onChange={(e) => handleUploadChange(props, e)}
+             onChange={(e) => handleUploadChange(currPath, e)}
              style={{display:'none'}}/>
     </>
   )
@@ -820,7 +820,7 @@ class Interface extends React.Component {
               <div>Upload File</div>
             </button>
             <input type='file' style={{display:'none'}}/>*/}
-            <FileUpload filePath={this.filePath}/>
+            <FileUpload currPath={filePath}/>
           </div>
           <div className='file-panel-bottom'>
             {this.renderFileData()}
