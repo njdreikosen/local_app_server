@@ -285,7 +285,7 @@ const FileUpload = props => {
       </button>
       <input type='file'
              ref={hiddenFileUpload}
-             onChange={(e) => handleUploadChange(this.props.filePath, e)}
+             onChange={(e) => handleUploadChange(props.filePath, e)}
              style={{display:'none'}}/>
     </>
   )

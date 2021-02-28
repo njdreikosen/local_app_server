@@ -1,10 +1,10 @@
 const express = require('express');
 const filesystem = require('./filesystem');
-const bodyParser = require('body-parser');
-const multer = require('multer');
-const cors = require('cors');
 const app = express();
+const bodyParser = require('body-parser');
+const cors = require('cors');
 const rfsRoutes = express.Router();
+const multer = require('multer');
 //const mongoose = require('mongoose');
 const PORT = 4000;
 
@@ -29,7 +29,6 @@ var storage = multer.diskStorage({
     }
 });
 var uploadDisk = multer({ storage: storage });
-
 
 rfsRoutes.route('/').get(function(req, res) {
     res.json({});
@@ -76,9 +75,8 @@ rfsRoutes.route('/downloadFile').get(function(req, res) {
     res.download(fp, req.query.file);
 });
 
-rfsRoutes.route('/uploadFile').post(uploadDisk.single('file'), function(req, res) {
-    let newFilePath = req.query.filePath;
-    let fileName = req.query.fileName;
+rfsRoutes.route('/uploadFile').get(function(req, res) {
+    let files = req.query.filePath;
 });
 
 app.use('/', rfsRoutes);
