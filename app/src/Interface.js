@@ -243,7 +243,7 @@ class PopUp extends React.Component {
 
 const FileUpload = props => {
 
-  console.log("props:" + props.filePath);
+  console.log("props:" + props);
   const uploadIcon = <FontAwesomeIcon icon={faCloudUploadAlt} size="1x" />
   const hiddenFileUpload = React.useRef(null);
   
@@ -267,7 +267,7 @@ const FileUpload = props => {
     console.log(upFile);
     const formData = new FormData();
     formData.append('file', upFile)
-    console.log(formData);
+    console.log(formData.file.name);
     /*axios.post('http://192.168.1.100:4000/uploadFile', formData, {
       params: {
         folder: fp
@@ -285,7 +285,7 @@ const FileUpload = props => {
       </button>
       <input type='file'
              ref={hiddenFileUpload}
-             onChange={(e) => handleUploadChange(props.filePath, e)}
+             onChange={(e) => handleUploadChange(props, e)}
              style={{display:'none'}}/>
     </>
   )
