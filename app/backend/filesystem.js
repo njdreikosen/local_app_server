@@ -69,18 +69,18 @@ function deleteFile(filePath, fileName, isFolder) {
     }
 }
 
-function moveFile(filePath, oldName, newFilePath) {
-    let originalPath = filePath.join('/');
-    let oldPath = filePath.concat(oldName).join('/');
+function moveFile(oldFilePath, newFilePath, currFilePath) {
+    //let originalPath = filePath.join('/');
+    //let oldPath = filePath.concat(oldName).join('/');
     try {
         if (!fs.existsSync(newFilePath)) {
             //fs.renameSync(oldPath, newFilePath);
-            mv(oldPath, newFilePath, function(err) {
+            mv(oldFilePath, newFilePath, function(err) {
                 if (err) {
                     throw err;
                 }
             });
-            return getFiles(originalPath);
+            return getFiles(currFilePath);
         } else {
             return "That file already exists at that location.";
         }

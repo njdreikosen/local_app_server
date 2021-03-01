@@ -264,16 +264,17 @@ const FileUpload = currPath => {
     console.log("handleUpload: " + JSON.stringify(fp));
     const upFile = e.target.files[0];
     console.log(upFile);
-    fp.currPath.push(upFile.name);
+    const currPath = fp.currPath;
+    const newPath = fp.currPath.concat([upFile.name]);
     const formData = new FormData();
     formData.append('file', upFile)
     axios.post('http://192.168.1.100:4000/uploadFile', formData)
     .then(res => {
       axios.get('http://192.168.1.100:4000/moveFile',  {
         params: {
-          filePath: ['.'],
-          oldName: upFile.name,
-          newFilePath: fp.currPath.join('/'),
+          oldFilePath: './'.concat(upFile.name),
+          newFilePath: newPath.join('/'),
+          currFilePath: currPath.join('/'),
         }
       });
     }).then(res => {
@@ -656,18 +657,19 @@ class Interface extends React.Component {
       });
     } else if (pop === "move") {
       let currFile = this.state.currFile;
-      let filePath;
+      let filePath = this.state.filePath;
+      let currFilePath;
       let newFilePath = e.target.absPath.value;
       if (currFile.isFolder) {
-        filePath = this.state.filePath.slice(0, this.state.filePath.length-1);
+        currFilePath = filePath.slice(0, filePath.length-1);
       } else {
-        filePath = this.state.filePath;
+        currFilePath = filePath;
       }
       axios.get('http://192.168.1.100:4000/moveFile', {
         params: {
-          filePath: filePath,
-          oldName: currFile.name,
+          oldFilePath: filePath.concat([currFile.name]).join('/'),
           newFilePath: newFilePath,
+          currFilePath: filePath,
         }
       }).then(res => {
         let files = res.data;

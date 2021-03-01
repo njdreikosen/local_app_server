@@ -50,7 +50,7 @@ rfsRoutes.route('/deleteFile').get(function(req, res) {
 });
 
 rfsRoutes.route('/moveFile').get(function(req, res) {
-    let newFiles = filesystem.moveFile(req.query.filePath, req.query.oldName, req.query.newFilePath);
+    let newFiles = filesystem.moveFile(req.query.oldFilePath, req.query.newFilePath, req.query.currFilePath);
     res.json(newFiles);
 });
 
