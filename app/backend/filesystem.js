@@ -1,6 +1,7 @@
 const drivelist = require('drivelist');
 const path = require("path");
 const fs = require("fs");
+const mv = require("mv");
 
 function createFolder(filePath, folderName) {
     let path = filePath;
@@ -73,7 +74,12 @@ function moveFile(filePath, oldName, newFilePath) {
     let oldPath = filePath.concat(oldName).join('/');
     try {
         if (!fs.existsSync(newFilePath)) {
-            fs.renameSync(oldPath, newFilePath);
+            //fs.renameSync(oldPath, newFilePath);
+            mv(oldPath, newFilePath, function(err) {
+                if (err) {
+                    throw err;
+                }
+            });
             return getFiles(originalPath);
         } else {
             return "That file already exists at that location.";

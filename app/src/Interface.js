@@ -264,16 +264,16 @@ const FileUpload = currPath => {
     console.log("handleUpload: " + JSON.stringify(fp));
     const upFile = e.target.files[0];
     console.log(upFile);
+    fp.currPath.push(upFile.name);
     const formData = new FormData();
     formData.append('file', upFile)
     axios.post('http://192.168.1.100:4000/uploadFile', formData)
     .then(res => {
-      console.log(res);
       axios.get('http://192.168.1.100:4000/moveFile',  {
         params: {
-          filePath: './',
+          filePath: ['.'],
           oldName: upFile.name,
-          newFilePath: fp,
+          newFilePath: fp.currPath.join('/'),
         }
       });
     }).then(res => {
