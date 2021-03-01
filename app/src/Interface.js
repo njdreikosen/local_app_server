@@ -269,23 +269,13 @@ const FileUpload = currPath => {
     axios.post('http://192.168.1.100:4000/uploadFile', formData)
     .then(res => {
       console.log(res);
-      if (res.data === "Success") {
-        axios.get('http://192.168.1.100:4000/moveFile',  {
-          params: {
-            filePath: './',
-            oldName: currFile.name,
-            newFilePath: fp,
-          }
-        });
-      } else {
-        axios.get('http://192.168.1.100:4000/deleteFile', {
-          params: {
-            filePath: filePath,
-            fileName: currFile.name,
-            isFolder: currFile.isFolder,
-          }
-        });
-      }
+      axios.get('http://192.168.1.100:4000/moveFile',  {
+        params: {
+          filePath: './',
+          oldName: upFile.name,
+          newFilePath: fp,
+        }
+      });
     }).then(res => {
       console.log("Uploaded file")
     });
@@ -313,7 +303,6 @@ class Interface extends React.Component {
     this.handleFolderClick = this.handleFolderClick.bind(this);
     this.handleFileClick = this.handleFileClick.bind(this);
     this.handleNewFolder = this.handleNewFolder.bind(this);
-    //this.handleUploadFile = this.handleUploadFile.bind(this);
     this.handleDownload = this.handleDownload.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleRename = this.handleRename.bind(this);

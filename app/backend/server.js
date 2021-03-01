@@ -77,7 +77,7 @@ rfsRoutes.route('/downloadFile').get(function(req, res) {
 
 rfsRoutes.route('/uploadFile').post(uploadDisk.single('file'), function(req, res) {
     console.log("File uploaded to disk")
-    res.send("Upload successful")
+    res.send("Success")
 });
 
 app.use('/', rfsRoutes);
