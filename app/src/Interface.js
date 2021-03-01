@@ -265,6 +265,7 @@ const FileUpload = currPath => {
     const upFile = e.target.files[0];
     console.log(upFile);
     const currPath = fp.currPath;
+    console.log("cp: " + currPath);
     const newPath = fp.currPath.concat([upFile.name]);
     const formData = new FormData();
     formData.append('file', upFile)
@@ -658,18 +659,18 @@ class Interface extends React.Component {
     } else if (pop === "move") {
       let currFile = this.state.currFile;
       let filePath = this.state.filePath;
-      let currFilePath;
+      let oldFilePath;
       let newFilePath = e.target.absPath.value;
       if (currFile.isFolder) {
-        currFilePath = filePath.slice(0, filePath.length-1);
+        oldFilePath = filePath.slice(0, filePath.length-1);
       } else {
-        currFilePath = filePath;
+        oldFilePath = filePath;
       }
       axios.get('http://192.168.1.100:4000/moveFile', {
         params: {
-          oldFilePath: filePath.concat([currFile.name]).join('/'),
+          oldFilePath: oldFilePath.concat([currFile.name]).join('/'),
           newFilePath: newFilePath,
-          currFilePath: filePath,
+          currFilePath: filePath.join('/'),
         }
       }).then(res => {
         let files = res.data;

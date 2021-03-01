@@ -74,19 +74,24 @@ function moveFile(oldFilePath, newFilePath, currFilePath) {
     //let oldPath = filePath.concat(oldName).join('/');
     try {
         if (!fs.existsSync(newFilePath)) {
-            //fs.renameSync(oldPath, newFilePath);
-            mv(oldFilePath, newFilePath, function(err) {
-                if (err) {
-                    throw err;
-                }
-            });
+            fs.renameSync(oldFilePath, newFilePath);
             return getFiles(currFilePath);
         } else {
             return "That file already exists at that location.";
         }
     } catch(err) {
-        console.log(err);
-        return "An unexpected error occured.";
+        if (err.code === "EXDEV") {
+          let inStream = fs.createReadStream(oldFilePath);
+          let outStream = fs.createWriteStream(newFilePath);
+          inStream.pipe(outStream);
+          inStream.on('end', function() {
+            fs.unlinkSync(oldFilePath);
+          });
+          return getFiles(currFilePath);
+        } else {
+          console.log(err);
+          return "An unexpected error occured.";
+        }
     }
 }
 

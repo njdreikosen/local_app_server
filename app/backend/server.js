@@ -51,6 +51,7 @@ rfsRoutes.route('/deleteFile').get(function(req, res) {
 
 rfsRoutes.route('/moveFile').get(function(req, res) {
     let newFiles = filesystem.moveFile(req.query.oldFilePath, req.query.newFilePath, req.query.currFilePath);
+    console.log(newFiles);
     res.json(newFiles);
 });
 
