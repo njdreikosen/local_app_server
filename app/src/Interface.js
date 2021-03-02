@@ -241,7 +241,7 @@ class PopUp extends React.Component {
   }
 }
 
-const FileUpload = currPath => {
+const FileUpload = props => {
 
   const uploadIcon = <FontAwesomeIcon icon={faCloudUploadAlt} size="1x" />
   const hiddenFileUpload = React.useRef(null);
@@ -249,7 +249,7 @@ const FileUpload = currPath => {
   const handleUploadFile = e => {
     // If there is not a current file, then the user is at the 'root' level,
     // and still needs to select a drive
-    if (currPath.length == 0) {
+    if (props.currFile.name === "") {
       //this.setState({
       //  popup: "You must select a drive to upload a file."
       //})
@@ -260,7 +260,7 @@ const FileUpload = currPath => {
     }
   }
 
-  const handleUploadChange = (fp, e) => {
+  /*const handleUploadChange = (fp, e) => {
     console.log("handleUpload: " + JSON.stringify(fp));
     const upFile = e.target.files[0];
     console.log(upFile);
@@ -281,7 +281,7 @@ const FileUpload = currPath => {
     }).then(res => {
       console.log("Uploaded file")
     });
-  }
+  }*/
 
   return (
     <>
@@ -291,7 +291,7 @@ const FileUpload = currPath => {
       </button>
       <input type='file'
              ref={hiddenFileUpload}
-             onChange={(e) => handleUploadChange(currPath, e)}
+             onChange={(e) => props.handleUploadChange(e)}
              style={{display:'none'}}/>
     </>
   )
@@ -305,6 +305,7 @@ class Interface extends React.Component {
     this.handleFolderClick = this.handleFolderClick.bind(this);
     this.handleFileClick = this.handleFileClick.bind(this);
     this.handleNewFolder = this.handleNewFolder.bind(this);
+    this.handleUploadChange = this.handleUploadChange.bind(this);
     this.handleDownload = this.handleDownload.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleRename = this.handleRename.bind(this);
@@ -441,6 +442,45 @@ class Interface extends React.Component {
         popup: "new-folder",
       });
     }
+  }
+
+  handleUploadChange(e) {
+    const currPath = this.state.filePath;
+    const upFile = e.target.files[0];
+    const newPath = currPath.concat([upFile.name]);
+    const formData = new FormData();
+    formData.append('file', upFile)
+    axios.post('http://192.168.1.100:4000/uploadFile', formData)
+    .then(res => {
+      axios.get('http://192.168.1.100:4000/moveFile',  {
+        params: {
+          oldFilePath: './'.concat(upFile.name),
+          newFilePath: newPath.join('/'),
+          currFilePath: currPath.join('/'),
+        }
+      });
+    }).then(res => {
+      console.log("Uploaded file")
+      let files = res.data;
+        if (typeof files !== "string") {
+          this.setState({
+            filePath: currPath,
+            contents: files,
+            popup: "Successfully uploaded: " + upFile.name,
+            currFile: {
+              name: filePath[filePath.length-1],
+              isFolder: true,
+              size: "",
+              lastMod: "",
+            },
+          });
+        } else {
+          console.log("FAILED TO MOVE UPLOADED FILE");
+          this.setState({
+            popup: files,
+          });
+        }
+    });
   }
 
   /* Handler for the 'Download' button being clicked */
@@ -826,7 +866,10 @@ class Interface extends React.Component {
               <div>Upload File</div>
             </button>
             <input type='file' style={{display:'none'}}/>*/}
-            <FileUpload currPath={filePath}/>
+            <FileUpload
+              currFile={currFile}
+              onChange={this.handleUploadChange}
+            />
           </div>
           <div className='file-panel-bottom'>
             {this.renderFileData()}

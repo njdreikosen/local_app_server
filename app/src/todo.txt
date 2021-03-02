@@ -1,4 +1,5 @@
 TODOS:
+ - TOP PRIORITY: State needs to be updated after the moveFile axios call in the uploadFile function
  - Add functionality to 'Upload File' button
  - Add functionality to 'Download' button
     b) Functionality for zipped Folder
