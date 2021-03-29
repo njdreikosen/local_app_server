@@ -1,7 +1,6 @@
 const drivelist = require('drivelist');
 const path = require("path");
 const fs = require("fs");
-const mv = require("mv");
 
 function createFolder(filePath, folderName) {
     let path = filePath;

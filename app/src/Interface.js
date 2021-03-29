@@ -468,7 +468,7 @@ class Interface extends React.Component {
             contents: files,
             popup: "Successfully uploaded: " + upFile.name,
             currFile: {
-              name: filePath[filePath.length-1],
+              name: currPath[currPath.length-1],
               isFolder: true,
               size: "",
               lastMod: "",
