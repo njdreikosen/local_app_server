@@ -241,7 +241,40 @@ class PopUp extends React.Component {
   }
 }
 
-const FileUpload = props => {
+class PopUp extends React.Component {
+  
+  handleUploadFile(e) {
+    const hiddenFileUpload = React.useRef(null);
+    // If there is not a current file, then the user is at the 'root' level,
+    // and still needs to select a drive
+    if (this.props.currFile.name === "") {
+      //this.setState({
+      //  popup: "You must select a drive to upload a file."
+      //})
+      console.log("Popup for fail to upload.");
+    } else {
+      console.log("Upload file");
+      hiddenFileUpload.current.click();
+    }
+  }
+  
+  render() {
+    const uploadIcon = <FontAwesomeIcon icon={faCloudUploadAlt} size="1x" />
+    return (
+      <>
+      <button onClick={handleUploadFile}>
+        <div>{uploadIcon}</div>
+        <div>Upload File</div>
+      </button>
+      <input type='file'
+             ref={hiddenFileUpload}
+             onChange={(e) => this.props.handleUploadChange(e)}
+             style={{display:'none'}}/>
+      </>
+    )
+  }
+}
+/*const FileUpload = props => {
 
   const uploadIcon = <FontAwesomeIcon icon={faCloudUploadAlt} size="1x" />
   const hiddenFileUpload = React.useRef(null);
@@ -281,7 +314,7 @@ const FileUpload = props => {
     }).then(res => {
       console.log("Uploaded file")
     });
-  }*/
+  }
 
   return (
     <>
@@ -295,7 +328,7 @@ const FileUpload = props => {
              style={{display:'none'}}/>
     </>
   )
-}
+}*/
 
 class Interface extends React.Component {
   /* Interface component constructor */
