@@ -274,13 +274,15 @@ class PopUp extends React.Component {
     )
   }
 }*/
-const FileUpload = props => {
+const FileUpload = (props) => {
 
   const uploadIcon = <FontAwesomeIcon icon={faCloudUploadAlt} size="1x" />
   const hiddenFileUpload = React.useRef(null);
   
   const handleUploadFile = e => {
     console.log("Upload file");
+    console.log("Props: " + JSON.stringify(props));
+    console.log("Func: " + props.handleUpload);
     hiddenFileUpload.current.click();
   }
 
@@ -486,10 +488,11 @@ class Interface extends React.Component {
           newFilePath: newPath.join('/'),
           currFilePath: currPath.join('/'),
         }
-      });
-    }).then(res => {
+      }).then(res2 => {
       console.log("Uploaded file")
-      let files = res.data;
+      console.log("res: " + res2);
+      console.log("res2: " + JSON.stringify(res2));
+      let files = res2.data;
         if (typeof files !== "string") {
           this.setState({
             filePath: currPath,
@@ -508,6 +511,7 @@ class Interface extends React.Component {
             popup: files,
           });
         }
+    });
     });
   }
 
@@ -895,7 +899,8 @@ class Interface extends React.Component {
             </button>
             <input type='file' style={{display:'none'}}/>*/}
             <FileUpload
-              handleUpload={this.handleUploadChange}
+              currFile={currFile}
+              handleUpload={this.handleUpload}
             />
           </div>
           <div className='file-panel-bottom'>
