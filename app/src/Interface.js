@@ -241,7 +241,7 @@ class PopUp extends React.Component {
   }
 }
 
-class PopUp extends React.Component {
+/*class FileUpload extends React.Component {
   
   handleUploadFile(e) {
     const hiddenFileUpload = React.useRef(null);
@@ -273,26 +273,21 @@ class PopUp extends React.Component {
       </>
     )
   }
-}
-/*const FileUpload = props => {
+}*/
+const FileUpload = props => {
 
   const uploadIcon = <FontAwesomeIcon icon={faCloudUploadAlt} size="1x" />
   const hiddenFileUpload = React.useRef(null);
   
   const handleUploadFile = e => {
-    // If there is not a current file, then the user is at the 'root' level,
-    // and still needs to select a drive
-    if (props.currFile.name === "") {
-      //this.setState({
-      //  popup: "You must select a drive to upload a file."
-      //})
-      console.log("Popup for fail to upload.");
-    } else {
-      console.log("Upload file");
-      hiddenFileUpload.current.click();
-    }
+    console.log("Upload file");
+    hiddenFileUpload.current.click();
   }
 
+  const handleChange = e => {
+    const upFile = e.target.files[0];
+    props.handleUpload(upFile);
+  }
   /*const handleUploadChange = (fp, e) => {
     console.log("handleUpload: " + JSON.stringify(fp));
     const upFile = e.target.files[0];
@@ -314,7 +309,7 @@ class PopUp extends React.Component {
     }).then(res => {
       console.log("Uploaded file")
     });
-  }
+  }*/
 
   return (
     <>
@@ -324,11 +319,11 @@ class PopUp extends React.Component {
       </button>
       <input type='file'
              ref={hiddenFileUpload}
-             onChange={(e) => props.handleUploadChange(e)}
+             onChange={handleChange}
              style={{display:'none'}}/>
     </>
   )
-}*/
+}
 
 class Interface extends React.Component {
   /* Interface component constructor */
@@ -338,7 +333,7 @@ class Interface extends React.Component {
     this.handleFolderClick = this.handleFolderClick.bind(this);
     this.handleFileClick = this.handleFileClick.bind(this);
     this.handleNewFolder = this.handleNewFolder.bind(this);
-    this.handleUploadChange = this.handleUploadChange.bind(this);
+    this.handleUpload = this.handleUpload.bind(this);
     this.handleDownload = this.handleDownload.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleRename = this.handleRename.bind(this);
@@ -477,9 +472,9 @@ class Interface extends React.Component {
     }
   }
 
-  handleUploadChange(e) {
+  handleUpload(upFile) {
     const currPath = this.state.filePath;
-    const upFile = e.target.files[0];
+    //const upFile = e.target.files[0];
     const newPath = currPath.concat([upFile.name]);
     const formData = new FormData();
     formData.append('file', upFile)
@@ -900,8 +895,7 @@ class Interface extends React.Component {
             </button>
             <input type='file' style={{display:'none'}}/>*/}
             <FileUpload
-              currFile={currFile}
-              onChange={this.handleUploadChange}
+              handleUpload={this.handleUploadChange}
             />
           </div>
           <div className='file-panel-bottom'>
