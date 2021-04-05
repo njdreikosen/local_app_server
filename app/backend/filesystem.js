@@ -1,6 +1,5 @@
 const drivelist = require('drivelist');
 const child_process = require("child_process")
-//const path = require("path");
 const fs = require("fs");
 
 function createFolder(filePath, folderName) {
@@ -24,7 +23,7 @@ function compressFiles(filePath, folder, zipFilePath) {
     let zipCommand = "pushd " + filePath + " && zip -r " + zipFilePath + " ./" + folder + "/ && popd";
     console.log("Zipping with command: " + zipCommand);
     try {
-        child_process.execSync(zipCommand);
+        child_process.execSync(zipCommand, {shell: '/bin/bash'});
     } catch (error) {
         console.log("ERROR ZIPPING FILE: " + error);
         return false;
@@ -82,8 +81,6 @@ function deleteFile(filePath, fileName, isFolder) {
 }
 
 function moveFile(oldFilePath, newFilePath, currFilePath) {
-    //let originalPath = filePath.join('/');
-    //let oldPath = filePath.concat(oldName).join('/');
     try {
         if (!fs.existsSync(newFilePath)) {
             fs.renameSync(oldFilePath, newFilePath);
@@ -112,10 +109,6 @@ async function getDrives() {
     const drives = await drivelist.list();
     console.log(drives);
     drives.forEach((drive) => {
-        //console.log(drive);
-        //console.log(drive.description);
-        //console.log(drive.isSystem);
-        //console.log(drive.mountpoints[0].path)
         // Use this loop to use only external drives
         if (!drive.isSystem && (drive.isUSB || drive.isUAS)) {
             hddList.push({name: drive.mountpoints[0].path, isFolder: true});
