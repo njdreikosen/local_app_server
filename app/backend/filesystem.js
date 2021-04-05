@@ -198,6 +198,7 @@ function getFiles(directoryPath) {
 }
 
 exports.createFolder = createFolder;
+exports.compressFiles = compressFiles;
 exports.renameFile = renameFile;
 exports.deleteFile = deleteFile;
 exports.moveFile = moveFile;
