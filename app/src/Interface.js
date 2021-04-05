@@ -479,7 +479,7 @@ class Interface extends React.Component {
       axios.get('http://192.168.1.100:4000/downloadFile', {
         responseType: 'blob',
         params: {
-          path: filePath,
+          path: filePath.slice(0, -1),
           file: currFile.name,
           isFolder: currFile.isFolder,
         }
