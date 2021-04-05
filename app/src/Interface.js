@@ -476,6 +476,11 @@ class Interface extends React.Component {
       let filePath = this.state.filePath;
       console.log("fp: " + filePath);
       console.log("fn: " + currFile.name);
+      if (currFile.isFolder) {
+        this.setState({
+          popup: "It may take a moment to create your zip file. Once it is created, the download will begin."
+        })
+      }
       axios.get('http://192.168.1.100:4000/downloadFile', {
         responseType: 'blob',
         params: {
@@ -498,6 +503,9 @@ class Interface extends React.Component {
         }
       }).catch(error => {
         console.log("Interface.handleDownload Error: " + error);
+        this.setState({
+          popup: "Could not download the selected file. Please restart the application and try again."
+        })
       });
     }
   }
