@@ -1,5 +1,5 @@
 const drivelist = require('drivelist');
-const child_process = requre("child_process")
+const child_process = require("child_process")
 //const path = require("path");
 const fs = require("fs");
 
@@ -20,8 +20,8 @@ function createFolder(filePath, folderName) {
     }
 }
 
-function compressFiles(filePath, fileName, zipFilePath) {
-    let zipCommand = "pushd " + filePath + " && zip -r " + zipFilePath + " ./" + fileName + "/ && popd";
+function compressFiles(filePath, folder, zipFilePath) {
+    let zipCommand = "pushd " + filePath + " && zip -r " + zipFilePath + " ./" + folder + "/ && popd";
     console.log("Zipping with command: " + zipCommand);
     try {
         child_process.execSync(zipCommand);

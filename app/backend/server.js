@@ -76,9 +76,9 @@ rfsRoutes.route('/downloadFile').get(function(req, res) {
     if (isFolder) {
         fp = filePath.join('/');
         console.log("CURR DIR: " + __dirname);
-        zipFP = [__dirname, "tmp", fileName, ".zip"].join('/');
+        zipFP = [__dirname, "tmp", fileName + ".zip"].join('/');
         console.log("zipFP: " + zipFP);
-        let fileZipped = filesystem.compressFiles(fp, folder, zipFP);
+        let fileZipped = filesystem.compressFiles(fp, fileName, zipFP);
         if (!fileZipped) {
             console.log("FAILED TO ZIP FILES!!");
             res.json("Failed to zip files.");
