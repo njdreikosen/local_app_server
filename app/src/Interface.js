@@ -488,6 +488,13 @@ class Interface extends React.Component {
           fileDownload(res.data, currFile.name);
         } else {
           fileDownload(res.data, currFile.name.concat(".zip"))
+          axios.get('http://192.168.1.100:4000/deleteFile', {
+            params: {
+              filePath: ["./tmp"],
+              fileName: currFile.name + ".zip",
+              isFolder: "false",
+            }
+          })
         }
       }).catch(error => {
         console.log("Interface.handleDownload Error: " + error);
