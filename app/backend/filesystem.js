@@ -1,5 +1,6 @@
 const drivelist = require('drivelist');
-const path = require("path");
+const child_process = requre("child_process")
+//const path = require("path");
 const fs = require("fs");
 
 function createFolder(filePath, folderName) {
@@ -17,6 +18,18 @@ function createFolder(filePath, folderName) {
     } catch(err) {
         return "An unexpected error occured.";
     }
+}
+
+function compressFiles(filePath, fileName, zipFilePath) {
+    let zipCommand = "pushd " + filePath + " && zip -r " + zipFilePath + " ./" + fileName + "/ && popd";
+    console.log("Zipping with command: " + zipCommand);
+    try {
+        child_process.execSync(zipCommand);
+    } catch (error) {
+        console.log("ERROR ZIPPING FILE: " + error);
+        return false;
+    }
+    return true;
 }
 
 function renameFile(filePath, newFilePath, oldName, newName) {

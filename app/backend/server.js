@@ -69,9 +69,25 @@ rfsRoutes.route('/getFiles').get(function(req, res) {
 });
 
 rfsRoutes.route('/downloadFile').get(function(req, res) {
+    let isFolder = req.query.isFolder;
     let filePath = req.query.path;
-    filePath.push(req.query.file);
-    let fp = filePath.join('/');
+    let fileName = req.query.file;
+    let fp;
+    if (isFolder) {
+        fp = filePath.join('/');
+        console.log("CURR DIR: " + __dirname);
+        zipFP = [__dirname, "tmp", fileName, ".zip"].join('/');
+        console.log("zipFP: " + zipFP);
+        let fileZipped = filesystem.compressFiles(fp, folder, zipFP);
+        if (!fileZipped) {
+            console.log("FAILED TO ZIP FILES!!");
+            res.json("Failed to zip files.");
+        }
+        fp = zipFP;
+    } else {
+        filePath.push(fileName);
+        fp = filePath.join('/');
+    }
     console.log("fp: " + fp);
     res.download(fp, req.query.file);
 });
