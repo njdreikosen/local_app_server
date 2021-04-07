@@ -1,9 +1,9 @@
 import React from "react"
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Route, Switch, Link } from 'react-router-dom'
 
 // Import all required modules here
 import Home from "./Home"
-import Interface from "./modules/Interface"
+import Interface from "./Interface"
 
 //import './App.css';
 

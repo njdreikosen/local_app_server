@@ -45,4 +45,4 @@ class Home extends React.Component {
   }
 }
 
-export default Interface;
+export default Home;
