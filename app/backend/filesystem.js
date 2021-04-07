@@ -190,6 +190,18 @@ function getFiles(directoryPath) {
     return files;
 }
 
+function getModules() {
+    let mods = [];
+    let modsPath = __dirname + "/../src/modules"
+    let files = fs.readdirSync(modsPath);
+    for (let i = 0; i < files.length; i++) {
+        if (!mods.includes(files[i])) {
+            modes.push(files[i]);
+        }
+    }
+    return mods;
+}
+
 exports.createFolder = createFolder;
 exports.compressFiles = compressFiles;
 exports.renameFile = renameFile;
@@ -197,3 +209,4 @@ exports.deleteFile = deleteFile;
 exports.moveFile = moveFile;
 exports.getDrives = getDrives;
 exports.getFiles = getFiles;
+exports.getModules = getModules;

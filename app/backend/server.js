@@ -34,6 +34,11 @@ rfsRoutes.route('/').get(function(req, res) {
     res.json({});
 });
 
+rfsRoutes.route('/getModules').get(function(req, res) {
+    let mods = filesystem.getModules();
+    res.json(mods);
+});
+
 rfsRoutes.route('/createFolder').get(function(req, res) {
     let newFiles = filesystem.createFolder(req.query.filePath, req.query.folderName);
     res.json(newFiles);
