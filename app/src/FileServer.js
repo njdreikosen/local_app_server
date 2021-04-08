@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import fileDownload from 'js-file-download'
-//import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolder } from '@fortawesome/free-solid-svg-icons';
 import { faFile } from '@fortawesome/free-solid-svg-icons';
@@ -11,96 +10,38 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 import { NavLink } from 'react-router-dom';
 
-import './Interface.css';
+import './css/FileServer.css';
 
 
+const FileUpload = (props) => {
 
-class UIHeader extends React.Component {
-  render() {
-    let path = this.props.path;
-    let size;
-    if (window.innerWidth < 580) {
-      size = 40;
-    } else if (window.innerWidth < 1100) {
-      size = 70;
-    } else {
-      size = 90;
-    }
-    const breadcrumbs = path.map((breadcrumb, index, path) => {
-      return (
-        <li key={index}>
-          <button
-            onClick={(e) => this.props.onClick(index)}
-          >
-            {breadcrumb}
-          </button>
-        </li>
-      );
-    });
-    return (
-      <div className='ui-header'>
-        <NavLink className='icon-block' to='/'>
-          <div>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.5 8.5" width={size} height={size}>
-              <g fill="#e6e6e6">
-                <path d="m 2.1166667,2.1166667 c -0.1465791,0 -0.2645833,0.1180043 -0.2645833,0.2645833 V 4.7625 5.0270833 5.2916667 h 0.2645833 1.984375 V 4.7625 H 2.3812501 V 2.6458334 H 5.55625 v 1.0474811 0.1431439 h 0.5291667 v -0.396875 -1.179773 c 0,-0.079397 -0.063747,-0.1431437 -0.1431438,-0.1431437 H 5.8208333 Z M 4.365625,3.96875 c -0.07329,0 -0.1322916,0.059002 -0.1322916,0.1322917 v 0.5291666 c 0,0.07329 0.059001,0.1322917 0.1322916,0.1322917 h 2.6458333 c 0.07329,0 0.1322917,-0.059001 0.1322917,-0.1322917 V 4.1010417 C 7.14375,4.0277517 7.084748,3.96875 7.0114583,3.96875 Z M 4.6245241,4.2333334 H 5.297351 c 0.070256,0 0.1266073,0.056352 0.1266073,0.1266073 v 0.011369 c 0,0.070256 -0.056352,0.1266074 -0.1266073,0.1266074 H 4.6245241 c -0.070256,0 -0.1266074,-0.056352 -0.1266074,-0.1266074 v -0.011369 c 0,-0.070256 0.056352,-0.1266073 0.1266074,-0.1266073 z m 1.7223753,0 a 0.13229165,0.13229165 0 0 1 0.0031,0 A 0.13229165,0.13229165 0 0 1 6.4822917,4.365625 0.13229165,0.13229165 0 0 1 6.35,4.4979167 0.13229165,0.13229165 0 0 1 6.2177083,4.365625 0.13229165,0.13229165 0 0 1 6.3468994,4.2333334 Z m 0.3968749,0 a 0.13229165,0.13229165 0 0 1 0.0031,0 A 0.13229165,0.13229165 0 0 1 6.8791667,4.365625 0.13229165,0.13229165 0 0 1 6.746875,4.4979167 0.13229165,0.13229165 0 0 1 6.6145833,4.365625 0.13229165,0.13229165 0 0 1 6.7437743,4.2333334 Z M 4.365625,4.8947917 c -0.07329,0 -0.1322916,0.059001 -0.1322916,0.1322916 V 5.55625 c 0,0.07329 0.059001,0.1322917 0.1322916,0.1322917 h 2.6458333 c 0.07329,0 0.1322917,-0.059002 0.1322917,-0.1322917 V 5.0270833 c 0,-0.07329 -0.059002,-0.1322916 -0.1322917,-0.1322916 z M 4.6245241,5.159375 H 5.297351 c 0.070256,0 0.1266073,0.056351 0.1266073,0.1266074 v 0.011369 c 0,0.070256 -0.056351,0.1266073 -0.1266073,0.1266073 H 4.6245241 c -0.070256,0 -0.1266074,-0.056352 -0.1266074,-0.1266073 v -0.011369 c 0,-0.070256 0.056351,-0.1266074 0.1266074,-0.1266074 z m 1.7223753,0 a 0.13229165,0.13229165 0 0 1 0.0031,0 A 0.13229165,0.13229165 0 0 1 6.4822917,5.2916667 0.13229165,0.13229165 0 0 1 6.35,5.4239583 0.13229165,0.13229165 0 0 1 6.2177083,5.2916667 0.13229165,0.13229165 0 0 1 6.3468994,5.159375 Z m 0.3968749,0 a 0.13229165,0.13229165 0 0 1 0.0031,0 A 0.13229165,0.13229165 0 0 1 6.8791667,5.2916667 0.13229165,0.13229165 0 0 1 6.746875,5.4239583 0.13229165,0.13229165 0 0 1 6.6145833,5.2916667 0.13229165,0.13229165 0 0 1 6.7437743,5.159375 Z M 1.4552084,5.55625 c -0.07329,0 -0.1322917,0.059002 -0.1322917,0.1322917 V 5.8208333 5.953125 6.0854167 C 1.3229167,6.2319958 1.4409209,6.35 1.5875001,6.35 H 4.1010417 V 5.8208333 h -0.79375 C 3.2340017,5.8208333 3.175,5.7618313 3.175,5.6885417 V 5.55625 H 1.5875001 Z M 4.365625,5.8208333 c -0.07329,0 -0.1322916,0.059002 -0.1322916,0.1322917 v 0.5291667 c 0,0.073289 0.059001,0.1322916 0.1322916,0.1322916 h 2.6458333 c 0.07329,0 0.1322917,-0.059001 0.1322917,-0.1322916 V 5.953125 c 0,-0.07329 -0.059003,-0.1322917 -0.1322917,-0.1322917 z M 4.6245241,6.0854167 H 5.297351 c 0.070256,0 0.1266073,0.056352 0.1266073,0.1266073 v 0.011369 c 0,0.070256 -0.056351,0.1266074 -0.1266073,0.1266074 H 4.6245241 c -0.070256,0 -0.1266074,-0.056351 -0.1266074,-0.1266074 V 6.212024 c 0,-0.070256 0.056351,-0.1266073 0.1266074,-0.1266073 z m 1.7223753,0 a 0.13229165,0.13229165 0 0 1 0.0031,0 A 0.13229165,0.13229165 0 0 1 6.4822917,6.2177083 0.13229165,0.13229165 0 0 1 6.35,6.35 0.13229165,0.13229165 0 0 1 6.2177083,6.2177083 0.13229165,0.13229165 0 0 1 6.3468994,6.0854167 Z m 0.3968749,0 a 0.13229165,0.13229165 0 0 1 0.0031,0 A 0.13229165,0.13229165 0 0 1 6.8791667,6.2177083 0.13229165,0.13229165 0 0 1 6.746875,6.35 0.13229165,0.13229165 0 0 1 6.6145833,6.2177083 0.13229165,0.13229165 0 0 1 6.7437743,6.0854167 Z" transform="scale(1)" className="undefined"/>
-              </g>
-            </svg>
-          </div>
-          <div className='connection-circle'></div>
-          <div className='connection-line'></div>
-          <div className='connection-circle'></div>
-          <div>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.5 8.5" width={size} height={size}>
-              <g fill="#e6e6e6">
-                <path d="m 2.1166667,2.1166667 c -0.080872,0 -0.145977,0.064902 -0.145977,0.1455208 v 0.7276042 c 0,0.080619 0.065106,0.1455208 0.145977,0.1455208 h 3.6494252 c 0.080872,0 0.145977,-0.064902 0.145977,-0.1455208 V 2.2621875 c 0,-0.080619 -0.065106,-0.1455208 -0.145977,-0.1455208 z m 2.8556752,0.3643705 a 0.14597699,0.14552081 0 0 1 0.00342,0 A 0.14597699,0.14552081 0 0 1 5.1217403,2.626558 0.14597699,0.14552081 0 0 1 4.9757633,2.7720789 0.14597699,0.14552081 0 0 1 4.8297863,2.626558 0.14597699,0.14552081 0 0 1 4.9723419,2.4810372 Z m 0.4858296,0 a 0.14597699,0.14552081 0 0 1 0.00399,0 A 0.14597699,0.14552081 0 0 1 5.6081401,2.626558 0.14597699,0.14552081 0 0 1 5.4621631,2.7720789 0.14597699,0.14552081 0 0 1 5.3161861,2.626558 0.14597699,0.14552081 0 0 1 5.4581715,2.4810372 Z m -3.1225393,0.072192 h 1.3137931 c 0.040436,0 0.072989,0.032451 0.072989,0.07276 0,0.04031 -0.032553,0.07276 -0.072989,0.07276 H 2.3356322 c -0.040436,0 -0.072989,-0.032451 -0.072989,-0.07276 0,-0.04031 0.032553,-0.07276 0.072989,-0.07276 z M 2.1166667,3.2808334 c -0.080872,0 -0.145977,0.064902 -0.145977,0.1455208 v 0.7276041 c 0,0.080619 0.065106,0.1455209 0.145977,0.1455209 H 4.0143678 V 3.6031393 c 0,-0.097818 0.079215,-0.1767851 0.1773393,-0.1767851 h 1.7203618 c 0,-0.080619 -0.065106,-0.1455208 -0.145977,-0.1455208 z M 4.3376841,3.571875 c -0.098124,0 -0.1773393,0.078968 -0.1773393,0.1767851 v 2.5568464 c 0,0.097818 0.079216,0.1767851 0.1773393,0.1767851 h 1.8349765 c 0.098124,0 0.1773393,-0.078968 0.1773393,-0.1767851 V 4.5905208 h -0.729885 c -0.1617434,0 -0.291954,-0.1126485 -0.291954,-0.2523878 V 3.571875 Z m 1.2824308,0 v 0.7276042 h 0.729885 V 4.1658957 L 5.7370106,3.571875 Z M 2.3356322,3.7173958 h 1.3137931 c 0.040436,0 0.072989,0.032451 0.072989,0.072761 0,0.040309 -0.032553,0.07276 -0.072989,0.07276 H 2.3356322 c -0.040436,0 -0.072989,-0.032451 -0.072989,-0.07276 0,-0.04031 0.032553,-0.072761 0.072989,-0.072761 z M 2.1411863,4.445 c -0.094349,0 -0.1704966,0.07591 -0.1704966,0.1699637 v 0.6787184 c 0,0.094054 0.076148,0.1699637 0.1704966,0.1699637 H 4.0143678 V 4.445 Z m 0.1944459,0.4365625 h 1.3137931 c 0.040436,0 0.072989,0.032451 0.072989,0.07276 0,0.04031 -0.032553,0.07276 -0.072989,0.07276 H 2.3356322 c -0.040436,0 -0.072989,-0.032451 -0.072989,-0.07276 0,-0.04031 0.032553,-0.07276 0.072989,-0.07276 z" transform="scale(1)" className="undefined"/>
-              </g>
-            </svg>
-          </div>
-        </NavLink>
-        <div className='navbar'>
-          <div className="nav-title">
-            Remote File Server
-          </div>
-          <ul className='breadcrumbs'>
-            <li key={-1}>
-              <button
-                onClick={(e) => this.props.onClick(-1)}
-              >
-                Home
-              </button>
-            </li>
-            {breadcrumbs}
-          </ul>
-        </div>
-      </div>
-    )
+  const uploadIcon = <FontAwesomeIcon icon={faCloudUploadAlt} size="1x" />
+  const hiddenFileUpload = React.useRef(null);
+  
+  const handleUploadFile = e => {
+    console.log("Upload file");
+    console.log("Props: " + JSON.stringify(props));
+    console.log("Func: " + props.handleUpload);
+    hiddenFileUpload.current.click();
   }
-}
 
-class FolderPanel extends React.Component {
-  render() {
-    const folderIcon = <FontAwesomeIcon icon={faFolder} size="4x" />
-    const dirList = this.props.contents;
-    const dirs = dirList.map((dir) => {
-      return (
-        <button
-          className='folder'
-          //onClick={this.props.onClick}
-          onClick={(e) => this.props.onClick(dir)}
-          key={dir.name}
-        >
-          <div>{folderIcon}</div>
-          <div>{dir.name}</div>
-        </button>
-      );
-    });
-    return (
-      <div className='folder-panel'>
-        {dirs}
-      </div>
-    )
+  const handleChange = e => {
+    const upFile = e.target.files[0];
+    props.handleUpload(upFile);
   }
+
+  return (
+    <>
+      <button onClick={handleUploadFile}>
+        <div>{uploadIcon}</div>
+        <div>Upload File</div>
+      </button>
+      <input type='file'
+             ref={hiddenFileUpload}
+             onChange={handleChange}
+             style={{display:'none'}}/>
+    </>
+  )
 }
 
 class FilePanel extends React.Component {
@@ -136,6 +77,31 @@ class FilePanel extends React.Component {
     return (
       <div className='file-panel'>
         {files}
+      </div>
+    )
+  }
+}
+
+class FolderPanel extends React.Component {
+  render() {
+    const folderIcon = <FontAwesomeIcon icon={faFolder} size="4x" />
+    const dirList = this.props.contents;
+    const dirs = dirList.map((dir) => {
+      return (
+        <button
+          className='folder'
+          //onClick={this.props.onClick}
+          onClick={(e) => this.props.onClick(dir)}
+          key={dir.name}
+        >
+          <div>{folderIcon}</div>
+          <div>{dir.name}</div>
+        </button>
+      );
+    });
+    return (
+      <div className='folder-panel'>
+        {dirs}
       </div>
     )
   }
@@ -243,39 +209,71 @@ class PopUp extends React.Component {
   }
 }
 
-const FileUpload = (props) => {
-
-  const uploadIcon = <FontAwesomeIcon icon={faCloudUploadAlt} size="1x" />
-  const hiddenFileUpload = React.useRef(null);
-  
-  const handleUploadFile = e => {
-    console.log("Upload file");
-    console.log("Props: " + JSON.stringify(props));
-    console.log("Func: " + props.handleUpload);
-    hiddenFileUpload.current.click();
+class UIHeader extends React.Component {
+  render() {
+    let path = this.props.path;
+    let size;
+    if (window.innerWidth < 580) {
+      size = 40;
+    } else if (window.innerWidth < 1100) {
+      size = 70;
+    } else {
+      size = 90;
+    }
+    const breadcrumbs = path.map((breadcrumb, index, path) => {
+      return (
+        <li key={index}>
+          <button
+            onClick={(e) => this.props.onClick(index)}
+          >
+            {breadcrumb}
+          </button>
+        </li>
+      );
+    });
+    return (
+      <div className='ui-header'>
+        <NavLink className='icon-block' to='/'>
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.5 8.5" width={size} height={size}>
+              <g fill="#e6e6e6">
+                <path d="m 2.1166667,2.1166667 c -0.1465791,0 -0.2645833,0.1180043 -0.2645833,0.2645833 V 4.7625 5.0270833 5.2916667 h 0.2645833 1.984375 V 4.7625 H 2.3812501 V 2.6458334 H 5.55625 v 1.0474811 0.1431439 h 0.5291667 v -0.396875 -1.179773 c 0,-0.079397 -0.063747,-0.1431437 -0.1431438,-0.1431437 H 5.8208333 Z M 4.365625,3.96875 c -0.07329,0 -0.1322916,0.059002 -0.1322916,0.1322917 v 0.5291666 c 0,0.07329 0.059001,0.1322917 0.1322916,0.1322917 h 2.6458333 c 0.07329,0 0.1322917,-0.059001 0.1322917,-0.1322917 V 4.1010417 C 7.14375,4.0277517 7.084748,3.96875 7.0114583,3.96875 Z M 4.6245241,4.2333334 H 5.297351 c 0.070256,0 0.1266073,0.056352 0.1266073,0.1266073 v 0.011369 c 0,0.070256 -0.056352,0.1266074 -0.1266073,0.1266074 H 4.6245241 c -0.070256,0 -0.1266074,-0.056352 -0.1266074,-0.1266074 v -0.011369 c 0,-0.070256 0.056352,-0.1266073 0.1266074,-0.1266073 z m 1.7223753,0 a 0.13229165,0.13229165 0 0 1 0.0031,0 A 0.13229165,0.13229165 0 0 1 6.4822917,4.365625 0.13229165,0.13229165 0 0 1 6.35,4.4979167 0.13229165,0.13229165 0 0 1 6.2177083,4.365625 0.13229165,0.13229165 0 0 1 6.3468994,4.2333334 Z m 0.3968749,0 a 0.13229165,0.13229165 0 0 1 0.0031,0 A 0.13229165,0.13229165 0 0 1 6.8791667,4.365625 0.13229165,0.13229165 0 0 1 6.746875,4.4979167 0.13229165,0.13229165 0 0 1 6.6145833,4.365625 0.13229165,0.13229165 0 0 1 6.7437743,4.2333334 Z M 4.365625,4.8947917 c -0.07329,0 -0.1322916,0.059001 -0.1322916,0.1322916 V 5.55625 c 0,0.07329 0.059001,0.1322917 0.1322916,0.1322917 h 2.6458333 c 0.07329,0 0.1322917,-0.059002 0.1322917,-0.1322917 V 5.0270833 c 0,-0.07329 -0.059002,-0.1322916 -0.1322917,-0.1322916 z M 4.6245241,5.159375 H 5.297351 c 0.070256,0 0.1266073,0.056351 0.1266073,0.1266074 v 0.011369 c 0,0.070256 -0.056351,0.1266073 -0.1266073,0.1266073 H 4.6245241 c -0.070256,0 -0.1266074,-0.056352 -0.1266074,-0.1266073 v -0.011369 c 0,-0.070256 0.056351,-0.1266074 0.1266074,-0.1266074 z m 1.7223753,0 a 0.13229165,0.13229165 0 0 1 0.0031,0 A 0.13229165,0.13229165 0 0 1 6.4822917,5.2916667 0.13229165,0.13229165 0 0 1 6.35,5.4239583 0.13229165,0.13229165 0 0 1 6.2177083,5.2916667 0.13229165,0.13229165 0 0 1 6.3468994,5.159375 Z m 0.3968749,0 a 0.13229165,0.13229165 0 0 1 0.0031,0 A 0.13229165,0.13229165 0 0 1 6.8791667,5.2916667 0.13229165,0.13229165 0 0 1 6.746875,5.4239583 0.13229165,0.13229165 0 0 1 6.6145833,5.2916667 0.13229165,0.13229165 0 0 1 6.7437743,5.159375 Z M 1.4552084,5.55625 c -0.07329,0 -0.1322917,0.059002 -0.1322917,0.1322917 V 5.8208333 5.953125 6.0854167 C 1.3229167,6.2319958 1.4409209,6.35 1.5875001,6.35 H 4.1010417 V 5.8208333 h -0.79375 C 3.2340017,5.8208333 3.175,5.7618313 3.175,5.6885417 V 5.55625 H 1.5875001 Z M 4.365625,5.8208333 c -0.07329,0 -0.1322916,0.059002 -0.1322916,0.1322917 v 0.5291667 c 0,0.073289 0.059001,0.1322916 0.1322916,0.1322916 h 2.6458333 c 0.07329,0 0.1322917,-0.059001 0.1322917,-0.1322916 V 5.953125 c 0,-0.07329 -0.059003,-0.1322917 -0.1322917,-0.1322917 z M 4.6245241,6.0854167 H 5.297351 c 0.070256,0 0.1266073,0.056352 0.1266073,0.1266073 v 0.011369 c 0,0.070256 -0.056351,0.1266074 -0.1266073,0.1266074 H 4.6245241 c -0.070256,0 -0.1266074,-0.056351 -0.1266074,-0.1266074 V 6.212024 c 0,-0.070256 0.056351,-0.1266073 0.1266074,-0.1266073 z m 1.7223753,0 a 0.13229165,0.13229165 0 0 1 0.0031,0 A 0.13229165,0.13229165 0 0 1 6.4822917,6.2177083 0.13229165,0.13229165 0 0 1 6.35,6.35 0.13229165,0.13229165 0 0 1 6.2177083,6.2177083 0.13229165,0.13229165 0 0 1 6.3468994,6.0854167 Z m 0.3968749,0 a 0.13229165,0.13229165 0 0 1 0.0031,0 A 0.13229165,0.13229165 0 0 1 6.8791667,6.2177083 0.13229165,0.13229165 0 0 1 6.746875,6.35 0.13229165,0.13229165 0 0 1 6.6145833,6.2177083 0.13229165,0.13229165 0 0 1 6.7437743,6.0854167 Z" transform="scale(1)" className="undefined"/>
+              </g>
+            </svg>
+          </div>
+          <div className='connection-circle'></div>
+          <div className='connection-line'></div>
+          <div className='connection-circle'></div>
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.5 8.5" width={size} height={size}>
+              <g fill="#e6e6e6">
+                <path d="m 2.1166667,2.1166667 c -0.080872,0 -0.145977,0.064902 -0.145977,0.1455208 v 0.7276042 c 0,0.080619 0.065106,0.1455208 0.145977,0.1455208 h 3.6494252 c 0.080872,0 0.145977,-0.064902 0.145977,-0.1455208 V 2.2621875 c 0,-0.080619 -0.065106,-0.1455208 -0.145977,-0.1455208 z m 2.8556752,0.3643705 a 0.14597699,0.14552081 0 0 1 0.00342,0 A 0.14597699,0.14552081 0 0 1 5.1217403,2.626558 0.14597699,0.14552081 0 0 1 4.9757633,2.7720789 0.14597699,0.14552081 0 0 1 4.8297863,2.626558 0.14597699,0.14552081 0 0 1 4.9723419,2.4810372 Z m 0.4858296,0 a 0.14597699,0.14552081 0 0 1 0.00399,0 A 0.14597699,0.14552081 0 0 1 5.6081401,2.626558 0.14597699,0.14552081 0 0 1 5.4621631,2.7720789 0.14597699,0.14552081 0 0 1 5.3161861,2.626558 0.14597699,0.14552081 0 0 1 5.4581715,2.4810372 Z m -3.1225393,0.072192 h 1.3137931 c 0.040436,0 0.072989,0.032451 0.072989,0.07276 0,0.04031 -0.032553,0.07276 -0.072989,0.07276 H 2.3356322 c -0.040436,0 -0.072989,-0.032451 -0.072989,-0.07276 0,-0.04031 0.032553,-0.07276 0.072989,-0.07276 z M 2.1166667,3.2808334 c -0.080872,0 -0.145977,0.064902 -0.145977,0.1455208 v 0.7276041 c 0,0.080619 0.065106,0.1455209 0.145977,0.1455209 H 4.0143678 V 3.6031393 c 0,-0.097818 0.079215,-0.1767851 0.1773393,-0.1767851 h 1.7203618 c 0,-0.080619 -0.065106,-0.1455208 -0.145977,-0.1455208 z M 4.3376841,3.571875 c -0.098124,0 -0.1773393,0.078968 -0.1773393,0.1767851 v 2.5568464 c 0,0.097818 0.079216,0.1767851 0.1773393,0.1767851 h 1.8349765 c 0.098124,0 0.1773393,-0.078968 0.1773393,-0.1767851 V 4.5905208 h -0.729885 c -0.1617434,0 -0.291954,-0.1126485 -0.291954,-0.2523878 V 3.571875 Z m 1.2824308,0 v 0.7276042 h 0.729885 V 4.1658957 L 5.7370106,3.571875 Z M 2.3356322,3.7173958 h 1.3137931 c 0.040436,0 0.072989,0.032451 0.072989,0.072761 0,0.040309 -0.032553,0.07276 -0.072989,0.07276 H 2.3356322 c -0.040436,0 -0.072989,-0.032451 -0.072989,-0.07276 0,-0.04031 0.032553,-0.072761 0.072989,-0.072761 z M 2.1411863,4.445 c -0.094349,0 -0.1704966,0.07591 -0.1704966,0.1699637 v 0.6787184 c 0,0.094054 0.076148,0.1699637 0.1704966,0.1699637 H 4.0143678 V 4.445 Z m 0.1944459,0.4365625 h 1.3137931 c 0.040436,0 0.072989,0.032451 0.072989,0.07276 0,0.04031 -0.032553,0.07276 -0.072989,0.07276 H 2.3356322 c -0.040436,0 -0.072989,-0.032451 -0.072989,-0.07276 0,-0.04031 0.032553,-0.07276 0.072989,-0.07276 z" transform="scale(1)" className="undefined"/>
+              </g>
+            </svg>
+          </div>
+        </NavLink>
+        <div className='navbar'>
+          <div className="nav-title">
+            Remote File Server
+          </div>
+          <ul className='breadcrumbs'>
+            <li key={-1}>
+              <button
+                onClick={(e) => this.props.onClick(-1)}
+              >
+                Home
+              </button>
+            </li>
+            {breadcrumbs}
+          </ul>
+        </div>
+      </div>
+    )
   }
-
-  const handleChange = e => {
-    const upFile = e.target.files[0];
-    props.handleUpload(upFile);
-  }
-
-  return (
-    <>
-      <button onClick={handleUploadFile}>
-        <div>{uploadIcon}</div>
-        <div>Upload File</div>
-      </button>
-      <input type='file'
-             ref={hiddenFileUpload}
-             onChange={handleChange}
-             style={{display:'none'}}/>
-    </>
-  )
 }
 
-class Interface extends React.Component {
-  /* Interface component constructor */
+class FileServer extends React.Component {
+  /* FileServer component constructor */
   constructor(props) {
     super(props);
     this.handleCrumbClick = this.handleCrumbClick.bind(this);
@@ -313,7 +311,15 @@ class Interface extends React.Component {
         contents: drives,
       });
     }).catch(error => {
-      console.log("Interface.componentDidMount Error: " + error);
+      console.log("FileServer.componentDidMount Error: " + error);
+    });
+  }
+
+  /* Handler for the popup 'Cancel' button being clicked */
+  handleClose(e) {
+    e.preventDefault();
+    this.setState({
+      popup: null,
     });
   }
 
@@ -334,7 +340,7 @@ class Interface extends React.Component {
           }
         });
       }).catch(error => {
-        console.log("Interface.handleCrumbClick Error: " + error);
+        console.log("FileServer.handleCrumbClick Error: " + error);
       });
     } else {
       let filePath = this.state.filePath;
@@ -358,9 +364,94 @@ class Interface extends React.Component {
           }
         });
       }).catch(error => {
-        console.log("Interface.handleCrumbClick Error: " + error);
+        console.log("FileServer.handleCrumbClick Error: " + error);
       });
     }
+  }
+
+  /* Handler for the 'Delete' button being clicked */
+  handleDelete() {
+    const currFile = this.state.currFile;
+    const filePath = this.state.filePath;
+    // If there is not a current file, then the user is at the 'root' level,
+    // and still needs to select a file
+    if (currFile.name === "") {
+      this.setState({
+        popup: "You must select a file or folder to delete."
+      })
+    } else if (filePath.length < 2 && currFile.isFolder) {
+      this.setState({
+        popup: "You cannot delete a hard drive."
+      })
+    } else {
+      this.setState({
+        popup: "delete",
+      });
+    }
+  }
+
+  /* Handler for the 'Download' button being clicked */
+  handleDownload() {
+    const currFile = this.state.currFile;
+    // If there is not a current file, then the user is at the 'root' level,
+    // and still needs to select a drive
+    if (currFile.name === "") {
+      this.setState({
+        popup: "You must select a file or folder to download it."
+      })
+    } else {
+      // Download the file
+      console.log("Download file");
+      let filePath = this.state.filePath;
+      console.log("fp: " + filePath);
+      console.log("fn: " + currFile.name);
+      if (currFile.isFolder) {
+        this.setState({
+          popup: "It may take a moment to create your zip file. Once it is created, the download will begin."
+        })
+      }
+      axios.get('http://192.168.1.100:4000/downloadFile', {
+        responseType: 'blob',
+        params: {
+          path: filePath.slice(0, -1),
+          file: currFile.name,
+          isFolder: currFile.isFolder,
+        }
+      }).then(res => {
+        if (!currFile.isFolder) {
+          fileDownload(res.data, currFile.name);
+        } else {
+          fileDownload(res.data, currFile.name.concat(".zip"))
+          axios.get('http://192.168.1.100:4000/deleteFile', {
+            params: {
+              filePath: ["./tmp"],
+              fileName: currFile.name + ".zip",
+              isFolder: "false",
+            }
+          })
+        }
+      }).catch(error => {
+        console.log("FileServer.handleDownload Error: " + error);
+        this.setState({
+          popup: "Could not download the selected file. Please restart the application and try again."
+        })
+      });
+    }
+  }
+
+  /* Hanlder for a file being clicked */
+  handleFileClick(file) {
+    let filePath = this.state.filePath;
+    console.log("fp: " + filePath);
+    console.log("fn: " + JSON.stringify(file));
+    this.setState({
+      currFile: {
+        name: file.name,
+        isFolder: false,
+        size: file.size,
+        lastMod: file.lastMod,
+      }
+    });
   }
 
   /* Handler for a folder being clicked */
@@ -386,23 +477,29 @@ class Interface extends React.Component {
         }
       });
     }).catch(error => {
-      console.log("Interface.handleFolderClick Error: " + error);
+      console.log("FileServer.handleFolderClick Error: " + error);
     });
   }
 
-  /* Hanlder for a file being clicked */
-  handleFileClick(file) {
-    let filePath = this.state.filePath;
-    console.log("fp: " + filePath);
-    console.log("fn: " + JSON.stringify(file));
-    this.setState({
-      currFile: {
-        name: file.name,
-        isFolder: false,
-        size: file.size,
-        lastMod: file.lastMod,
-      }
-    });
+  /* Handler for the 'Move' button being clicked */
+  handleMove() {
+    const currFile = this.state.currFile;
+    const filePath = this.state.filePath;
+    // If there is not a current file, then the user is at the 'root' level,
+    // and still needs to select a file
+    if (currFile.name === "") {
+      this.setState({
+        popup: "You must select a file or folder to move."
+      })
+    } else if (filePath.length < 2 && currFile.isFolder) {
+      this.setState({
+        popup: "You cannot move a hard drive."
+      })
+    } else {
+      this.setState({
+        popup: "move",
+      });
+    }
   }
 
   /* Handler for the 'New Folder' button being clicked */
@@ -417,6 +514,195 @@ class Interface extends React.Component {
     } else {
       this.setState({
         popup: "new-folder",
+      });
+    }
+  }
+
+  /* Handler for submitting the popup form */
+  handlePopupButtonClick(e) {
+    // Prevent default action
+    e.preventDefault();
+    // Depending on the popup status, do something different
+    const pop = this.state.popup;
+
+    if (pop === "new-folder") {
+      // If the popup is for a new folder, try to make one
+      let filePath = this.state.filePath;
+      axios.get('http://192.168.1.100:4000/createFolder', {
+        params: {
+          filePath: filePath,
+          folderName: e.target.folderName.value,
+        }
+      }).then(res => {
+        let files = res.data;
+        if (typeof files !== "string") {
+          this.setState({
+            contents: files,
+            popup: "Successfully created folder: " + e.target.folderName.value,
+          });
+        } else {
+          console.log("FAILED TO MAKE FOLDER");
+          this.setState({
+            popup: files,
+          });
+        }
+      }).catch(error => {
+        console.log("FileServer.handlePopupButtonClick Error: " + error);
+        this.setState({
+          popup: "Unable to connect to server.",
+        });
+      });
+    } else if (pop === "rename") {
+      // If the popup is for renaming a file, try to
+      let currFile = this.state.currFile;
+      let filePath;
+      let newFilePath;
+      if (currFile.isFolder) {
+        filePath = this.state.filePath.slice(0, this.state.filePath.length-1);
+        newFilePath = filePath.concat(e.target.newName.value);
+      } else {
+        filePath = this.state.filePath;
+        newFilePath = filePath;
+      }
+      axios.get('http://192.168.1.100:4000/renameFile', {
+        params: {
+          filePath: filePath,
+          newFilePath: newFilePath,
+          oldName: currFile.name,
+          newName: e.target.newName.value,
+        }
+      }).then(res => {
+        let files = res.data;
+        console.log("f: " + files);
+        if (typeof files !== "string") {
+          this.setState({
+            filePath: newFilePath,
+            contents: files,
+            popup: "Successfully renamed: " + e.target.newName.value,
+            currFile: {
+              name: newFilePath[newFilePath.length-1],
+              isFolder: true,
+              size: "",
+              lastMod: "",
+            },
+          });
+        } else {
+          console.log("FAILED TO RENAME FILE");
+          this.setState({
+            popup: files,
+          });
+        }
+      }).catch(error => {
+        console.log("FileServer.handlePopupButtonClick Error: " + error);
+        this.setState({
+          popup: "Unable to connect to server.",
+        });
+      });
+    } else if (pop === "delete") {
+      let currFile = this.state.currFile;
+      let filePath;
+      if (currFile.isFolder) {
+        filePath = this.state.filePath.slice(0, this.state.filePath.length-1);
+      } else {
+        filePath = this.state.filePath;
+      }
+      axios.get('http://192.168.1.100:4000/deleteFile', {
+        params: {
+          filePath: filePath,
+          fileName: currFile.name,
+          isFolder: currFile.isFolder,
+        }
+      }).then(res => {
+        let files = res.data;
+        console.log("f: " + files);
+        if (typeof files !== "string") {
+          this.setState({
+            filePath: filePath,
+            contents: files,
+            popup: "Successfully deleted: " + currFile.name,
+            currFile: {
+              name: filePath[filePath.length-1],
+              isFolder: true,
+              size: "",
+              lastMod: "",
+            },
+          });
+        } else {
+          this.setState({
+            popup: files,
+          })
+          console.log("FAILED TO DELETE FILE");
+        }
+      }).catch(error => {
+        console.log("FileServer.handlePopupButtonClick Error: " + error);
+        this.setState({
+          popup: "Could not establish connection to server."
+        })
+      });
+    } else if (pop === "move") {
+      let currFile = this.state.currFile;
+      let filePath = this.state.filePath;
+      let oldFilePath;
+      let newFilePath = e.target.absPath.value;
+      if (currFile.isFolder) {
+        oldFilePath = filePath.slice(0, filePath.length-1);
+      } else {
+        oldFilePath = filePath;
+      }
+      axios.get('http://192.168.1.100:4000/moveFile', {
+        params: {
+          oldFilePath: oldFilePath.concat([currFile.name]).join('/'),
+          newFilePath: newFilePath,
+          currFilePath: filePath.join('/'),
+        }
+      }).then(res => {
+        let files = res.data;
+        if (typeof files !== "string") {
+          this.setState({
+            filePath: filePath,
+            contents: files,
+            popup: "Successfully moved: " + currFile.name,
+            currFile: {
+              name: filePath[filePath.length-1],
+              isFolder: true,
+              size: "",
+              lastMod: "",
+            },
+          });
+        } else {
+          console.log("FAILED TO MOVE FILE");
+          this.setState({
+            popup: files,
+          });
+        }
+      }).catch(error => {
+        console.log("FileServer.handlePopupButtonClick Error: " + error);
+        this.setState({
+          popup: "Unable to connect to server.",
+        });
+      });
+    } else {
+      console.log("Unknown state!");
+    }
+  }
+
+  /* Handler for the 'Rename' button being clicked */
+  handleRename() {
+    const currFile = this.state.currFile;
+    const filePath = this.state.filePath;
+    // If there is not a current file, then the user is at the 'root' level,
+    // and still needs to select a file
+    if (currFile.name === "") {
+      this.setState({
+        popup: "You must select a file or folder to rename."
+      })
+    } else if (filePath.length < 2 && currFile.isFolder) {
+      this.setState({
+        popup: "You cannot rename a hard drive."
+      })
+    } else {
+      this.setState({
+        popup: "rename",
       });
     }
   }
@@ -463,325 +749,6 @@ class Interface extends React.Component {
     });
   }
 
-  /* Handler for the 'Download' button being clicked */
-  handleDownload() {
-    const currFile = this.state.currFile;
-    // If there is not a current file, then the user is at the 'root' level,
-    // and still needs to select a drive
-    if (currFile.name === "") {
-      this.setState({
-        popup: "You must select a file or folder to download it."
-      })
-    } else {
-      // Download the file
-      console.log("Download file");
-      let filePath = this.state.filePath;
-      console.log("fp: " + filePath);
-      console.log("fn: " + currFile.name);
-      if (currFile.isFolder) {
-        this.setState({
-          popup: "It may take a moment to create your zip file. Once it is created, the download will begin."
-        })
-      }
-      axios.get('http://192.168.1.100:4000/downloadFile', {
-        responseType: 'blob',
-        params: {
-          path: filePath.slice(0, -1),
-          file: currFile.name,
-          isFolder: currFile.isFolder,
-        }
-      }).then(res => {
-        if (!currFile.isFolder) {
-          fileDownload(res.data, currFile.name);
-        } else {
-          fileDownload(res.data, currFile.name.concat(".zip"))
-          axios.get('http://192.168.1.100:4000/deleteFile', {
-            params: {
-              filePath: ["./tmp"],
-              fileName: currFile.name + ".zip",
-              isFolder: "false",
-            }
-          })
-        }
-      }).catch(error => {
-        console.log("Interface.handleDownload Error: " + error);
-        this.setState({
-          popup: "Could not download the selected file. Please restart the application and try again."
-        })
-      });
-    }
-  }
-
-  /* Handler for the 'Delete' button being clicked */
-  handleDelete() {
-    const currFile = this.state.currFile;
-    const filePath = this.state.filePath;
-    // If there is not a current file, then the user is at the 'root' level,
-    // and still needs to select a file
-    if (currFile.name === "") {
-      this.setState({
-        popup: "You must select a file or folder to delete."
-      })
-    } else if (filePath.length < 2 && currFile.isFolder) {
-      this.setState({
-        popup: "You cannot delete a hard drive."
-      })
-    } else {
-      this.setState({
-        popup: "delete",
-      });
-    }
-  }
-
-  /* Handler for the 'Rename' button being clicked */
-  handleRename() {
-    const currFile = this.state.currFile;
-    const filePath = this.state.filePath;
-    // If there is not a current file, then the user is at the 'root' level,
-    // and still needs to select a file
-    if (currFile.name === "") {
-      this.setState({
-        popup: "You must select a file or folder to rename."
-      })
-    } else if (filePath.length < 2 && currFile.isFolder) {
-      this.setState({
-        popup: "You cannot rename a hard drive."
-      })
-    } else {
-      this.setState({
-        popup: "rename",
-      });
-    }
-  }
-
-  /* Handler for the 'Move' button being clicked */
-  handleMove() {
-    const currFile = this.state.currFile;
-    const filePath = this.state.filePath;
-    // If there is not a current file, then the user is at the 'root' level,
-    // and still needs to select a file
-    if (currFile.name === "") {
-      this.setState({
-        popup: "You must select a file or folder to move."
-      })
-    } else if (filePath.length < 2 && currFile.isFolder) {
-      this.setState({
-        popup: "You cannot move a hard drive."
-      })
-    } else {
-      this.setState({
-        popup: "move",
-      });
-    }
-  }
-
-  /* Handler for submitting the popup form */
-  handlePopupButtonClick(e) {
-    // Prevent default action
-    e.preventDefault();
-    // Depending on the popup status, do something different
-    const pop = this.state.popup;
-
-    if (pop === "new-folder") {
-      // If the popup is for a new folder, try to make one
-      let filePath = this.state.filePath;
-      axios.get('http://192.168.1.100:4000/createFolder', {
-        params: {
-          filePath: filePath,
-          folderName: e.target.folderName.value,
-        }
-      }).then(res => {
-        let files = res.data;
-        if (typeof files !== "string") {
-          this.setState({
-            contents: files,
-            popup: "Successfully created folder: " + e.target.folderName.value,
-          });
-        } else {
-          console.log("FAILED TO MAKE FOLDER");
-          this.setState({
-            popup: files,
-          });
-        }
-      }).catch(error => {
-        console.log("Interface.handlePopupButtonClick Error: " + error);
-        this.setState({
-          popup: "Unable to connect to server.",
-        });
-      });
-    } else if (pop === "rename") {
-      // If the popup is for renaming a file, try to
-      let currFile = this.state.currFile;
-      let filePath;
-      let newFilePath;
-      if (currFile.isFolder) {
-        filePath = this.state.filePath.slice(0, this.state.filePath.length-1);
-        newFilePath = filePath.concat(e.target.newName.value);
-      } else {
-        filePath = this.state.filePath;
-        newFilePath = filePath;
-      }
-      axios.get('http://192.168.1.100:4000/renameFile', {
-        params: {
-          filePath: filePath,
-          newFilePath: newFilePath,
-          oldName: currFile.name,
-          newName: e.target.newName.value,
-        }
-      }).then(res => {
-        let files = res.data;
-        console.log("f: " + files);
-        if (typeof files !== "string") {
-          this.setState({
-            filePath: newFilePath,
-            contents: files,
-            popup: "Successfully renamed: " + e.target.newName.value,
-            currFile: {
-              name: newFilePath[newFilePath.length-1],
-              isFolder: true,
-              size: "",
-              lastMod: "",
-            },
-          });
-        } else {
-          console.log("FAILED TO RENAME FILE");
-          this.setState({
-            popup: files,
-          });
-        }
-      }).catch(error => {
-        console.log("Interface.handlePopupButtonClick Error: " + error);
-        this.setState({
-          popup: "Unable to connect to server.",
-        });
-      });
-    } else if (pop === "delete") {
-      let currFile = this.state.currFile;
-      let filePath;
-      if (currFile.isFolder) {
-        filePath = this.state.filePath.slice(0, this.state.filePath.length-1);
-      } else {
-        filePath = this.state.filePath;
-      }
-      axios.get('http://192.168.1.100:4000/deleteFile', {
-        params: {
-          filePath: filePath,
-          fileName: currFile.name,
-          isFolder: currFile.isFolder,
-        }
-      }).then(res => {
-        let files = res.data;
-        console.log("f: " + files);
-        if (typeof files !== "string") {
-          this.setState({
-            filePath: filePath,
-            contents: files,
-            popup: "Successfully deleted: " + currFile.name,
-            currFile: {
-              name: filePath[filePath.length-1],
-              isFolder: true,
-              size: "",
-              lastMod: "",
-            },
-          });
-        } else {
-          this.setState({
-            popup: files,
-          })
-          console.log("FAILED TO DELETE FILE");
-        }
-      }).catch(error => {
-        console.log("Interface.handlePopupButtonClick Error: " + error);
-        this.setState({
-          popup: "Could not establish connection to server."
-        })
-      });
-    } else if (pop === "move") {
-      let currFile = this.state.currFile;
-      let filePath = this.state.filePath;
-      let oldFilePath;
-      let newFilePath = e.target.absPath.value;
-      if (currFile.isFolder) {
-        oldFilePath = filePath.slice(0, filePath.length-1);
-      } else {
-        oldFilePath = filePath;
-      }
-      axios.get('http://192.168.1.100:4000/moveFile', {
-        params: {
-          oldFilePath: oldFilePath.concat([currFile.name]).join('/'),
-          newFilePath: newFilePath,
-          currFilePath: filePath.join('/'),
-        }
-      }).then(res => {
-        let files = res.data;
-        if (typeof files !== "string") {
-          this.setState({
-            filePath: filePath,
-            contents: files,
-            popup: "Successfully moved: " + currFile.name,
-            currFile: {
-              name: filePath[filePath.length-1],
-              isFolder: true,
-              size: "",
-              lastMod: "",
-            },
-          });
-        } else {
-          console.log("FAILED TO MOVE FILE");
-          this.setState({
-            popup: files,
-          });
-        }
-      }).catch(error => {
-        console.log("Interface.handlePopupButtonClick Error: " + error);
-        this.setState({
-          popup: "Unable to connect to server.",
-        });
-      });
-    } else {
-      console.log("Unknown state!");
-    }
-  }
-
-  /* Handler for the popup 'Cancel' button being clicked */
-  handleClose(e) {
-    e.preventDefault();
-    this.setState({
-      popup: null,
-    });
-  }
-
-  /* Render the folder and file panels */
-  renderPanels(files) {
-    let dirList = [];
-    let fileList = [];
-    if (typeof files !== "undefined") {
-      files.forEach((f) =>{
-        // Separate out the folders and files
-        if (f.isFolder) {
-          dirList.push(f);
-        } else if (!f.isFolder) {
-          fileList.push(f);
-        } else {
-          console.log("renderPanels: Unknown file type.");
-        }
-      });
-    };
-    return (
-      <div className='ui-contents'>
-        <FolderPanel
-          contents={dirList}
-          //onClick={(folderName) => this.handleClick(folderName)}
-          onClick={this.handleFolderClick}
-        />
-        <FilePanel
-          contents={fileList}
-          onClick={this.handleFileClick}
-        />
-      </div>
-    )
-  }
-  
   /* Render the file data in the bottom panel */
   renderFileData() {
     const file = this.state.currFile;
@@ -824,6 +791,37 @@ class Interface extends React.Component {
             </div>
           </div>
         </div>
+      </div>
+    )
+  }
+
+  /* Render the folder and file panels */
+  renderPanels(files) {
+    let dirList = [];
+    let fileList = [];
+    if (typeof files !== "undefined") {
+      files.forEach((f) =>{
+        // Separate out the folders and files
+        if (f.isFolder) {
+          dirList.push(f);
+        } else if (!f.isFolder) {
+          fileList.push(f);
+        } else {
+          console.log("renderPanels: Unknown file type.");
+        }
+      });
+    };
+    return (
+      <div className='ui-contents'>
+        <FolderPanel
+          contents={dirList}
+          //onClick={(folderName) => this.handleClick(folderName)}
+          onClick={this.handleFolderClick}
+        />
+        <FilePanel
+          contents={fileList}
+          onClick={this.handleFileClick}
+        />
       </div>
     )
   }
@@ -912,4 +910,4 @@ class Interface extends React.Component {
   }
 }
 
-export default Interface;
+export default FileServer;
