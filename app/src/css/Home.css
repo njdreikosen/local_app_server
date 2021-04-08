@@ -11,6 +11,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: #bfbfbf;
 }
 button {
   outline: none;
@@ -24,8 +25,19 @@ button {
 .ui-header {
   display: flex;
   flex-direction: row;
+  align-items: center;
   height: 85px;
+  background: #32506e;
 }
+
+.header-title {
+  flex: 1;
+  color: #e6e6e6;
+  /*text-align: center;*/
+  font-size: 45px;
+  padding-left: 50px;
+}
+
 /* Overall icon block */
 .icon-block {
   display: flex;
@@ -67,68 +79,6 @@ button {
   text-align: center;
   font-size: 35px;
 }
-/* Overall breadcrumb styling */
-.breadcrumbs {
-  font-size: 100px;
-  list-style: none;
-  overflow: hidden;
-  margin: 0px;
-  padding-left: 5px;
-  height: 30px;
-  display: relative;
-}
-/* Overall for each individual breadcrumb */
-.breadcrumbs li {
-  float: left;
-}
-/* Button styling for each breadcrumb */
-.breadcrumbs li button {
-  color: #32506e;
-  font-size: 20px;
-  text-decoration: none;
-  padding: 0px 5px 0px 25px;
-  background: #bfbfbf;
-  position: relative;
-  display: block;
-  height: 30px;
-}
-/* Additional triangle and gap pixel */
-.breadcrumbs li button:before,
-.breadcrumbs li button:after {
-  content: " "; 
-  display: block; 
-  width: 0; 
-  height: 0;
-  border-top: 15px solid transparent;
-  border-bottom: 15px solid transparent;
-  position: absolute;
-  top: 50%;
-  margin-top: -15px;
-  left: 100%;
-}
-/* Additional triangle on right of button */
-.breadcrumbs li button:before { 
-  border-left: 15px solid #32506e;
-  margin-left: 1px;
-  z-index: 1; 
-}
-/* Pixel wide gap between each breadcrumb */
-.breadcrumbs li button:after { 
-  border-left: 15px solid #bfbfbf;
-  z-index: 2; 
-}	
-/* Padding in first breadcrumb button */
-.breadcrumbs li:first-child button {
-  padding-left: 10px;
-}
-/* Breadcrumb hover effects */
-.breadcrumbs li button:hover {
-  background-color: peru;
-  border-color: peru;
-}
-.breadcrumbs li button:hover:after {
-  border-left-color: peru;
-}
 
 
 /*============================================================================*/
@@ -140,79 +90,83 @@ button {
   display: flex;
   flex-direction: row;
 }
-/* Folder and file styling */
-.folder-panel,
-.file-panel {
+
+/* */
+.module-panel {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
   background-color: #bfbfbf;
-  flex: 1;
+  max-height: calc(100vh - 95px);
+  border-top: solid 5px #bfbfbf;
+  border-bottom: solid 5px #bfbfbf;
 }
-.folder-panel {
+
+/* Styling for module list headers */
+.list-header {
+  font-size: 60px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: underline;
+  color: #32506e;
+
+}
+/* Folder and file styling */
+.module-list {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
   justify-content: space-evenly;
-  max-height: calc(100vh - 205px);
-  max-width: calc(20vw + 5px);
   padding-top: 10px;
   padding-left: 5px;
   padding-right: 5px;
-  border-top: solid 5px #bfbfbf;
-  border-bottom: solid 5px #bfbfbf;
-  border-right: solid 5px #32506e;
 }
-.file-panel {
-  align-content: flex-start;
-  max-height: calc(100vh - 185px);
-}
+
 /* Scrollbar styling */
-.folder-panel::-webkit-scrollbar,
-.file-panel::-webkit-scrollbar {
+.module-panel::-webkit-scrollbar {
   width: 10px;
 }
-.folder-panel::-webkit-scrollbar-track
-.file-panel::-webkit-scrollbar-track {
-  background-color: #bfbfbf;  
+.module-panel::-webkit-scrollbar-track {
+  background-color: #bfbfbf;
 }
-.folder-panel::-webkit-scrollbar-thumb,
-.file-panel::-webkit-scrollbar-thumb {
+.module-panel::-webkit-scrollbar-thumb {
   background-color: #32506e;
   border-radius: 5px;
+  max-height: 50px;
 }
 /* Folder and File Buttons */
-.folder,
-.file {
-  font-size: 20px;
-  color: #32506e;
-  background-color: #bfbfbf;
+.module-button {
+  font-size: 30px;
+  color: #e6e6e6;
+  background-color: #32506e;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  max-width: 180px;
-  min-height: 120px;
-  max-height: 180px;
+  width: 300px;
+  height: 140px;
   border-radius: 12px;
   overflow: hidden;
-  flex: 1;
-  flex-basis: 120px;
-}
-.folder {
-  margin-bottom: 10px;
-  min-width: 20px;
-}
-.file {
-  align-self: flex-start;
+  flex: 0;
+  flex-basis: 300px;
   margin: 20px;
+  padding-top: 10px;
   min-width: 120px;
 }
+
 /* File button hover effect */
-.folder:hover,
-.file:hover {
-  color: peru;
-  background-color: #32506e;
+.module-button:hover {
+  color: #32506e;
+  background-color: peru;
+}
+.module-button:hover g {
+  fill: #32506e;
 }
 
+.module-svg {
+  margin: -40px;
+}
 
 /*============================================================================*/
 /*                         EMPTY MAIN CONTENT SECTION                         */
@@ -245,218 +199,4 @@ button {
   border-width: 0 9px;
   margin: 24px;
   padding: 24px;
-}
-
-
-/*============================================================================*/
-/*                         BOTTOM INTERACTIVE SECTION                         */
-/*============================================================================*/
-/* Bottom interactive panel, includes folder buttons, file data, and file buttons */
-.bottom-panel {
-  display: flex;
-  min-height: 100px;
-  height: 100px;
-  background-color: #32506e;
-}
-/* Bottom folder and file panels */
-.folder-panel-bottom,
-.file-panel-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-right: 10px;
-  overflow: hidden;
-}
-/* Bottom of folder panel, includes new folder and upload folder buttons */
-.folder-panel-bottom {
-  display: flex;
-  flex-direction: column;
-  width: calc(20vw + 5px);
-  border-right: solid 5px #bfbfbf;
-}
-/* Bottom of the file panel, including file data and buttons */
-.file-panel-bottom {
-  display: flex;
-  padding-left: 10px;
-  flex: 1;
-}
-.folder-panel-bottom button,
-.file-buttons button {
-  color: #32506e;
-  background-color: #bfbfbf;
-  font-size: 20px;
-  height: 35px;
-  width: 150px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-}
-/* New Folder and Upload File Buttons */
-.folder-panel-bottom button {
-  padding-left: 12px;
-  padding-right: 10px;
-  margin-left: 10px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-/* Individual file buttons */
-.file-buttons button {
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  flex: 1;
-}
-/* File data, including icon, name, size, and creation date */
-.file-data,
-.file-data-empty {
-  flex: 1;
-  color: #bfbfbf;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.file-data {
-  padding: 10px;
-}
-/* Empty file data */
-.file-data-empty {
-  font-size: 30px;
-  text-align: center;
-}
-/* Brackets around no file selected message */
-.file-data-empty p {
-  background-image: linear-gradient(#bfbfbf, #bfbfbf),
-                    linear-gradient(#bfbfbf, #bfbfbf),
-                    linear-gradient(#bfbfbf, #bfbfbf),
-                    linear-gradient(#bfbfbf, #bfbfbf);
-  background-repeat: no-repeat;
-  background-size: 16px 6px;
-  background-position: top left, top right, bottom left, bottom right;
-  border: solid #bfbfbf;
-  border-width: 0 6px;
-  margin: 2px;
-  padding: 10px;
-}
-/* Overall file info */
-.fileinfo {
-  margin-left:10px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-/* File name */
-.filename {
-  font-size: 35px;
-  margin-left: 0px;
-  flex: 0;
-}
-/* File statistics */
-.file-stats {
-  font-size: 15px;
-  flex: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-/* Individual file statistics */
-.file-stats div {
-  flex: 1;
-}
-/* Overall file buttons */
-.file-buttons {
-  flex: 0;
-  padding-left: 10px;
-}
-/* Folder and file button hover effects */
-.folder-panel-bottom button:hover,
-.file-buttons button:hover {
-  background-color: peru;
-}
-
-
-/*============================================================================*/
-/*                            POPUP MODAL SECTION                             */
-/*============================================================================*/
-.popup {
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-  background-color: rgba(191,191,191,0.6);
-}
-.popup-modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
-  width: 600px;
-  height: 300px;
-  border-radius: 20px;
-  color: #bfbfbf;
-  background: #32506e;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-}
-
-.popup-msg {
-  font-size: 40px;
-  text-align: center;
-  align-self: center;
-  flex: 0;
-  min-height: 60px;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
-.popup-msg-small {
-  font-size: 30px;
-  text-align: center;
-  align-self: center;
-  flex: 0;
-  min-height: 60px;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
-.popup-input {
-  width: 300px;
-  padding: 10px;
-  font-size: 20px;
-  background-color: #bfbfbf;
-  border-radius: 15px;
-  outline: none;
-}
-
-.popup-buttons {
-  flex: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  width: 90%;
-  min-height: 70px;
-}
-
-.popup-buttons button {
-  flex: 0;
-  color: #32506e;
-  background-color: #bfbfbf;
-  border-radius: 25px;
-  height: 50px;
-  min-width: 120px;
-  font-size: 25px;
-}
-
-.popup-buttons button:hover {
-  background-color: peru;
 }

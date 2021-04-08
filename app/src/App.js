@@ -10,15 +10,6 @@ import Interface from "./Interface"
 function App() {
   return (
     <BrowserRouter>
-      <div>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-            <Link to="/interface">Interface</Link>
-          </li>
-        </ul>
-      </div>
-      <hr />
       <Switch>
         <Route exact path="/">
           <Home />

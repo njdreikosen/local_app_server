@@ -9,6 +9,8 @@ import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
+import { NavLink } from 'react-router-dom';
+
 import './Interface.css';
 
 
@@ -37,7 +39,7 @@ class UIHeader extends React.Component {
     });
     return (
       <div className='ui-header'>
-        <div className='icon-block'>
+        <NavLink className='icon-block' to='/'>
           <div>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.5 8.5" width={size} height={size}>
               <g fill="#e6e6e6">
@@ -55,7 +57,7 @@ class UIHeader extends React.Component {
               </g>
             </svg>
           </div>
-        </div>
+        </NavLink>
         <div className='navbar'>
           <div className="nav-title">
             Remote File Server

@@ -26,6 +26,7 @@ button {
   flex-direction: row;
   height: 85px;
 }
+
 /* Overall icon block */
 .icon-block {
   display: flex;
@@ -36,19 +37,31 @@ button {
   background-color: #32506e;
   border-right: solid 5px #bfbfbf;
 }
+
+/* When hovering on the icon block, change color */
+.icon-block:hover .connection-circle {
+  border: solid 5px peru;
+}
+.icon-block:hover .connection-line {
+  background: peru;
+}
+.icon-block:hover g {
+  fill: peru;
+}
+
 /* Circle and line of connection icon */
 .connection-circle {
   min-width: 10px;
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  border: solid 5px #bfbfbf;
+  border: solid 5px #e6e6e6;
   flex: 0;
 }
 .connection-line {
   min-width: 5px;
   height: 5px;
-  background: #bfbfbf;
+  background: #e6e6e6;
   margin: -2px;
   flex: 1;
 }
