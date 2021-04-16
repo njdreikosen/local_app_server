@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch, Link } from 'react-router-dom'
 
 // Import all required modules here
 import Home from "./Home"
+import Calendar from "./Calendar"
 import FileServer from "./FileServer"
 
 //import './App.css';
@@ -13,6 +14,9 @@ function App() {
       <Switch>
         <Route exact path="/">
           <Home />
+        </Route>
+        <Route path="/calendar">
+          <Calendar />
         </Route>
         <Route path="/file_server">
           <FileServer />

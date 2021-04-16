@@ -39,6 +39,12 @@ rfsRoutes.route('/getModules').get(function(req, res) {
     res.json(mods);
 });
 
+rfsRoutes.route('/getMonth').get(function(req, res) {
+    //let month = filesystem.getMonth(req.query.month, req.query.year);
+    let month = {month: "032021", events: [{eName: "April Fools", eDate: "04.01"}, {eName: "Test Day", eDate: "04.23"}]}
+    res.json(month);
+});
+
 rfsRoutes.route('/createFolder').get(function(req, res) {
     let newFiles = filesystem.createFolder(req.query.filePath, req.query.folderName);
     res.json(newFiles);

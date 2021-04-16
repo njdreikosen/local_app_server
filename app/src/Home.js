@@ -46,7 +46,7 @@ class Home extends React.Component {
           <div className='module-list'>
             <NavLink
               className='module-button'
-              to='/'
+              to='/calendar'
             >
               <div className='module-svg'>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.5 8.5" width="150px" height="150px">
