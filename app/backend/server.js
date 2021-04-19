@@ -3,23 +3,26 @@ const filesystem = require('./filesystem');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const rfsRoutes = express.Router();
+const routes = express.Router();
 const multer = require('multer');
-//const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const PORT = 4000;
 
-//let rfs = require('./rfs.model');
-
+/* General setup */
 app.use(cors())
 app.use(bodyParser.json());
 
-//mongoose.connect('mongodb://127.0.0.1:27017/remote-file-server', { useNewUrlParser: true });
-//const connection = mongoose.connection;
+/* Database initialization */
+let events = require('./events.model');
+let dbURI = "mongodb://127.0.0.1:27017/remote-server"
 
-//connection.once('open', function() {
-//    console.log("MongoDB database connection established successfully");
-//});
+mongoose.connect(uri, {useNewUrlParser: true});
+const connection = mongoose.connection;
+connection.once('open', function() {
+    console.log("MongoDB database connection established successfully");
+});
 
+/* File Server storage setup */
 var storage = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, "./");
@@ -30,56 +33,86 @@ var storage = multer.diskStorage({
 });
 var uploadDisk = multer({ storage: storage });
 
-rfsRoutes.route('/').get(function(req, res) {
+/* Home route */
+routes.route('/').get(function(req, res) {
     res.json({});
 });
 
-rfsRoutes.route('/getModules').get(function(req, res) {
+/*===========================================================================*/
+/*                              Database Routes                              */
+/*===========================================================================*/
+routes.route('/insertEvent').post(function(req, res) {
+    res.send("This function not yet implemented.");
+});
+
+routes.route('/getMonth').get(function(req, res) {
+    let month = req.query.month;
+    let year = req.query.year;
+    let queryString = month + "[0-9][0-9]" + year;
+    try {
+        let monthEvents = events.find({ eDate: queryString }, 'eName eDate').lean();
+        console.log("Start monthEvents");
+        console.log(JSON.stringify(monthEvents));
+        console.log("Breakpoint");
+        console.log(monthEvents);
+        console.log("End monthEvents.");
+        res.json(monthEvents);
+    } catch (err) {
+        console.log(err);
+        res.send(err);
+    }
+});
+
+/*===========================================================================*/
+/*                         Remote File Server Routes                         */
+/*===========================================================================*/
+
+routes.route('/getModules').get(function(req, res) {
     let mods = filesystem.getModules();
     res.json(mods);
 });
 
-rfsRoutes.route('/getMonth').get(function(req, res) {
+/*routes.route('/getMonth').get(function(req, res) {
     //let month = filesystem.getMonth(req.query.month, req.query.year);
     let month = {month: "032021", events: [{eName: "April Fools", eDate: "04.01"}, {eName: "Test Day", eDate: "04.23"}]}
     res.json(month);
-});
+});*/
 
-rfsRoutes.route('/createFolder').get(function(req, res) {
+routes.route('/createFolder').get(function(req, res) {
     let newFiles = filesystem.createFolder(req.query.filePath, req.query.folderName);
     res.json(newFiles);
 });
 
-rfsRoutes.route('/renameFile').get(function(req, res) {
+routes.route('/renameFile').get(function(req, res) {
     let newFiles = filesystem.renameFile(req.query.filePath, req.query.newFilePath, req.query.oldName, req.query.newName);
     res.json(newFiles);
 });
 
-rfsRoutes.route('/deleteFile').get(function(req, res) {
+routes.route('/deleteFile').get(function(req, res) {
     let newFiles = filesystem.deleteFile(req.query.filePath, req.query.fileName, req.query.isFolder);
     res.json(newFiles);
 });
 
-rfsRoutes.route('/moveFile').get(function(req, res) {
+routes.route('/moveFile').get(function(req, res) {
     let newFiles = filesystem.moveFile(req.query.oldFilePath, req.query.newFilePath, req.query.currFilePath);
     console.log(newFiles);
     res.json(newFiles);
 });
 
-rfsRoutes.route('/getDrives').get(async function(req, res) {
+routes.route('/getDrives').get(async function(req, res) {
     const drives = await filesystem.getDrives();
     console.log("DRIVES: " + drives);
     res.json(drives);
 });
 
-rfsRoutes.route('/getFiles').get(function(req, res) {
+routes.route('/getFiles').get(function(req, res) {
     console.log("params: " + req.query.folder);
     let files = filesystem.getFiles(req.query.folder);
     console.log("FILES: " + JSON.stringify(files));
     res.json(files);
 });
 
-rfsRoutes.route('/downloadFile').get(function(req, res) {
+routes.route('/downloadFile').get(function(req, res) {
     let isFolder = req.query.isFolder;
     let filePath = req.query.path;
     let fileName = req.query.file;
@@ -103,12 +136,12 @@ rfsRoutes.route('/downloadFile').get(function(req, res) {
     res.download(fp, req.query.file);
 });
 
-rfsRoutes.route('/uploadFile').post(uploadDisk.single('file'), function(req, res) {
+routes.route('/uploadFile').post(uploadDisk.single('file'), function(req, res) {
     console.log("File uploaded to disk")
     res.send("Success")
 });
 
-app.use('/', rfsRoutes);
+app.use('/', routes);
 
 app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);

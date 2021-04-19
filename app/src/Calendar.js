@@ -95,9 +95,9 @@ class PopUp extends React.Component {
         console.log(event);
         return (
           <div
-            key={event.name}
+            key={event.eName}
           >
-            {event.name}
+            {event.eName}
           </div>
         )
       })
@@ -144,7 +144,7 @@ class Calendar extends React.Component {
     // Get todays date in order to get data for the current month
     let today = new Date();
     // Define drives in case an error occurs
-    let monthData;
+    let monthEvents;
     // Get drives on remote server
     axios.get('http://192.168.1.100:4000/getMonth', {
       params: {
@@ -152,10 +152,11 @@ class Calendar extends React.Component {
         year: today.getFullYear(),
       }
     }).then(res => {
-      monthData = res.data;
+      monthEvents = res.data;
+      console.log("mE: " + monthEvents);
       this.setState({
-        month: monthData.month,
-        events: monthData.events,
+        month: String(today.getMonth).padStart(2, '0') + today.getFullYear,
+        events: monthEvents,
       });
     }).catch(error => {
       console.log("Calendar.componentDidMount Error: " + error);
@@ -193,9 +194,9 @@ class Calendar extends React.Component {
         return (
           <div
             className='day-events'
-            key={e.name}
+            key={e.eName}
           >
-            {e.name}
+            {e.eName}
           </div>
         )
       })
@@ -229,7 +230,7 @@ class Calendar extends React.Component {
     }
     // Iterate through the events, and add them to the days
     for (i = 0; i < events.length; i ++) {
-      let dayNum = parseInt(events[i].date.slice(2,4), 10);
+      let dayNum = parseInt(events[i].eDate.slice(2,4), 10);
       days[dayNum].events.push(events[i]);
     }
     // Iterate through the days, and set the display based on the events
@@ -244,7 +245,7 @@ class Calendar extends React.Component {
         let e;
         console.log("len: " + days[i].events.length);
         for (e = 0; e < days[i].events.length; e ++) {
-          days[i].display += days[i].events[e].name;
+          days[i].display += days[i].events[e].eName;
           days[i].display += "\n";
         }
       }
