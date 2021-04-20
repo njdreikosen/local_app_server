@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const routes = express.Router();
 const multer = require('multer');
-const mongoose = require('mongoose');
 const PORT = 4000;
 
 /* General setup */
@@ -13,14 +12,6 @@ app.use(cors())
 app.use(bodyParser.json());
 
 /* Database initialization */
-let events = require('./events.model');
-let dbURI = "mongodb://127.0.0.1:27017/remote-server"
-
-mongoose.connect(uri, {useNewUrlParser: true});
-const connection = mongoose.connection;
-connection.once('open', function() {
-    console.log("MongoDB database connection established successfully");
-});
 
 /* File Server storage setup */
 var storage = multer.diskStorage({
@@ -49,18 +40,6 @@ routes.route('/getMonth').get(function(req, res) {
     let month = req.query.month;
     let year = req.query.year;
     let queryString = month + "[0-9][0-9]" + year;
-    try {
-        let monthEvents = events.find({ eDate: queryString }, 'eName eDate').lean();
-        console.log("Start monthEvents");
-        console.log(JSON.stringify(monthEvents));
-        console.log("Breakpoint");
-        console.log(monthEvents);
-        console.log("End monthEvents.");
-        res.json(monthEvents);
-    } catch (err) {
-        console.log(err);
-        res.send(err);
-    }
 });
 
 /*===========================================================================*/
