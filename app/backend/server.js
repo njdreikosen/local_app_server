@@ -15,9 +15,9 @@ app.use(bodyParser.json());
 /* Database initialization */
 let connectionPool = mysql.createPool({
     connectionLimit: 5,
-    host: localhost,
-    user: 'root',
-    password: '',
+    host: 'localhost',
+    user: 'remote_server',
+    password: 'remote_server',
     database: 'remote_server'
 });
 
@@ -27,24 +27,22 @@ connectionPool.getConnection(function(err, connection) {
         connection.release();
     } else {
         // Try and create the database
-        try {
-            connection.query("CREATE DATABASE remote_server", function(err, result) {
-                if (err) throw err;
+        connection.query("CREATE DATABASE remote_server", function(err, result) {
+            if (err) {
+                console.log("Database already created: " + err);
+            } else {
                 console.log("Created database.");
-            });
-        } catch (createErr) {
-            console.log("Database already created: " + createErr);
-        }
+            }
+        });
         // Try and create the table
-        try {
-            let eventTable = "CREATE TABLE events (eID int NOT NULL AUTO_INCREMENT, eName varchar(25) NOT NULL, eDate char(8))";
-            connection.query(eventTable, function (err, result) {
-                if (err) throw err;
+        let eventTable = "CREATE TABLE events (eID int NOT NULL AUTO_INCREMENT, eName varchar(25) NOT NULL, eDate char(8), PRIMARY KEY (eID))";
+        connection.query(eventTable, function (err, result) {
+            if (err) {
+                console.log("Event Table already created: " + err);
+            } else {
                 console.log("Event Table created");
-            })
-        } catch (createErr) {
-            console.log("Table already created: " + createErr);
-        }
+            }
+        });
         connection.release();
     }
 });
@@ -158,23 +156,23 @@ routes.route('/uploadFile').post(uploadDisk.single('file'), function(req, res) {
 
 app.use('/', routes);
 
-app.listen(PORT, function() {
+const appServer = app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);
 });
 
 function GracefulShutdown() {
     console.log("Closing server gracefully...");
 
-    app.close(() => {
+    appServer.close(() => {
         console.log("Server closed.");
-        mysql.createPool.end(function(err) {
+        connectionPool.end(function(err) {
             if (err) {
                 console.log("DBerror: " + err);
             } else {
                 console.log("Closed DB connections")
             }
+            process.exit(0);
         })
-        process.exit(0);
     })
 }
 
