@@ -1,5 +1,6 @@
 const express = require('express');
 const filesystem = require('./filesystem');
+const mysql = require('mysql');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -12,6 +13,41 @@ app.use(cors())
 app.use(bodyParser.json());
 
 /* Database initialization */
+let connectionPool = mysql.createPool({
+    connectionLimit: 5,
+    host: localhost,
+    user: 'root',
+    password: '',
+    database: 'remote_server'
+});
+
+connectionPool.getConnection(function(err, connection) {
+    if (err) {
+        console.log("PoolErr: " + err);
+        connection.release();
+    } else {
+        // Try and create the database
+        try {
+            connection.query("CREATE DATABASE remote_server", function(err, result) {
+                if (err) throw err;
+                console.log("Created database.");
+            });
+        } catch (createErr) {
+            console.log("Database already created: " + createErr);
+        }
+        // Try and create the table
+        try {
+            let eventTable = "CREATE TABLE events (eID int NOT NULL AUTO_INCREMENT, eName varchar(25) NOT NULL, eDate char(8))";
+            connection.query(eventTable, function (err, result) {
+                if (err) throw err;
+                console.log("Event Table created");
+            })
+        } catch (createErr) {
+            console.log("Table already created: " + createErr);
+        }
+        connection.release();
+    }
+});
 
 /* File Server storage setup */
 var storage = multer.diskStorage({
@@ -125,3 +161,23 @@ app.use('/', routes);
 app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);
 });
+
+function GracefulShutdown() {
+    console.log("Closing server gracefully...");
+
+    app.close(() => {
+        console.log("Server closed.");
+        mysql.createPool.end(function(err) {
+            if (err) {
+                console.log("DBerror: " + err);
+            } else {
+                console.log("Closed DB connections")
+            }
+        })
+        process.exit(0);
+    })
+}
+
+process.on('SIGTERM', GracefulShutdown);
+process.on('SIGINT', GracefulShutdown);
+process.on('SIGHUP', GracefulShutdown);
