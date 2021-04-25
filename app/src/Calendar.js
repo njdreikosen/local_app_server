@@ -2,12 +2,17 @@ import React from 'react';
 import axios from 'axios';
 //import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
+
 
 import './css/Calendar.css';
 import { NavLink } from 'react-router-dom';
 
 class CalendarHeader extends React.Component {
   render() {
+    const leftArrow = <FontAwesomeIcon icon={faArrowCircleLeft} size="1x" />;
+    const rightArrow = <FontAwesomeIcon icon={faArrowCircleRight} size="1x" />;
     let path = this.props.path;
     let size;
     if (window.innerWidth < 580) {
@@ -38,10 +43,22 @@ class CalendarHeader extends React.Component {
             </svg>
           </div>
         </NavLink>
-        <div className='navbar'>
-          <div className="month">
+        <div className='month-navbar'>
+          <button
+            className='month-arrow'
+            onClick={(e) => this.props.onClick('prev')}
+          >
+            {leftArrow}
+          </button>
+          <div className='month'>
             {this.props.month}
           </div>
+          <button
+            className='month-arrow'
+            onClick={(e) => this.props.onClick('next')}
+          >
+            {rightArrow}
+          </button>
         </div>
       </div>
     )
@@ -160,6 +177,43 @@ class Calendar extends React.Component {
       });
     }).catch(error => {
       console.log("Calendar.componentDidMount Error: " + error);
+    });
+  }
+
+  handleArrowClick(direction) {
+    let month = parseInt(this.state.month.slice(0, 2), 10);
+    let year = parseInt(this.state.month.slice(2));
+    if (direction === 'prev') {
+      month = month - 1;
+      if (month < 0) {
+        month = (month + 12) % 12;
+        year = year - 1;
+      }
+    } else if (direction === 'next') {
+      month = month + 1;
+      if (month > 11) {
+        month = month % 12;
+        year = year + 1; 
+      }
+    } else {
+      console.log("An unexpected error occured.")
+      return;
+    }
+
+    let monthEvents;
+    axios.get('http://192.168.1.100:4000/getMonth', {
+      params: {
+        month: String(month).padStart(2, '0'),
+        year: year,
+      }
+    }).then(res => {
+      monthEvents = res.data;
+      this.setState({
+        month: String(month).padStart(2, '0') + year,
+        events: monthEvents,
+      });
+    }).catch(error => {
+      console.log("Calendar.arrowClick Error: " + error);
     });
   }
 
@@ -299,6 +353,7 @@ class Calendar extends React.Component {
       <div className='ui'>
         <CalendarHeader
           month={month}
+          onClick={this.handleArrowClick}
         />
         <PopUp
           contents={this.state.popup}
