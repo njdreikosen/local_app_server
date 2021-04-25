@@ -210,7 +210,6 @@ class Calendar extends React.Component {
     let month = parseInt(this.state.month.slice(0,2), 10);
     let year = this.state.month.slice(2);
     let events = this.state.events;
-    //console.log("Month: " + month + ", Year: " + year + ", Events: " + events);
     
     // Calculate the number of days in the month
     let numDaysInMonth = this.getDaysInMonth(month, year);

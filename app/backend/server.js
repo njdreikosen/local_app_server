@@ -1,4 +1,5 @@
 const express = require('express');
+const helper = require('./helper');
 const filesystem = require('./filesystem');
 const mysql = require('mysql');
 const app = express();
@@ -21,10 +22,10 @@ let connectionPool = mysql.createPool({
     database: 'remote_server'
 });
 
+// Database initialization
 connectionPool.getConnection(function(err, connection) {
     if (err) {
         console.log("PoolErr: " + err);
-        connection.release();
     } else {
         // Try and create the database
         connection.query("CREATE DATABASE remote_server", function(err, result) {
@@ -34,18 +35,46 @@ connectionPool.getConnection(function(err, connection) {
                 console.log("Created database.");
             }
         });
-        // Try and create the table
-        let eventTable = "CREATE TABLE events (eID int NOT NULL AUTO_INCREMENT, eName varchar(25) NOT NULL, eDate char(8), PRIMARY KEY (eID))";
+        // Try and create the event table
+        let eventTable = "CREATE TABLE events (eID char(44) NOT NULL, eName varchar(25) NOT NULL, eDate char(8), PRIMARY KEY (eID))";
         connection.query(eventTable, function (err, result) {
             if (err) {
                 console.log("Event Table already created: " + err);
             } else {
                 console.log("Event Table created");
+                // Populate the event table with common events
+                let commonEvents = [{eName: "New Year's Day", eDate: "0001...."},
+                    {eName: "Valentine's Day", eDate: "0114...."},
+                    {eName: "St. Patrick's Day", eDate: "0217...."},
+                    {eName: "April Fool's Day", eDate: "0301...."},
+                    {eName: "Cinco de Mayo", eDate: "0405...."},
+                    {eName: "Independence Day", eDate: "0604...."},
+                    {eName: "Halloween", eDate: "0931...."},
+                    {eName: "Chirstmas Eve", eDate: "1124...."},
+                    {eName: "Christmas", eDate: "1125...."},
+                    {eName: "New Year's Eve", eDate: "1131...."}];
+                let eventHash, eventName, eventDate, eventInsert;
+                for (let i = 0; i < commonEvents.length; i ++) {
+                    eventName = commonEvents[i].eName;
+                    eventDate = commonEvents[i].eDate;
+                    eventHash = helper.hashStrings(eventName, eventDate);
+                    console.log("Name: " + eventName + ", Date: " + eventDate + ", ID: " + eventHash);
+                    eventInsert = `INSERT INTO events (eID, eName, eDate) VALUES ('${eventHash}', '${eventName}', '${eventDate}')`;
+                    console.log(eventInsert);
+                    connection.query(eventInsert, function (err, result) {
+                        if (err) {
+                            console.log("InsertErr: " + err);
+                        } else {
+                            console.log("Inserted Event");
+                        }
+                    });
+                }
             }
         });
-        connection.release();
     }
+    connection.release();
 });
+
 
 /* File Server storage setup */
 var storage = multer.diskStorage({
@@ -73,7 +102,14 @@ routes.route('/insertEvent').post(function(req, res) {
 routes.route('/getMonth').get(function(req, res) {
     let month = req.query.month;
     let year = req.query.year;
-    let queryString = month + "[0-9][0-9]" + year;
+    //let queryString = month + "[0-9][0-9]" + year;
+    let queryString = `SELECT eName, eDate FROM events WHERE eDate LIKE '${month}##${year}' OR eDate LIKE '${month}##....'`;
+    console.log("getMonthQuery: " + queryString);
+    connection.query(queryString, function (err, result) {
+        if (err) res.send("getMonthErr: " + err);
+        console.log(result);
+        res.json(result);
+    });
 });
 
 /*===========================================================================*/
@@ -84,12 +120,6 @@ routes.route('/getModules').get(function(req, res) {
     let mods = filesystem.getModules();
     res.json(mods);
 });
-
-/*routes.route('/getMonth').get(function(req, res) {
-    //let month = filesystem.getMonth(req.query.month, req.query.year);
-    let month = {month: "032021", events: [{eName: "April Fools", eDate: "04.01"}, {eName: "Test Day", eDate: "04.23"}]}
-    res.json(month);
-});*/
 
 routes.route('/createFolder').get(function(req, res) {
     let newFiles = filesystem.createFolder(req.query.filePath, req.query.folderName);
