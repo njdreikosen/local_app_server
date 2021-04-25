@@ -104,8 +104,9 @@ routes.route('/getMonth').get(function(req, res) {
     let year = req.query.year;
     let queryString = `SELECT eName, eDate FROM events WHERE eDate LIKE '${month}##${year}' OR eDate LIKE '${month}##....'`;
     console.log("getMonthQuery: " + queryString);
-    let rows = db.getRows(queryString);
-    res.json(rows);
+    db.getRows(queryString).then(rows => {
+        res.json(rows);
+    });
 });
 
 /*===========================================================================*/

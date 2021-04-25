@@ -15,7 +15,7 @@ const pool = connectionPool.promise();
 initDB();
 
 
-function initDB() {
+async function initDB() {
     // Create the database if it isn't already created
     try {
         await pool.query("CREATE DATABASE remote_server");
@@ -58,9 +58,9 @@ function initDB() {
     return;
 }
 
-function getRows(queryString) {
+async function getRows(queryString) {
     try {
-        let [rows, fields] = pool.execute(queryString);
+        let [rows, fields] = await pool.execute(queryString);
         console.log("rows: " + rows);
         console.log("fields: " + fields);
         return rows;
