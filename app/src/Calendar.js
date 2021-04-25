@@ -155,7 +155,7 @@ class Calendar extends React.Component {
       monthEvents = res.data;
       console.log("mE: " + monthEvents);
       this.setState({
-        month: String(today.getMonth).padStart(2, '0') + today.getFullYear,
+        month: String(today.getMonth()).padStart(2, '0') + today.getFullYear(),
         events: monthEvents,
       });
     }).catch(error => {
