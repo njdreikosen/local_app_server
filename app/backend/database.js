@@ -42,7 +42,7 @@ function initDB() {
         for (let i = 0; i < commonEvents.length; i ++) {
             eventName = commonEvents[i].eName;
             eventDate = commonEvents[i].eDate;
-            eventHash = helper.hashStrings(eventName, eventDate);
+            eventHash = hashStrings(eventName, eventDate);
             eventInsert = `INSERT INTO events (eID, eName, eDate) VALUES ('${eventHash}', '${eventName}', '${eventDate}')`;
             console.log("Name: " + eventName + ", Date: " + eventDate + ", ID: " + eventHash);
             console.log(eventInsert);
@@ -75,4 +75,3 @@ function hashStrings(str1, str2) {
 }
 
 exports.getRows = getRows;
-exports.hashStrings = hashStrings;
