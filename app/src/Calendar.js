@@ -148,7 +148,7 @@ class Calendar extends React.Component {
     // Get drives on remote server
     axios.get('http://192.168.1.100:4000/getMonth', {
       params: {
-        month: today.getMonth(),
+        month: String(today.getMonth()).padStart(2, '0'),
         year: today.getFullYear(),
       }
     }).then(res => {

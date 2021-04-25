@@ -1,7 +1,7 @@
 const express = require('express');
-const helper = require('./helper');
+const db = require('./database');
 const filesystem = require('./filesystem');
-const mysql = require('mysql');
+//const mysql = require('mysql');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -13,7 +13,7 @@ const PORT = 4000;
 app.use(cors())
 app.use(bodyParser.json());
 
-/* Database initialization */
+/* Database initialization
 let connectionPool = mysql.createPool({
     connectionLimit: 5,
     host: 'localhost',
@@ -73,7 +73,7 @@ connectionPool.getConnection(function(err, connection) {
         });
     }
     connection.release();
-});
+});*/
 
 
 /* File Server storage setup */
@@ -102,14 +102,10 @@ routes.route('/insertEvent').post(function(req, res) {
 routes.route('/getMonth').get(function(req, res) {
     let month = req.query.month;
     let year = req.query.year;
-    //let queryString = month + "[0-9][0-9]" + year;
     let queryString = `SELECT eName, eDate FROM events WHERE eDate LIKE '${month}##${year}' OR eDate LIKE '${month}##....'`;
     console.log("getMonthQuery: " + queryString);
-    connection.query(queryString, function (err, result) {
-        if (err) res.send("getMonthErr: " + err);
-        console.log(result);
-        res.json(result);
-    });
+    let rows = db.getRows(queryString);
+    res.json(rows);
 });
 
 /*===========================================================================*/
