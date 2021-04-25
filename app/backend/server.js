@@ -102,7 +102,7 @@ routes.route('/insertEvent').post(function(req, res) {
 routes.route('/getMonth').get(function(req, res) {
     let month = req.query.month;
     let year = req.query.year;
-    let queryString = `SELECT eName, eDate FROM events WHERE eDate LIKE '${month}##${year}' OR eDate LIKE '${month}##....'`;
+    let queryString = `SELECT eName, eDate FROM events WHERE eDate LIKE '${month}__${year}' OR eDate LIKE '${month}__....'`;
     console.log("getMonthQuery: " + queryString);
     db.getRows(queryString).then(rows => {
         res.json(rows);

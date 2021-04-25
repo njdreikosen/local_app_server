@@ -47,7 +47,7 @@ async function initDB() {
             console.log("Name: " + eventName + ", Date: " + eventDate + ", ID: " + eventHash);
             console.log(eventInsert);
             try {
-                connection.query(eventInsert);
+                await pool.execute('INSERT INTO events (eID, eName, eDate) VALUES (?, ?, ?)', [eventHash, eventName, eventDate]);
             } catch (insertErr) {
                 console.log("InsertErr: " + insertErr);
             }
@@ -61,8 +61,8 @@ async function initDB() {
 async function getRows(queryString) {
     try {
         let [rows, fields] = await pool.execute(queryString);
-        console.log("rows: " + rows);
-        console.log("fields: " + fields);
+        console.log("rows: " + JSON.stringify(rows));
+        console.log("fields: " + JSON.stringify(fields));
         return rows;
     } catch (err) {
         console.log("getEventsErr: " + err);
