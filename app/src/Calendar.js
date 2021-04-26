@@ -78,12 +78,12 @@ class PopUp extends React.Component {
     } else if (this.props.contents[0] === 'add') {
       return (
         <form className='popup' onSubmit={(e) => this.props.onSubmit(this.props.contents[1], e)}>
-          <div className='day-popup'>
+          <div className='event-popup'>
             <div className='popup-title'>
-              New Event Name:
+              Enter New Event Name:
             </div>
-            <input type='text' name='eventName' placeholder='New-Event-Name' autoComplete='off' className='popup-input'/>
-            <div className='popup-buttons'>
+            <input type='text' name='eventName' placeholder='New-Event-Name' autoComplete='off' className='event-input'/>
+            <div className='day-buttons'>
               <button type='submit'>
                 Add
               </button>
