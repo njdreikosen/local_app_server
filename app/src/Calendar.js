@@ -75,6 +75,25 @@ class PopUp extends React.Component {
     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     if (this.props.contents == null){
       return null;
+    } else if (this.props.contents === 'add') {
+      return (
+        <form className='popup' onSubmit={(e) => this.props.onSubmit(e)}>
+          <div className='day-popup'>
+            <div className='popup-title'>
+              New Event Name:
+            </div>
+            <input type='text' name='eventName' placeholder='New-Event-Name' autoComplete='off' className='popup-input'/>
+            <div className='popup-buttons'>
+              <button type='submit'>
+                Add
+              </button>
+              <button onClick={(e) => this.props.onClick('close', e)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </form>
+      )
     } else if (this.props.contents.events.length === 0) {
       let day = this.props.contents;
       let dayMonth = monthList[parseInt(day.day.slice(0,2),10)];
@@ -91,10 +110,10 @@ class PopUp extends React.Component {
               <p>No Events</p>
             </div>
             <div className='day-buttons'>
-              <button onClick={(e) => this.props.onClick(e)}>
+              <button onClick={(e) => this.props.onClick('add', e)}>
                 Add Event
               </button>
-              <button onClick={(e) => this.props.onClick(e)}>
+              <button onClick={(e) => this.props.onClick('close', e)}>
                 Close
               </button>
             </div>
@@ -107,9 +126,7 @@ class PopUp extends React.Component {
       let dayNum = day.day.slice(2,4);
       let dayYear = day.day.slice(4,8);
       let dayName = dayNames[new Date(parseInt(dayYear), parseInt(day.day.slice(0,2), 10), parseInt(dayNum, 10)).getDay()];
-      console.log(dayMonth + " " + dayNum + ", " + dayYear);
       let eventList = day.events.map((event) => {
-        console.log(event);
         return (
           <div
             key={event.eName}
@@ -130,10 +147,10 @@ class PopUp extends React.Component {
               </div>
             </div>
             <div className='day-buttons'>
-              <button onClick={(e) => this.props.onClick(e)}>
+              <button onClick={(e) => this.props.onClick('add', e)}>
                 Add Event
               </button>
-              <button onClick={(e) => this.props.onClick(e)}>
+              <button onClick={(e) => this.props.onClick('close', e)}>
                 Close
               </button>
             </div>
@@ -149,7 +166,8 @@ class Calendar extends React.Component {
   constructor(props) {
     super(props);
     this.handleArrowClick = this.handleArrowClick.bind(this);
-    this.handleClose = this.handleClose.bind(this);
+    this.handlePopupButtonClick = this.handlePopupButtonClick.bind(this);
+    //this.handleClose = this.handleClose.bind(this);
     this.state = {
       month: "",
       events: [],
@@ -171,7 +189,6 @@ class Calendar extends React.Component {
       }
     }).then(res => {
       monthEvents = res.data;
-      console.log("mE: " + monthEvents);
       this.setState({
         month: String(today.getMonth()).padStart(2, '0') + today.getFullYear(),
         events: monthEvents,
@@ -181,9 +198,12 @@ class Calendar extends React.Component {
     });
   }
 
+  handleAddEvent(e) {
+    e.preventDefault();
+    console.log(e.target.eventName.value)
+  }
+
   handleArrowClick(direction) {
-    console.log("state: " + JSON.stringify(this.state));
-    console.log(this.state);
     let month = parseInt(this.state.month.slice(0, 2), 10);
     let year = parseInt(this.state.month.slice(2));
     if (direction === 'prev') {
@@ -199,7 +219,7 @@ class Calendar extends React.Component {
         year = year + 1; 
       }
     } else {
-      console.log("An unexpected error occured.")
+      console.log("arrowClickErr: An unexpected error occured.")
       return;
     }
 
@@ -220,17 +240,30 @@ class Calendar extends React.Component {
     });
   }
 
-  handleClose(e) {
+  /*handleClose(e) {
     e.preventDefault();
     this.setState({
       popup: null,
     });
-  }
+  }*/
 
   handleDayClick(events) {
     this.setState({
       popup: events
     });
+  }
+
+  handlePopupButtonClick(action, e) {
+    e.preventDefault();
+    if (action === 'add') {
+      this.setState({
+        popup: 'add',
+      });
+    } else {
+      this.setState({
+        popup: null,
+      });
+    }
   }
 
   /* Gets the number of days in month by getting the '0th' day of the next month,
@@ -240,7 +273,7 @@ class Calendar extends React.Component {
   }
 
   renderEvents(events) {
-    if (events.length > 2) {
+    if (events.length > 1) {
       return (
         <div className='day-events'>
           {events.length + " events"}
@@ -284,8 +317,6 @@ class Calendar extends React.Component {
       let dayString = this.state.month.slice(0,2) + String(i+1).padStart(2, '0') + this.state.month.slice(2);
       days.push({day: dayString, display: "", events: []})
     }
-    console.log("daysssss: " + JSON.stringify(days));
-    console.log(days);
     // Iterate through the events, and add them to the days
     for (i = 0; i < events.length; i ++) {
       let dayNum = parseInt(events[i].eDate.slice(2,4), 10);
@@ -294,14 +325,12 @@ class Calendar extends React.Component {
     // Iterate through the days, and set the display based on the events
     for (i = 0; i < days.length; i ++) {
       let numEvents = days[i].events.length;
-      console.log("nE: " + numEvents);
       if (numEvents === 0) {
         days[i].display = "";
       } else if (numEvents > 2) {
         days[i].display = numEvents + " events";
       } else {
         let e;
-        console.log("len: " + days[i].events.length);
         for (e = 0; e < days[i].events.length; e ++) {
           days[i].display += days[i].events[e].eName;
           days[i].display += "\n";
@@ -317,9 +346,6 @@ class Calendar extends React.Component {
       days.push({day: "", events: []});
     }
 
-    console.log(days);
-    // className={`${index < startDayIndex ? 'day-blank' : 'day'}`}
-    // className='day'
     let index = 0;
     const dayButtons = days.map((day) => {
       index ++; 
@@ -362,7 +388,8 @@ class Calendar extends React.Component {
         />
         <PopUp
           contents={this.state.popup}
-          onClick={this.handleClose}
+          onSubmit={this.handleAddEvent}
+          onClick={this.handlePopupButtonClick}
         />
         {this.renderWeeks()}
       </div>

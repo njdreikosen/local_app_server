@@ -70,7 +70,7 @@ button {
   flex: 1;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-evenly;
   background-color: #32506e;
   border-bottom: solid 5px #32506e;
 }
@@ -84,15 +84,15 @@ button {
 
 /* Month Name in Title Block */
 .month {
-  flex: 0;
-  color: #bfbfbf;
+  flex: 1;
+  color: #e6e6e6;
   text-align: center;
   font-size: 60px;
 }
 
 .month-arrow {
-  flex: 0;
-  color: #bfbfbf;
+  flex: 1;
+  color: #e6e6e6;
   background-color: #32506e;
   font-size: 50px;
   padding-left: 20px;
@@ -163,15 +163,17 @@ button {
 }
 
 .day-num {
+  flex: 0;
   align-self: flex-end;
   padding-bottom: 10px;
 }
 
 .day-events {
+  flex: 1;
   color: #32506e;
-  font-size: 20px;
+  font-size: 12px;
   align-self: flex-start;
-  padding-left: 10px;
+  padding-left: 5px;
 }
 
 
