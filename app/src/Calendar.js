@@ -75,9 +75,9 @@ class PopUp extends React.Component {
     const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     if (this.props.contents == null){
       return null;
-    } else if (this.props.contents === 'add') {
+    } else if (this.props.contents[0] === 'add') {
       return (
-        <form className='popup' onSubmit={(e) => this.props.onSubmit(e)}>
+        <form className='popup' onSubmit={(e) => this.props.onSubmit(this.props.contents[1], e)}>
           <div className='day-popup'>
             <div className='popup-title'>
               New Event Name:
@@ -87,15 +87,15 @@ class PopUp extends React.Component {
               <button type='submit'>
                 Add
               </button>
-              <button onClick={(e) => this.props.onClick('close', e)}>
+              <button onClick={(e) => this.props.onClick('close', this.props.contents[1], e)}>
                 Cancel
               </button>
             </div>
           </div>
         </form>
       )
-    } else if (this.props.contents.events.length === 0) {
-      let day = this.props.contents;
+    } else if (this.props.contents[1].length === 0) {
+      let day = this.props.contents[1];
       let dayMonth = monthList[parseInt(day.day.slice(0,2),10)];
       let dayNum = day.day.slice(2,4);
       let dayYear = day.day.slice(4,8);
@@ -110,18 +110,18 @@ class PopUp extends React.Component {
               <p>No Events</p>
             </div>
             <div className='day-buttons'>
-              <button onClick={(e) => this.props.onClick('add', e)}>
+              <button onClick={(e) => this.props.onClick('add', this.props.contents[1], e)}>
                 Add Event
               </button>
-              <button onClick={(e) => this.props.onClick('close', e)}>
-                Close
+              <button onClick={(e) => this.props.onClick('cancel', this.props.contents[1], e)}>
+                Cancel
               </button>
             </div>
           </div>
         </form>
       )
     } else {
-      let day = this.props.contents;
+      let day = this.props.contents[1];
       let dayMonth = monthList[parseInt(day.day.slice(0,2),10)];
       let dayNum = day.day.slice(2,4);
       let dayYear = day.day.slice(4,8);
@@ -147,10 +147,10 @@ class PopUp extends React.Component {
               </div>
             </div>
             <div className='day-buttons'>
-              <button onClick={(e) => this.props.onClick('add', e)}>
+              <button onClick={(e) => this.props.onClick('add', this.props.contents[1], e)}>
                 Add Event
               </button>
-              <button onClick={(e) => this.props.onClick('close', e)}>
+              <button onClick={(e) => this.props.onClick('close', this.props.contents[1], e)}>
                 Close
               </button>
             </div>
@@ -167,7 +167,6 @@ class Calendar extends React.Component {
     super(props);
     this.handleArrowClick = this.handleArrowClick.bind(this);
     this.handlePopupButtonClick = this.handlePopupButtonClick.bind(this);
-    //this.handleClose = this.handleClose.bind(this);
     this.state = {
       month: "",
       events: [],
@@ -198,9 +197,36 @@ class Calendar extends React.Component {
     });
   }
 
-  handleAddEvent(e) {
+  handleAddEvent(day, e) {
     e.preventDefault();
-    console.log(e.target.eventName.value)
+    console.log(e.target.eventName.value);
+    /*axios.get('http://192.168.1.100:4000/addEvent', {
+      params: {
+        filePath: filePath,
+        folderName: e.target.folderName.value,
+      }
+    }).then(res => {
+      let files = res.data;
+      if (typeof files !== "string") {
+        this.setState({
+          contents: files,
+          popup: "Successfully created folder: " + e.target.folderName.value,
+        });
+      } else {
+        console.log("FAILED TO MAKE FOLDER");
+        this.setState({
+          popup: files,
+        });
+      }
+    }).catch(error => {
+      console.log("FileServer.handlePopupButtonClick Error: " + error);
+      this.setState({
+        popup: "Unable to connect to server.",
+      });
+    });*/
+    this.setState({
+      popup: ['display', day]
+    });
   }
 
   handleArrowClick(direction) {
@@ -240,24 +266,21 @@ class Calendar extends React.Component {
     });
   }
 
-  /*handleClose(e) {
-    e.preventDefault();
+  handleDayClick(day) {
     this.setState({
-      popup: null,
-    });
-  }*/
-
-  handleDayClick(events) {
-    this.setState({
-      popup: events
+      popup: ['display', day]
     });
   }
 
-  handlePopupButtonClick(action, e) {
+  handlePopupButtonClick(action, day, e) {
     e.preventDefault();
     if (action === 'add') {
       this.setState({
-        popup: 'add',
+        popup: ['add', day],
+      });
+    } else if (action === 'cancel') {
+      this.setState({
+        popup: ['display', day],
       });
     } else {
       this.setState({
