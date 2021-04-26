@@ -226,6 +226,7 @@ class Calendar extends React.Component {
         popup: ['display', day]
       });
       if (typeof insertConfirmation !== "object") {
+        let monthEvents;
         axios.get('http://192.168.1.100:4000/getMonth', {
           params: {
             month: day.day.slice(0,2),
@@ -234,7 +235,6 @@ class Calendar extends React.Component {
         }).then(res => {
           monthEvents = res.data;
           this.setState({
-            month: String(today.getMonth()).padStart(2, '0') + today.getFullYear(),
             events: monthEvents,
             popup: ["Success", "Successfully added event!"]
           });
