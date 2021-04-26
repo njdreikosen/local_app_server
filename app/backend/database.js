@@ -70,7 +70,7 @@ async function getRows(queryString) {
 
 async function insertRow(queryString) {
     try {
-        let [rows, fields] = await pool.exectute(queryString);
+        let [rows, fields] = await pool.execute(queryString);
         console.log("inRows: " + rows);
         console.log("inFields: " + fields);
         return rows;

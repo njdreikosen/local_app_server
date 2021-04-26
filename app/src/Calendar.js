@@ -205,11 +205,9 @@ class Calendar extends React.Component {
     /*let month = day.day.slice(0,2);
     let dayNum = day.day.slice(2,4);
     let year = day.day.slice(4,8);*/
-    axios.get('http://192.168.1.100:4000/insertEvent', {
-      params: {
+    axios.post('http://192.168.1.100:4000/insertEvent', {
         name: e.target.eventName.value,
-        date: day
-      }
+        date: day.day
     }).then(res => {
       let insertConfirmation = res.data;
       console.log(insertConfirmation);
