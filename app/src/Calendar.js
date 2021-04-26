@@ -94,6 +94,21 @@ class PopUp extends React.Component {
           </div>
         </form>
       )
+    } else if (this.props.contents[0] === 'Success' || this.props.contents[0] === 'Failure') {
+      return (
+        <form className='popup'>
+          <div className='event-popup'>
+            <div className='popup-title'>
+              {this.props.contents[1]}
+            </div>
+            <div className='day-buttons'>
+              <button onClick={(e) => this.props.onClick('close', this.props.contents[1], e)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </form>
+      )
     } else if (this.props.contents[1].length === 0) {
       let day = this.props.contents[1];
       let dayMonth = monthList[parseInt(day.day.slice(0,2),10)];
@@ -200,11 +215,6 @@ class Calendar extends React.Component {
 
   handleAddEvent(day, e) {
     e.preventDefault();
-    console.log(e.target.eventName.value);
-    console.log(day);
-    /*let month = day.day.slice(0,2);
-    let dayNum = day.day.slice(2,4);
-    let year = day.day.slice(4,8);*/
     axios.post('http://192.168.1.100:4000/insertEvent', {
         name: e.target.eventName.value,
         date: day.day
@@ -215,16 +225,28 @@ class Calendar extends React.Component {
       this.setState({
         popup: ['display', day]
       });
-      /*if (typeof insertConfirmation !== "string") {
-        this.setState({
-          popup: ["Success", "Successfully added event!"],
+      if (typeof insertConfirmation !== "object") {
+        axios.get('http://192.168.1.100:4000/getMonth', {
+          params: {
+            month: day.day.slice(0,2),
+            year: day.day.slice(4),
+          }
+        }).then(res => {
+          monthEvents = res.data;
+          this.setState({
+            month: String(today.getMonth()).padStart(2, '0') + today.getFullYear(),
+            events: monthEvents,
+            popup: ["Success", "Successfully added event!"]
+          });
+        }).catch(error => {
+          console.log("Calendar.handleEvent Error: " + error);
         });
       } else {
-        console.log("FAILED TO MAKE FOLDER");
+        console.log("FAILED TO ADD EVENT");
         this.setState({
-          popup: files,
+          popup: ["Failure", "Failed to add event. :("]
         });
-      }*/
+      }
     }).catch(error => {
       console.log("Calendar.handleAddEvent Error: " + error);
       this.setState({
