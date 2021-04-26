@@ -211,6 +211,7 @@ class Calendar extends React.Component {
     }).then(res => {
       let insertConfirmation = res.data;
       console.log(insertConfirmation);
+      console.log(typeof(insertConfirmation));
       this.setState({
         popup: ['display', day]
       });

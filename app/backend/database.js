@@ -15,6 +15,17 @@ const pool = connectionPool.promise();
 initDB();
 
 
+function closeDatabase(callback) {
+    try {
+        console.log("Closing database connections... ");
+        await pool.end();
+        console.log("Database connections closed.");
+    } catch (err) {
+        console.log("Could not close database connections due to error: " + err);
+    }
+    callback();
+}
+
 async function initDB() {
     // Create the database if it isn't already created
     try {
@@ -84,6 +95,7 @@ function hashStrings(str1, str2) {
     return crypto.createHash('sha256').update(str1 + str2).digest('base64');
 }
 
+exports.closeDatabase = closeDatabase;
 exports.getRows = getRows;
 exports.insertRow = insertRow;
 exports.hashStrings = hashStrings;

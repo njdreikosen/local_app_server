@@ -13,69 +13,6 @@ const PORT = 4000;
 app.use(cors())
 app.use(bodyParser.json());
 
-/* Database initialization
-let connectionPool = mysql.createPool({
-    connectionLimit: 5,
-    host: 'localhost',
-    user: 'remote_server',
-    password: 'remote_server',
-    database: 'remote_server'
-});
-
-// Database initialization
-connectionPool.getConnection(function(err, connection) {
-    if (err) {
-        console.log("PoolErr: " + err);
-    } else {
-        // Try and create the database
-        connection.query("CREATE DATABASE remote_server", function(err, result) {
-            if (err) {
-                console.log("Database already created: " + err);
-            } else {
-                console.log("Created database.");
-            }
-        });
-        // Try and create the event table
-        let eventTable = "CREATE TABLE events (eID char(44) NOT NULL, eName varchar(25) NOT NULL, eDate char(8), PRIMARY KEY (eID))";
-        connection.query(eventTable, function (err, result) {
-            if (err) {
-                console.log("Event Table already created: " + err);
-            } else {
-                console.log("Event Table created");
-                // Populate the event table with common events
-                let commonEvents = [{eName: "New Year's Day", eDate: "0001...."},
-                    {eName: "Valentine's Day", eDate: "0114...."},
-                    {eName: "St. Patrick's Day", eDate: "0217...."},
-                    {eName: "April Fool's Day", eDate: "0301...."},
-                    {eName: "Cinco de Mayo", eDate: "0405...."},
-                    {eName: "Independence Day", eDate: "0604...."},
-                    {eName: "Halloween", eDate: "0931...."},
-                    {eName: "Chirstmas Eve", eDate: "1124...."},
-                    {eName: "Christmas", eDate: "1125...."},
-                    {eName: "New Year's Eve", eDate: "1131...."}];
-                let eventHash, eventName, eventDate, eventInsert;
-                for (let i = 0; i < commonEvents.length; i ++) {
-                    eventName = commonEvents[i].eName;
-                    eventDate = commonEvents[i].eDate;
-                    eventHash = helper.hashStrings(eventName, eventDate);
-                    console.log("Name: " + eventName + ", Date: " + eventDate + ", ID: " + eventHash);
-                    eventInsert = `INSERT INTO events (eID, eName, eDate) VALUES ('${eventHash}', '${eventName}', '${eventDate}')`;
-                    console.log(eventInsert);
-                    connection.query(eventInsert, function (err, result) {
-                        if (err) {
-                            console.log("InsertErr: " + err);
-                        } else {
-                            console.log("Inserted Event");
-                        }
-                    });
-                }
-            }
-        });
-    }
-    connection.release();
-});*/
-
-
 /* File Server storage setup */
 var storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -98,7 +35,6 @@ routes.route('/').get(function(req, res) {
 routes.route('/insertEvent').post(function(req, res) {
     let eventName = req.body.name;
     let eventDate = req.body.date;
-    console.log(eventName + ", " + JSON.stringify(eventDate));
     let eventHash = db.hashStrings(eventName, eventDate);
     let queryString = `INSERT INTO events (eID, eName, eDate) VALUES ('${eventHash}', '${eventName}', '${eventDate}')`;
     console.log("insertEventQuery: " + queryString);
@@ -199,13 +135,17 @@ function GracefulShutdown() {
     console.log("Closing server gracefully...");
 
     appServer.close(() => {
-        console.log("Server closed.");
-        connectionPool.end(function(err) {
+        console.log("Server closing...");
+        /*connectionPool.end(function(err) {
             if (err) {
                 console.log("DBerror: " + err);
             } else {
                 console.log("Closed DB connections")
             }
+            process.exit(0);
+        })*/
+        db.closeDatabase(function() {
+            console.log("Server closed.");
             process.exit(0);
         })
     })
