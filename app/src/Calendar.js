@@ -148,6 +148,7 @@ class Calendar extends React.Component {
   /* Calendar component constructor */
   constructor(props) {
     super(props);
+    this.handleArrowClick = this.handleArrowClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.state = {
       month: "",
@@ -181,6 +182,8 @@ class Calendar extends React.Component {
   }
 
   handleArrowClick(direction) {
+    console.log("state: " + JSON.stringify(this.state));
+    console.log(this.state);
     let month = parseInt(this.state.month.slice(0, 2), 10);
     let year = parseInt(this.state.month.slice(2));
     if (direction === 'prev') {
@@ -281,10 +284,12 @@ class Calendar extends React.Component {
       let dayString = this.state.month.slice(0,2) + String(i+1).padStart(2, '0') + this.state.month.slice(2);
       days.push({day: dayString, display: "", events: []})
     }
+    console.log("daysssss: " + JSON.stringify(days));
+    console.log(days);
     // Iterate through the events, and add them to the days
     for (i = 0; i < events.length; i ++) {
       let dayNum = parseInt(events[i].eDate.slice(2,4), 10);
-      days[dayNum].events.push(events[i]);
+      days[dayNum-1].events.push(events[i]);
     }
     // Iterate through the days, and set the display based on the events
     for (i = 0; i < days.length; i ++) {
