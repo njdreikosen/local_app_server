@@ -87,7 +87,7 @@ class PopUp extends React.Component {
               <button type='submit'>
                 Add
               </button>
-              <button onClick={(e) => this.props.onClick('close', this.props.contents[1], e)}>
+              <button onClick={(e) => this.props.onClick('cancel', this.props.contents[1], e)}>
                 Cancel
               </button>
             </div>
@@ -113,8 +113,8 @@ class PopUp extends React.Component {
               <button onClick={(e) => this.props.onClick('add', this.props.contents[1], e)}>
                 Add Event
               </button>
-              <button onClick={(e) => this.props.onClick('cancel', this.props.contents[1], e)}>
-                Cancel
+              <button onClick={(e) => this.props.onClick('close', this.props.contents[1], e)}>
+                Close
               </button>
             </div>
           </div>
@@ -165,6 +165,7 @@ class Calendar extends React.Component {
   /* Calendar component constructor */
   constructor(props) {
     super(props);
+    this.handleAddEvent = this.handleAddEvent.bind(this);
     this.handleArrowClick = this.handleArrowClick.bind(this);
     this.handlePopupButtonClick = this.handlePopupButtonClick.bind(this);
     this.state = {
