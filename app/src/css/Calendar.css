@@ -295,7 +295,9 @@ button {
 
 .event-input {
   width: 300px;
-  padding-left: 100px;
+  padding: 10px;
+  margin-left: 90px;
+  margin-bottom: 10px;
   font-size: 20px;
   background-color: #bfbfbf;
   border-radius: 15px;
