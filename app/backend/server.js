@@ -96,7 +96,14 @@ routes.route('/').get(function(req, res) {
 /*                              Database Routes                              */
 /*===========================================================================*/
 routes.route('/insertEvent').post(function(req, res) {
-    res.send("This function not yet implemented.");
+    let eName = req.query.name;
+    let eDate = req.query.date;
+    let eventHash = db.hashStrings(eName, eDate);
+    let queryString = `INSERT INTO events (eID, eName, eDate) VALUES ('${eventHash}', '${eventName}', '${eventDate}')`;
+    console.log("insertEventQuery: " + queryString);
+    db.insertRow(queryString).then(rows => {
+        res.json(rows);
+    });
 });
 
 routes.route('/getMonth').get(function(req, res) {

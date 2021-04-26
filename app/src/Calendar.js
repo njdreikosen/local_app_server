@@ -201,32 +201,36 @@ class Calendar extends React.Component {
   handleAddEvent(day, e) {
     e.preventDefault();
     console.log(e.target.eventName.value);
-    /*axios.get('http://192.168.1.100:4000/addEvent', {
+    console.log(day);
+    /*let month = day.day.slice(0,2);
+    let dayNum = day.day.slice(2,4);
+    let year = day.day.slice(4,8);*/
+    axios.get('http://192.168.1.100:4000/insertEvent', {
       params: {
-        filePath: filePath,
-        folderName: e.target.folderName.value,
+        name: e.target.eventName.value,
+        date: day
       }
     }).then(res => {
-      let files = res.data;
-      if (typeof files !== "string") {
+      let insertConfirmation = res.data;
+      console.log(insertConfirmation);
+      this.setState({
+        popup: ['display', day]
+      });
+      /*if (typeof insertConfirmation !== "string") {
         this.setState({
-          contents: files,
-          popup: "Successfully created folder: " + e.target.folderName.value,
+          popup: ["Success", "Successfully added event!"],
         });
       } else {
         console.log("FAILED TO MAKE FOLDER");
         this.setState({
           popup: files,
         });
-      }
+      }*/
     }).catch(error => {
-      console.log("FileServer.handlePopupButtonClick Error: " + error);
+      console.log("Calendar.handleAddEvent Error: " + error);
       this.setState({
-        popup: "Unable to connect to server.",
+        popup: ['display', day]
       });
-    });*/
-    this.setState({
-      popup: ['display', day]
     });
   }
 

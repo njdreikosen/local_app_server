@@ -61,12 +61,22 @@ async function initDB() {
 async function getRows(queryString) {
     try {
         let [rows, fields] = await pool.execute(queryString);
-        console.log("rows: " + JSON.stringify(rows));
-        console.log("fields: " + JSON.stringify(fields));
         return rows;
     } catch (err) {
-        console.log("getEventsErr: " + err);
-        return "getEventsErr: + " + err;
+        console.log("getRowsErr: " + err);
+        return "getRowsErr: + " + err;
+    }
+}
+
+async function insertRow(queryString) {
+    try {
+        let [rows, fields] = await pool.exectute(queryString);
+        console.log("inRows: " + rows);
+        console.log("inFields: " + fields);
+        return rows;
+    } catch (err) {
+        console.log("insertRowErr: " + err);
+        return "insertRowErr: " + err;
     }
 }
 
@@ -75,3 +85,5 @@ function hashStrings(str1, str2) {
 }
 
 exports.getRows = getRows;
+exports.insertRow = insertRow;
+exports.hashStrings = hashStrings;
