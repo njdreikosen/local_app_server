@@ -36,9 +36,10 @@ routes.route('/insertEvent').post(function(req, res) {
     let eventName = req.body.name;
     let eventDate = req.body.date;
     let eventHash = db.hashStrings(eventName, eventDate);
-    let queryString = `INSERT INTO events (eID, eName, eDate) VALUES ('${eventHash}', '${eventName}', '${eventDate}')`;
+    let queryString = `INSERT INTO events (eID, eName, eDate) VALUES (?, ?, ?)`;
+    let vals = [eventHash, eventName, eventDate];
     console.log("insertEventQuery: " + queryString);
-    db.insertRow(queryString).then(rows => {
+    db.insertRow(queryString, vals).then(rows => {
         res.json(rows);
     });
 });

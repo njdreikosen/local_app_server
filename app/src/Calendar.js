@@ -225,7 +225,7 @@ class Calendar extends React.Component {
       this.setState({
         popup: ['display', day]
       });
-      if (typeof(insertConfirmation) !== "object") {
+      if (typeof(insertConfirmation) !== "string") {
         let monthEvents;
         axios.get('http://192.168.1.100:4000/getMonth', {
           params: {
