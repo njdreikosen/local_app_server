@@ -15,7 +15,7 @@ const pool = connectionPool.promise();
 initDB();
 
 
-function closeDatabase(callback) {
+async function closeDatabase() {
     try {
         console.log("Closing database connections... ");
         await pool.end();
@@ -23,7 +23,7 @@ function closeDatabase(callback) {
     } catch (err) {
         console.log("Could not close database connections due to error: " + err);
     }
-    callback();
+    return true;
 }
 
 async function initDB() {

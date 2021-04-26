@@ -144,10 +144,10 @@ function GracefulShutdown() {
             }
             process.exit(0);
         })*/
-        db.closeDatabase(function() {
+        db.closeDatabase().then(res => {
             console.log("Server closed.");
             process.exit(0);
-        })
+        });
     })
 }
 
