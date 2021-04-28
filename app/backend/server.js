@@ -1,7 +1,6 @@
 const express = require('express');
 const db = require('./database');
 const filesystem = require('./filesystem');
-//const mysql = require('mysql');
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -24,9 +23,17 @@ var storage = multer.diskStorage({
 });
 var uploadDisk = multer({ storage: storage });
 
-/* Home route */
+/*===========================================================================*/
+/*                              General Routes                               */
+/*===========================================================================*/
 routes.route('/').get(function(req, res) {
     res.json({});
+});
+
+routes.route('/login').get(function(req, res) {
+    res.send({
+        token: 'test123'
+    });
 });
 
 /*===========================================================================*/
@@ -80,20 +87,16 @@ routes.route('/deleteFile').get(function(req, res) {
 
 routes.route('/moveFile').get(function(req, res) {
     let newFiles = filesystem.moveFile(req.query.oldFilePath, req.query.newFilePath, req.query.currFilePath);
-    console.log(newFiles);
     res.json(newFiles);
 });
 
 routes.route('/getDrives').get(async function(req, res) {
     const drives = await filesystem.getDrives();
-    console.log("DRIVES: " + drives);
     res.json(drives);
 });
 
 routes.route('/getFiles').get(function(req, res) {
-    console.log("params: " + req.query.folder);
     let files = filesystem.getFiles(req.query.folder);
-    console.log("FILES: " + JSON.stringify(files));
     res.json(files);
 });
 
@@ -104,9 +107,7 @@ routes.route('/downloadFile').get(function(req, res) {
     let fp;
     if (isFolder) {
         fp = filePath.join('/');
-        console.log("CURR DIR: " + __dirname);
         zipFP = [__dirname, "tmp", fileName + ".zip"].join('/');
-        console.log("zipFP: " + zipFP);
         let fileZipped = filesystem.compressFiles(fp, fileName, zipFP);
         if (!fileZipped) {
             console.log("FAILED TO ZIP FILES!!");
@@ -117,7 +118,6 @@ routes.route('/downloadFile').get(function(req, res) {
         filePath.push(fileName);
         fp = filePath.join('/');
     }
-    console.log("fp: " + fp);
     res.download(fp, req.query.file);
 });
 
@@ -137,14 +137,6 @@ function GracefulShutdown() {
 
     appServer.close(() => {
         console.log("Server closing...");
-        /*connectionPool.end(function(err) {
-            if (err) {
-                console.log("DBerror: " + err);
-            } else {
-                console.log("Closed DB connections")
-            }
-            process.exit(0);
-        })*/
         db.closeDatabase().then(res => {
             console.log("Server closed.");
             process.exit(0);

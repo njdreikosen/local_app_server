@@ -1,19 +1,17 @@
 import React from 'react';
 import axios from 'axios';
-//import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
 
 
 import './css/Calendar.css';
-import { NavLink } from 'react-router-dom';
 
 class CalendarHeader extends React.Component {
   render() {
     const leftArrow = <FontAwesomeIcon icon={faArrowCircleLeft} size="1x" />;
     const rightArrow = <FontAwesomeIcon icon={faArrowCircleRight} size="1x" />;
-    let path = this.props.path;
     let size;
     if (window.innerWidth < 580) {
       size = 40;
@@ -51,7 +49,7 @@ class CalendarHeader extends React.Component {
             {leftArrow}
           </button>
           <div className='month'>
-            {this.props.month}
+            {this.props.month + " " + this.props.year}
           </div>
           <button
             className='month-arrow'
@@ -429,10 +427,12 @@ class Calendar extends React.Component {
   render() {
     const monthList = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     let month = monthList[parseInt(this.state.month.slice(0,2), 10)];
+    let year = this.state.month.slice(2);
     return (
       <div className='ui'>
         <CalendarHeader
           month={month}
+          year={year}
           onClick={this.handleArrowClick}
         />
         <PopUp
