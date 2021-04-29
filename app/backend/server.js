@@ -30,7 +30,7 @@ routes.route('/').get(function(req, res) {
     res.json({});
 });
 
-routes.route('/login').get(function(req, res) {
+routes.route('/login').post(function(req, res) {
     res.send({
         token: 'test123'
     });

@@ -33,9 +33,14 @@ async function initDB() {
     } catch (err) {
         console.log("Database already created: " + err);
     }
+    try {
+        await pool.query("CREATE TABLE users (uName varchar(50) NOT NULL, uPassword char(44) NOT NULL, PRIMARY KEY (uName))");
+    } catch (err) {
+        console.log("Event Table already created: " + err);
+    }
     // Create the events table if it isn't already created. If it isn't also add common events
     try {
-        await pool.query("CREATE TABLE events (eID char(44) NOT NULL, eName varchar(25) NOT NULL, eDate char(8) NOT NULL, PRIMARY KEY (eID))");
+        await pool.query("CREATE TABLE events (eID char(44) NOT NULL, eName varchar(25) NOT NULL, eDate char(8) NOT NULL, eUID varchar(44), PRIMARY KEY (eID))");
         // Common events to add
         let commonEvents = [{eName: "New Year's Day", eDate: "0001...."},
                             {eName: "Valentine's Day", eDate: "0114...."},
@@ -54,11 +59,10 @@ async function initDB() {
             eventName = commonEvents[i].eName;
             eventDate = commonEvents[i].eDate;
             eventHash = hashStrings(eventName, eventDate);
-            eventInsert = `INSERT INTO events (eID, eName, eDate) VALUES ('${eventHash}', '${eventName}', '${eventDate}')`;
-            console.log("Name: " + eventName + ", Date: " + eventDate + ", ID: " + eventHash);
+            eventInsert = `INSERT INTO events (eID, eName, eDate, eUID) VALUES ('${eventHash}', '${eventName}', '${eventDate}', '')`;
             console.log(eventInsert);
             try {
-                await pool.execute('INSERT INTO events (eID, eName, eDate) VALUES (?, ?, ?)', [eventHash, eventName, eventDate]);
+                await pool.execute('INSERT INTO events (eID, eName, eDate, eUID) VALUES (?, ?, ?, ?)', [eventHash, eventName, eventDate, '']);
             } catch (insertErr) {
                 console.log("InsertErr: " + insertErr);
             }
