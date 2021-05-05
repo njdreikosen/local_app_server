@@ -203,15 +203,11 @@ class Calendar extends React.Component {
     // Define drives in case an error occurs
     let monthEvents;
     // Get drives on remote server
-    //const token = JSON.parse(sessionStorage.getItem('token'))['token'];
     axios.get('/getMonth', {
       params: {
         month: String(today.getMonth()).padStart(2, '0'),
         year: today.getFullYear(),
       }
-      //headers: {
-      //  'Authorization': 'Bearer ' + token
-      //}
     }).then(res => {
       monthEvents = res.data;
       this.setState({
@@ -225,14 +221,9 @@ class Calendar extends React.Component {
 
   handleAddEvent(day, e) {
     e.preventDefault();
-    //const token = JSON.parse(sessionStorage.getItem('token'))['token'];
     axios.post('/insertEvent', {
       name: e.target.eventName.value,
       date: day.day
-    //}, {
-    //  headers: {
-    //    'Authorization': 'Bearer ' + token
-    //  }
     }).then(res => {
       let insertConfirmation = res.data;
       console.log(insertConfirmation);
@@ -246,10 +237,7 @@ class Calendar extends React.Component {
           params: {
             month: day.day.slice(0,2),
             year: day.day.slice(4),
-          }//,
-          //headers: {
-          //  'Authorization': 'Bearer ' + token
-          //}
+          }
         }).then(res => {
           monthEvents = res.data;
           this.setState({
@@ -294,15 +282,11 @@ class Calendar extends React.Component {
     }
 
     let monthEvents;
-    //const token = JSON.parse(sessionStorage.getItem('token'))['token'];
     axios.get('/getMonth', {
       params: {
         month: String(month).padStart(2, '0'),
         year: year,
-      }//,
-      //headers: {
-      //    'Authorization': 'Bearer ' + token
-      //}
+      }
     }).then(res => {
       monthEvents = res.data;
       this.setState({

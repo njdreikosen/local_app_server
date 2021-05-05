@@ -12,6 +12,15 @@ import { NavLink } from 'react-router-dom';
 
 import './css/FileServer.css';
 
+axios.defaults.baseURL = 'http://192.168.1.100:4000';
+axios.interceptors.request.use(function (config) {
+  const token = JSON.parse(sessionStorage.getItem('token'))['token'];
+  config.headers.Authorization = 'Bearer ' + token;
+  return config;
+  }, function (err) {
+  return Promise.reject(err);
+});
+
 
 const FileUpload = (props) => {
 
@@ -305,7 +314,7 @@ class FileServer extends React.Component {
     // Define drives in case an error occurs
     let drives;
     // Get drives on remote server
-    axios.get('http://192.168.1.100:4000/getDrives').then(res => {
+    axios.get('/getDrives').then(res => {
       drives = res.data;
       this.setState({
         contents: drives,
@@ -327,7 +336,7 @@ class FileServer extends React.Component {
   handleCrumbClick(depth) {
     if (depth === -1) {
       let drives;
-      axios.get('http://192.168.1.100:4000/getDrives').then(res => {
+      axios.get('/getDrives').then(res => {
         drives = res.data;
         this.setState({
           filePath: [],
@@ -347,7 +356,7 @@ class FileServer extends React.Component {
       let newFilePath = filePath.slice(0, depth+1);
       let fp = newFilePath.join('/');
       let files;
-      axios.get('http://192.168.1.100:4000/getFiles', {
+      axios.get('/getFiles', {
         params: {
           folder: fp
         }
@@ -410,7 +419,7 @@ class FileServer extends React.Component {
           popup: "It may take a moment to create your zip file. Once it is created, the download will begin."
         })
       }
-      axios.get('http://192.168.1.100:4000/downloadFile', {
+      axios.get('/downloadFile', {
         responseType: 'blob',
         params: {
           path: filePath.slice(0, -1),
@@ -422,7 +431,7 @@ class FileServer extends React.Component {
           fileDownload(res.data, currFile.name);
         } else {
           fileDownload(res.data, currFile.name.concat(".zip"))
-          axios.get('http://192.168.1.100:4000/deleteFile', {
+          axios.get('/deleteFile', {
             params: {
               filePath: ["./tmp"],
               fileName: currFile.name + ".zip",
@@ -460,7 +469,7 @@ class FileServer extends React.Component {
     filePath.push(folder.name);
     let fp = filePath.join('/');
     let files;
-    axios.get('http://192.168.1.100:4000/getFiles', {
+    axios.get('/getFiles', {
       params: {
         folder: fp
       }
@@ -528,7 +537,7 @@ class FileServer extends React.Component {
     if (pop === "new-folder") {
       // If the popup is for a new folder, try to make one
       let filePath = this.state.filePath;
-      axios.get('http://192.168.1.100:4000/createFolder', {
+      axios.get('/createFolder', {
         params: {
           filePath: filePath,
           folderName: e.target.folderName.value,
@@ -564,7 +573,7 @@ class FileServer extends React.Component {
         filePath = this.state.filePath;
         newFilePath = filePath;
       }
-      axios.get('http://192.168.1.100:4000/renameFile', {
+      axios.get('/renameFile', {
         params: {
           filePath: filePath,
           newFilePath: newFilePath,
@@ -606,7 +615,7 @@ class FileServer extends React.Component {
       } else {
         filePath = this.state.filePath;
       }
-      axios.get('http://192.168.1.100:4000/deleteFile', {
+      axios.get('/deleteFile', {
         params: {
           filePath: filePath,
           fileName: currFile.name,
@@ -649,7 +658,7 @@ class FileServer extends React.Component {
       } else {
         oldFilePath = filePath;
       }
-      axios.get('http://192.168.1.100:4000/moveFile', {
+      axios.get('/moveFile', {
         params: {
           oldFilePath: oldFilePath.concat([currFile.name]).join('/'),
           newFilePath: newFilePath,
@@ -715,10 +724,10 @@ class FileServer extends React.Component {
     const formData = new FormData();
     formData.append('file', upFile)
     // Send the file form data to the backend server
-    axios.post('http://192.168.1.100:4000/uploadFile', formData)
+    axios.post('/uploadFile', formData)
     .then(res => {
       // Move the uploaded file 
-      axios.get('http://192.168.1.100:4000/moveFile',  {
+      axios.get('/moveFile',  {
         params: {
           oldFilePath: './'.concat(upFile.name),
           newFilePath: newPath.join('/'),

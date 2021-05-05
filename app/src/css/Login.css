@@ -1,0 +1,254 @@
+/* Styling for Remote File Server Interface */
+
+/*============================================================================*/
+/*                              GENERAL STYLING                               */
+/*============================================================================*/
+body {
+  overflow: hidden;
+}
+/* Overall section, contains the entire HTML body */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #32506e;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-field p {
+  font-size: 50px;
+  margin: 0px;
+  color: #e6e6e6
+}
+
+.login-field input {
+  width: 300px;
+  padding: 10px;
+  font-size: 20px;
+  background-color: #bfbfbf;
+  border-radius: 15px;
+  outline: none;
+  margin-bottom: 20px;
+}
+
+.hidden-err {
+  font-size: 20px;
+  visibility: hidden;
+}
+
+.visible-err {
+  color: red;
+  font-size: 20px;
+  text-align: center;
+}
+
+.login-buttons {
+  flex: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 90%;
+  min-height: 70px;
+}
+
+button {
+  outline: none;
+  border: none;
+  flex: 0;
+  color: #32506e;
+  background-color: #bfbfbf;
+  border-radius: 25px;
+  height: 50px;
+  min-width: 120px;
+  font-size: 25px;
+  margin: 20px;
+}
+
+button:hover {
+  color: #32506e;
+  background-color: peru;
+}
+
+/*============================================================================*/
+/*                           HEADER SECTION STYLING                           */
+/*============================================================================*/
+/* Entire header section */
+.ui-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 85px;
+  background: #32506e;
+}
+
+.header-title {
+  flex: 1;
+  color: #e6e6e6;
+  /*text-align: center;*/
+  font-size: 45px;
+  padding-left: 50px;
+}
+
+/* Overall icon block */
+.icon-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(20vw - 45px);
+  padding: 0px 30px;
+  background-color: #32506e;
+  border-right: solid 5px #bfbfbf;
+}
+/* Circle and line of connection icon */
+.connection-circle {
+  min-width: 10px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: solid 5px #bfbfbf;
+  flex: 0;
+}
+.connection-line {
+  min-width: 5px;
+  height: 5px;
+  background: #bfbfbf;
+  margin: -2px;
+  flex: 1;
+}
+/* Overall navbar section, including title and breadcrumbs */
+.navbar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #32506e;
+  border-bottom: solid 5px #32506e;
+}
+/* Title text */
+.nav-title {
+  flex: 1;
+  color: #bfbfbf;
+  text-align: center;
+  font-size: 35px;
+}
+
+
+/*============================================================================*/
+/*                            MAIN CONTENT SECTION                            */
+/*============================================================================*/
+/* Main content section, includes folder and file panels */
+.ui-contents {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+/* */
+.module-panel {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #bfbfbf;
+  max-height: calc(100vh - 95px);
+  border-top: solid 5px #bfbfbf;
+  border-bottom: solid 5px #bfbfbf;
+}
+
+/* Styling for module list headers */
+.list-header {
+  font-size: 60px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: underline;
+  color: #32506e;
+
+}
+/* Folder and file styling */
+.module-list {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: space-evenly;
+  padding-top: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+/* Scrollbar styling */
+.module-panel::-webkit-scrollbar {
+  width: 10px;
+}
+.module-panel::-webkit-scrollbar-track {
+  background-color: #bfbfbf;
+}
+.module-panel::-webkit-scrollbar-thumb {
+  background-color: #32506e;
+  border-radius: 5px;
+  max-height: 50px;
+}
+/* Folder and File Buttons */
+.module-button {
+  font-size: 30px;
+  color: #e6e6e6;
+  background-color: #32506e;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  height: 140px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex: 0;
+  flex-basis: 300px;
+  margin: 20px;
+  padding-top: 10px;
+  min-width: 120px;
+}
+
+/* File button hover effect */
+.module-button:hover {
+  color: #32506e;
+  background-color: peru;
+}
+.module-button:hover g {
+  fill: #32506e;
+}
+
+.module-svg {
+  margin: -40px;
+}
+
+/*============================================================================*/
+/*                         EMPTY MAIN CONTENT SECTION                         */
+/*============================================================================*/
+/* Empty file panel */
+.file-panel-empty {
+  font-size: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #32506e;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: calc(100vh - 185px);
+  max-height: calc(100vh - 185px);
+  background-color: #bfbfbf;
+  flex: 1;
+}
+/* Brackets around no files message */
+.file-panel-empty p {
+  background-image: linear-gradient(#32506e, #32506e),
+                    linear-gradient(#32506e, #32506e),
+                    linear-gradient(#32506e, #32506e),
+                    linear-gradient(#32506e, #32506e);
+  background-repeat: no-repeat;
+  background-size: 24px 9px;
+  background-position: top left, top right, bottom left, bottom right;
+  border: solid #32506e;
+  border-width: 0 9px;
+  margin: 24px;
+  padding: 24px;
+}
