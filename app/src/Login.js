@@ -14,7 +14,7 @@ function Login({setToken}) {
     e.preventDefault();
     console.log("buttonType: " + buttonType);
     if (buttonType !== 'signup') {
-      axios.post('http://192.168.1.100:4000/login', {
+      axios.post('/login', {
         credentials: {
           username: username,
           password: password
@@ -32,7 +32,7 @@ function Login({setToken}) {
         setLoginErr(true);
       });
     } else {
-      axios.post('http://192.168.1.100:4000/signup', {
+      axios.post('/signup', {
         credentials: {
           username: username,
           password: password
