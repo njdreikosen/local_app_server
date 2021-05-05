@@ -1,5 +1,6 @@
 import React, {useState } from "react"
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom'
+import axiosInterceptor from "./AxiosConfig"
 
 // Import all required modules here
 import Login from "./Login"

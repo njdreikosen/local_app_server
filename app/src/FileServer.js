@@ -12,15 +12,6 @@ import { NavLink } from 'react-router-dom';
 
 import './css/FileServer.css';
 
-axios.defaults.baseURL = 'http://192.168.1.100:4000';
-axios.interceptors.request.use(function (config) {
-  const token = JSON.parse(sessionStorage.getItem('token'))['token'];
-  config.headers.Authorization = 'Bearer ' + token;
-  return config;
-  }, function (err) {
-  return Promise.reject(err);
-});
-
 
 const FileUpload = (props) => {
 
