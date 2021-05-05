@@ -12,6 +12,11 @@ const PORT = 4000;
 app.use(cors())
 app.use(bodyParser.json());
 
+/* Get API Key */
+API_KEY = process.env.RS_API_KEY;
+console.log("API KEY: " + API_KEY);
+console.log(db.genBytes());
+
 /* File Server storage setup */
 var storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -31,15 +36,17 @@ routes.route('/').get(function(req, res) {
 });
 
 routes.route('/login').post(function(req, res) {
+    const userToken = db.generateToken(req.body.name.username);
+    console.log("userToken: " + userToken);
     res.send({
-        token: 'test123'
+        token: userToken
     });
 });
 
 /*===========================================================================*/
 /*                              Database Routes                              */
 /*===========================================================================*/
-routes.route('/insertEvent').post(function(req, res) {
+routes.route('/insertEvent').post(db.authenticateToken, function(req, res) {
     let eventName = req.body.name;
     let eventDate = req.body.date;
     let eventHash = db.hashStrings(eventName, eventDate);

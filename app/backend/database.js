@@ -1,4 +1,6 @@
+//const { json } = require("body-parser");
 const crypto = require("crypto");
+const jwt = require('jsonwebtoken');
 const mysql = require("mysql2");
 
 
@@ -13,6 +15,11 @@ const connectionPool = mysql.createPool({
 const pool = connectionPool.promise();
 // Initialize the database
 initDB();
+
+/* Get API Key */
+API_KEY = process.env.RS_API_KEY;
+console.log("API KEY: " + API_KEY);
+console.log(db.genBytes());
 
 
 async function closeDatabase() {
@@ -34,7 +41,7 @@ async function initDB() {
         console.log("Database already created: " + err);
     }
     try {
-        await pool.query("CREATE TABLE users (uName varchar(50) NOT NULL, uPassword char(44) NOT NULL, PRIMARY KEY (uName))");
+        await pool.query("CREATE TABLE users (uName varchar(50) NOT NULL, uSalt char(20) NOT NULL, uPassword char(44) NOT NULL, PRIMARY KEY (uName))");
     } catch (err) {
         console.log("Event Table already created: " + err);
     }
@@ -93,11 +100,43 @@ async function insertRow(queryString, vals) {
     }
 }
 
+
+function generateToken(username) {
+    const token = jwt.sign({user: username}, API_KEY);
+    console.log(token);
+    return token;
+}
+
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    console.log("authHeader: " + authHeader);
+    console.log("token: " + token);
+
+    if (token == null) return res.sendStatus(401);
+
+    jwt.verify(token, API_KEY, (err, user) => {
+        if (err) {
+            console.log("authenticateUserError: " + err);
+            //return json.sendStatus(403);
+        }
+        req.user = user;
+        next();
+    });
+}
+
 function hashStrings(str1, str2) {
     return crypto.createHash('sha256').update(str1 + str2).digest('base64');
 }
 
+function genBytes() {
+    return crypto.randomBytes(10).toString('base64');
+}
+
+exports.authenticateToken = authenticateToken;
+exports.generateToken = generateToken;
 exports.closeDatabase = closeDatabase;
 exports.getRows = getRows;
 exports.insertRow = insertRow;
 exports.hashStrings = hashStrings;
+exports.genBytes = genBytes;
