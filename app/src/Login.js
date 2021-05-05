@@ -4,41 +4,52 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import './css/Login.css';
 
-async function loginUser(credentials) {
-  return axios.post('http://192.168.1.100:4000/login', {
-        name: credentials
-    }).then(res =>  res.data);
-}
-
 function Login({setToken}) {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
   const [loginErr, setLoginErr] = useState(false);
+  const [buttonType, setButtonType] = useState();
 
-  //const handleLogin = async (e) => {
   const handleLogin = (e) => {
     e.preventDefault();
-    //const token = await loginUser({
-    //  username,
-    //  password
-    //});
-    axios.post('http://192.168.1.100:4000/login', {
-      credentials: {
-        username: username,
-        password: password
-      }
-    }).then(res => {
-      if (res.status === 401) {
-        console.log("401 received in 'then'");
-      } else {
-        console.log("res-token: " + res.data)
-        setToken(res.data);
-      }
-    }).catch(error => {
-      console.log("loginErr: " + error);
-      console.log(error.res.status);
-      setLoginErr(true)
-    });
+    console.log("buttonType: " + buttonType);
+    if (buttonType !== 'signup') {
+      axios.post('http://192.168.1.100:4000/login', {
+        credentials: {
+          username: username,
+          password: password
+        }
+      }).then(res => {
+        if (res.status === 401) {
+          console.log("401 received in 'then'");
+          setLoginErr(true);
+        } else {
+          setToken(res.data);
+        }
+      }).catch(error => {
+        console.log("loginErr: " + error);
+        console.log(error.response.status);
+        setLoginErr(true);
+      });
+    } else {
+      axios.post('http://192.168.1.100:4000/signup', {
+        credentials: {
+          username: username,
+          password: password
+        }
+      }).then(res => {
+        if (res.status === 401) {
+          console.log("401 received in 'then'");
+          setLoginErr(true);
+        } else {
+          setToken(res.data);
+        }
+      }).catch(error => {
+        console.log("signupErr: " + error);
+        console.log(error.response.status);
+        setLoginErr(true);
+      });
+    }
   }
 
   return (
@@ -55,10 +66,16 @@ function Login({setToken}) {
         <input type="password" onChange={(e) => setPassword(e.target.value)}/>
       </label>
       <div>
-        <button type="submit">
+        <button
+          type="submit"
+          onClick={() => setButtonType('login')}
+        >
           Login
         </button>
-        <button type="submit">
+        <button
+          type="submit"
+          onClick={() => setButtonType('signup')}
+        >
           Sign Up
         </button>
       </div>

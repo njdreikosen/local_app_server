@@ -19,7 +19,8 @@ body {
 .login-field p {
   font-size: 50px;
   margin: 0px;
-  color: #e6e6e6
+  color: #e6e6e6;
+  text-align: center;
 }
 
 .login-field input {

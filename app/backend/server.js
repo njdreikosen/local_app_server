@@ -36,6 +36,16 @@ routes.route('/').get(function(req, res) {
 });
 
 routes.route('/login').post(function(req, res) {
+    console.log("Login");
+    const userToken = db.generateToken(req.body.credentials.username);
+    console.log("userToken: " + userToken);
+    res.send({
+        token: userToken
+    });
+});
+
+routes.route('/signup').post(function(req, res) {
+    console.log("Signup");
     const userToken = db.generateToken(req.body.credentials.username);
     console.log("userToken: " + userToken);
     res.send({

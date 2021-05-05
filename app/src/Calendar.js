@@ -7,15 +7,6 @@ import { faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
 
 import './css/Calendar.css';
 
-/*axios.defaults.baseURL = 'http://192.168.1.100:4000';
-axios.interceptors.request.use(function (config) {
-  const token = JSON.parse(sessionStorage.getItem('token'))['token'];
-  config.headers.Authorization = 'Bearer ' + token;
-  return config;
-  }, function (err) {
-  return Promise.reject(err);
-});*/
-
 class CalendarHeader extends React.Component {
   render() {
     const leftArrow = <FontAwesomeIcon icon={faArrowCircleLeft} size="1x" />;
