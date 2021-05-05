@@ -1,4 +1,3 @@
-const { json } = require("body-parser");
 const crypto = require("crypto");
 const jwt = require('jsonwebtoken');
 const mysql = require("mysql2");
@@ -19,7 +18,6 @@ initDB();
 /* Get API Key */
 API_KEY = process.env.LAS_API_KEY;
 console.log("API KEY: " + API_KEY);
-console.log(genBytes());
 
 
 async function closeDatabase() {
@@ -108,7 +106,6 @@ function generateToken(username) {
 }
 
 function authenticateToken(req, res, next) {
-    console.log("header: " + JSON.stringify(req.headers.authorization.token));
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1];
     console.log("authHeader: " + authHeader);
@@ -119,7 +116,7 @@ function authenticateToken(req, res, next) {
     jwt.verify(token, API_KEY, (err, user) => {
         if (err) {
             console.log("authenticateUserError: " + err);
-            return json.sendStatus(403);
+            return res.sendStatus(403);
         }
         req.user = user;
         next();
@@ -131,7 +128,7 @@ function hashStrings(str1, str2) {
 }
 
 function genBytes() {
-    return crypto.randomBytes(10).toString('base64');
+    return crypto.randomBytes(20).toString('base64');
 }
 
 exports.authenticateToken = authenticateToken;
