@@ -1,4 +1,4 @@
-//const { json } = require("body-parser");
+const { json } = require("body-parser");
 const crypto = require("crypto");
 const jwt = require('jsonwebtoken');
 const mysql = require("mysql2");
@@ -108,7 +108,8 @@ function generateToken(username) {
 }
 
 function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
+    console.log("header: " + JSON.stringify(req.headers.authorization.token));
+    const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1];
     console.log("authHeader: " + authHeader);
     console.log("token: " + token);
@@ -118,7 +119,7 @@ function authenticateToken(req, res, next) {
     jwt.verify(token, API_KEY, (err, user) => {
         if (err) {
             console.log("authenticateUserError: " + err);
-            //return json.sendStatus(403);
+            return json.sendStatus(403);
         }
         req.user = user;
         next();

@@ -8,7 +8,7 @@ import { faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
 import './css/Calendar.css';
 
 axios.defaults.baseURL = 'http://192.168.1.100:4000';
-axios.defaults.headers.common['Authorization'] = sessionStorage.getItem('token');
+//axios.defaults.headers.common['Authorization'] = sessionStorage.getItem('token');
 
 class CalendarHeader extends React.Component {
   render() {
@@ -215,9 +215,14 @@ class Calendar extends React.Component {
 
   handleAddEvent(day, e) {
     e.preventDefault();
+    const token = JSON.parse(sessionStorage.getItem('token'))['token'];
     axios.post('/insertEvent', {
       name: e.target.eventName.value,
       date: day.day
+    }, {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
     }).then(res => {
       let insertConfirmation = res.data;
       console.log(insertConfirmation);
