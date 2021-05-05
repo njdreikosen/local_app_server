@@ -5,8 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
 
-
 import './css/Calendar.css';
+
+axios.defaults.baseURL = 'http://192.168.1.100:4000';
+axios.defaults.headers.common['Authorization'] = sessionStorage.getItem('token');
 
 class CalendarHeader extends React.Component {
   render() {
@@ -195,7 +197,7 @@ class Calendar extends React.Component {
     // Define drives in case an error occurs
     let monthEvents;
     // Get drives on remote server
-    axios.get('http://192.168.1.100:4000/getMonth', {
+    axios.get('/getMonth', {
       params: {
         month: String(today.getMonth()).padStart(2, '0'),
         year: today.getFullYear(),
@@ -213,9 +215,9 @@ class Calendar extends React.Component {
 
   handleAddEvent(day, e) {
     e.preventDefault();
-    axios.post('http://192.168.1.100:4000/insertEvent', {
-        name: e.target.eventName.value,
-        date: day.day
+    axios.post('/insertEvent', {
+      name: e.target.eventName.value,
+      date: day.day
     }).then(res => {
       let insertConfirmation = res.data;
       console.log(insertConfirmation);
@@ -225,7 +227,7 @@ class Calendar extends React.Component {
       });
       if (typeof(insertConfirmation) !== "string") {
         let monthEvents;
-        axios.get('http://192.168.1.100:4000/getMonth', {
+        axios.get('/getMonth', {
           params: {
             month: day.day.slice(0,2),
             year: day.day.slice(4),
@@ -274,7 +276,7 @@ class Calendar extends React.Component {
     }
 
     let monthEvents;
-    axios.get('http://192.168.1.100:4000/getMonth', {
+    axios.get('/getMonth', {
       params: {
         month: String(month).padStart(2, '0'),
         year: year,
