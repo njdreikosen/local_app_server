@@ -15,6 +15,7 @@
     "drivelist": "^9.1.0",
     "express": "^4.17.1",
     "js-file-download": "^0.4.12",
+    "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.2",
     "mysql2": "^2.2.5",
     "nodemon": "^2.0.6",

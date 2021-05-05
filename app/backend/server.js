@@ -13,7 +13,7 @@ app.use(cors())
 app.use(bodyParser.json());
 
 /* Get API Key */
-API_KEY = process.env.RS_API_KEY;
+API_KEY = process.env.LAS_API_KEY;
 console.log("API KEY: " + API_KEY);
 console.log(db.genBytes());
 
