@@ -136,6 +136,10 @@ function authenticateToken(req, res, next) {
     });
 }
 
+function decodeBase64(str) {
+    return Buffer.from(str, 'base64').toString('utf8');
+}
+
 function hashStrings(str1, str2) {
     return crypto.createHash('sha256').update(str1 + str2).digest('base64');
 }
@@ -150,5 +154,6 @@ exports.closeDatabase = closeDatabase;
 exports.getRows = getRows;
 exports.insertRow = insertRow;
 exports.authenticateUser = authenticateUser;
+exports.decodeBase64 = decodeBase64;
 exports.hashStrings = hashStrings;
 exports.genBytes = genBytes;
