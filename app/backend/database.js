@@ -98,6 +98,18 @@ async function insertRow(queryString, vals) {
     }
 }
 
+async function authenticateUser(credentials) {
+    try {
+        let queryString = `SELECT uName, uSalt, uPassword FROM users WHERE uName = ?`;
+        let [rows, fields] = await pool.execute(queryString, [credentials.username]);
+        console.log("verifyUser: " + rows);
+        return false;
+    } catch (err) {
+        console.log("getRowsErr: " + err);
+        return false;
+    }
+}
+
 
 function generateToken(username) {
     const token = jwt.sign({user: username}, API_KEY);
@@ -136,5 +148,6 @@ exports.generateToken = generateToken;
 exports.closeDatabase = closeDatabase;
 exports.getRows = getRows;
 exports.insertRow = insertRow;
+exports.authenticateUser = authenticateUser;
 exports.hashStrings = hashStrings;
 exports.genBytes = genBytes;

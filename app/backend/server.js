@@ -37,10 +37,16 @@ routes.route('/').get(function(req, res) {
 
 routes.route('/login').post(function(req, res) {
     console.log("Login");
-    const userToken = db.generateToken(req.body.credentials.username);
-    console.log("userToken: " + userToken);
-    res.send({
-        token: userToken
+    db.verifyUser(req.body.credentials).then(valid => {
+        if (valid) {
+            const userToken = db.generateToken(req.body.credentials.username);
+            console.log("userToken: " + userToken);
+            res.send({
+                token: userToken
+            });
+        } else {
+            res.sendStatus(401);
+        }
     });
 });
 
@@ -48,8 +54,18 @@ routes.route('/signup').post(function(req, res) {
     console.log("Signup");
     const userToken = db.generateToken(req.body.credentials.username);
     console.log("userToken: " + userToken);
-    res.send({
-        token: userToken
+    let credentials = req.body.credentials;
+    let salt = db.genBytes();
+    let queryString = `INSERT INTO users (uName, uSalt, uPassword) VALUES (?, ?, ?)`;
+    let vals = [credentials.username, salt, db.hashStrings(salt, db.hashStrings(salt, credentials.password))];
+    db.insertRow(queryString, vals).then(rows => {
+        const userToken = db.generateToken(req.body.credentials.username);
+        console.log("userToken: " + userToken);
+        res.send({
+            token: userToken
+        });
+    }).catch(err => {
+        console.log("signupErr: " + err);
     });
 });
 
@@ -68,7 +84,7 @@ routes.route('/insertEvent').post(db.authenticateToken, function(req, res) {
     });
 });
 
-routes.route('/getMonth').get(function(req, res) {
+routes.route('/getMonth').get(db.authenticateToken, function(req, res) {
     let month = req.query.month;
     let year = req.query.year;
     let queryString = `SELECT eName, eDate FROM events WHERE eDate LIKE '${month}__${year}' OR eDate LIKE '${month}__....'`;
@@ -82,42 +98,42 @@ routes.route('/getMonth').get(function(req, res) {
 /*                         Remote File Server Routes                         */
 /*===========================================================================*/
 
-routes.route('/getModules').get(function(req, res) {
+routes.route('/getModules').get(db.authenticateToken, function(req, res) {
     let mods = filesystem.getModules();
     res.json(mods);
 });
 
-routes.route('/createFolder').get(function(req, res) {
+routes.route('/createFolder').get(db.authenticateToken, function(req, res) {
     let newFiles = filesystem.createFolder(req.query.filePath, req.query.folderName);
     res.json(newFiles);
 });
 
-routes.route('/renameFile').get(function(req, res) {
+routes.route('/renameFile').get(db.authenticateToken, function(req, res) {
     let newFiles = filesystem.renameFile(req.query.filePath, req.query.newFilePath, req.query.oldName, req.query.newName);
     res.json(newFiles);
 });
 
-routes.route('/deleteFile').get(function(req, res) {
+routes.route('/deleteFile').get(db.authenticateToken, function(req, res) {
     let newFiles = filesystem.deleteFile(req.query.filePath, req.query.fileName, req.query.isFolder);
     res.json(newFiles);
 });
 
-routes.route('/moveFile').get(function(req, res) {
+routes.route('/moveFile').get(db.authenticateToken, function(req, res) {
     let newFiles = filesystem.moveFile(req.query.oldFilePath, req.query.newFilePath, req.query.currFilePath);
     res.json(newFiles);
 });
 
-routes.route('/getDrives').get(async function(req, res) {
+routes.route('/getDrives').get(db.authenticateToken, async function(req, res) {
     const drives = await filesystem.getDrives();
     res.json(drives);
 });
 
-routes.route('/getFiles').get(function(req, res) {
+routes.route('/getFiles').get(db.authenticateToken, function(req, res) {
     let files = filesystem.getFiles(req.query.folder);
     res.json(files);
 });
 
-routes.route('/downloadFile').get(function(req, res) {
+routes.route('/downloadFile').get(db.authenticateToken, function(req, res) {
     let isFolder = req.query.isFolder;
     let filePath = req.query.path;
     let fileName = req.query.file;
@@ -138,7 +154,7 @@ routes.route('/downloadFile').get(function(req, res) {
     res.download(fp, req.query.file);
 });
 
-routes.route('/uploadFile').post(uploadDisk.single('file'), function(req, res) {
+routes.route('/uploadFile').post(db.authenticateToken, uploadDisk.single('file'), function(req, res) {
     console.log("File uploaded to disk")
     res.send("Success")
 });
