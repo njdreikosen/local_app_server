@@ -32,12 +32,7 @@ async function closeDatabase() {
 }
 
 async function initDB() {
-    // Create the database if it isn't already created
-    try {
-        await pool.query("CREATE DATABASE remote_server");
-    } catch (err) {
-        console.log("Database already created: " + err);
-    }
+    // Create the users table if it isn't already created
     try {
         await pool.query("CREATE TABLE users (uName varchar(50) NOT NULL, uSalt char(32) NOT NULL, uPassword char(44) NOT NULL, PRIMARY KEY (uName))");
     } catch (err) {
