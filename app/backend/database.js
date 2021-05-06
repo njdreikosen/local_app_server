@@ -136,8 +136,8 @@ function authenticateToken(req, res, next) {
 }
 
 function checkUserAccess(req, res, next) {
-    const validUsers = ['1bbbc5af50a20a390fa5db6d53c9c0acde8fc1c3cf6c67179b92548bd6aabcb1'];
-    const user = JSON.parse(db.decodeBase64(req.headers.authorization.split(' ')[1].split('.')[1])).user;
+    const validUsers = ['G7vFr1CiCjkPpdttU8nArN6PwcPPbGcXm5JUi9aqvLE='];
+    const user = JSON.parse(decodeBase64(req.headers.authorization.split(' ')[1].split('.')[1])).user;
     if (!validUsers.includes(hashStrings('', user))) {
         return res.sendStatus(418);
     }
