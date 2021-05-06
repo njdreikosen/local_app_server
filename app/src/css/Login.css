@@ -45,19 +45,36 @@ body {
 }
 
 .login-buttons {
+  flex: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 300px;
+  min-height: 70px;
+}
+
+.login-buttons button {
   outline: none;
   border: none;
   flex: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   color: #32506e;
   background-color: #bfbfbf;
   border-radius: 25px;
   height: 50px;
-  min-width: 120px;
+  min-width: 150px;
   font-size: 25px;
   margin: 20px;
 }
 
-.login-buttons:hover {
+.login-buttons button div {
+  padding: 2px;
+}
+
+.login-buttons button:hover {
   color: #32506e;
   background-color: peru;
 }

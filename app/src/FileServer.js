@@ -2,11 +2,11 @@ import React from 'react';
 import axios from 'axios';
 import fileDownload from 'js-file-download'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFolder } from '@fortawesome/free-solid-svg-icons';
-import { faFile } from '@fortawesome/free-solid-svg-icons';
-import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faFolder, faFile, faCloudUploadAlt, faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
+//import { faFile } from '@fortawesome/free-solid-svg-icons';
+//import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
+//import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+//import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 import { NavLink } from 'react-router-dom';
 
@@ -86,11 +86,17 @@ class FolderPanel extends React.Component {
   render() {
     const folderIcon = <FontAwesomeIcon icon={faFolder} size="4x" />
     const dirList = this.props.contents;
+    if (dirList.length === 0) {
+      return (
+        <div className='file-panel-empty'>
+          <p>X</p>
+        </div>
+      )
+    }
     const dirs = dirList.map((dir) => {
       return (
         <button
           className='folder'
-          //onClick={this.props.onClick}
           onClick={(e) => this.props.onClick(dir)}
           key={dir.name}
         >

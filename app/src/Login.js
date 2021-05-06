@@ -1,6 +1,7 @@
 import React, {useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignInAlt, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 
 import './css/Login.css';
 
@@ -9,6 +10,8 @@ function Login({setToken}) {
   const [password, setPassword] = useState();
   const [loginErr, setLoginErr] = useState(false);
   const [buttonType, setButtonType] = useState();
+  const loginIcon = <FontAwesomeIcon icon={faSignInAlt} size="1x" />
+  const signupIcon = <FontAwesomeIcon icon={faUserPlus} size="1x" />
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -63,20 +66,20 @@ function Login({setToken}) {
         <p>Password</p>
         <input type="password" onChange={(e) => setPassword(e.target.value)}/>
       </label>
-      <div>
+      <div className='login-buttons'>
         <button
-          className='login-buttons'
           type="submit"
           onClick={() => setButtonType('login')}
         >
-          Login
+          <div>Login</div>
+          <div>{loginIcon}</div>
         </button>
         <button
-          className='login-buttons'
           type="submit"
           onClick={() => setButtonType('signup')}
         >
-          Sign Up
+          <div>Sign Up</div>
+          <div>{signupIcon}</div>
         </button>
       </div>
       <div className={`${loginErr === false ? 'hidden-err' : 'visible-err'}`}>
