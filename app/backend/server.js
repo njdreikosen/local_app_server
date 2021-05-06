@@ -76,7 +76,7 @@ routes.route('/insertEvent').post(db.authenticateToken, function(req, res) {
     let eventName = req.body.name;
     let eventDate = req.body.date;
     let eventHash = db.hashStrings(eventName, eventDate);
-    let eventUID = db.decodeBase64(req.headers.authorization.split(' ')[1].split('.')[1]);
+    let eventUID = JSON.parse(db.decodeBase64(req.headers.authorization.split(' ')[1].split('.')[1])).user;
     console.log("eUID: " + eventUID);
     let queryString = `INSERT INTO events (eID, eName, eDate, eUID) VALUES (?, ?, ?, ?)`;
     let vals = [eventHash, eventName, eventDate, eventUID];
