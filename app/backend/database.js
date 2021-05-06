@@ -73,9 +73,9 @@ async function initDB() {
     return;
 }
 
-async function getRows(queryString) {
+async function getRows(queryString, vals) {
     try {
-        let [rows, fields] = await pool.execute(queryString);
+        let [rows, fields] = await pool.execute(queryString, vals);
         return rows;
     } catch (err) {
         console.log("getRowsErr: " + err);
