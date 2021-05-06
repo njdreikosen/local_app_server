@@ -88,7 +88,7 @@ class FolderPanel extends React.Component {
     const dirList = this.props.contents;
     if (dirList.length === 0) {
       return (
-        <div className='file-panel-empty'>
+        <div className='folder-panel-empty'>
           <p>X</p>
         </div>
       )
