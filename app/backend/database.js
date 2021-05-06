@@ -86,7 +86,7 @@ async function getRows(queryString) {
 async function insertRow(queryString, vals) {
     try {
         let [rows, fields] = await pool.execute(queryString, vals);
-        return rows;
+        return [rows, fields];
     } catch (err) {
         console.log("insertRowErr: " + err);
         return "insertRowErr: " + err;
@@ -98,7 +98,13 @@ async function authenticateUser(credentials) {
         let queryString = `SELECT uName, uSalt, uPassword FROM users WHERE uName = ?`;
         let [rows, fields] = await pool.execute(queryString, [credentials.username]);
         console.log("verifyUser: " + rows);
-        return false;
+        if (rows.length !== 1) {
+            console.log("Found " + rows.length + " users when trying to login.");
+            return false;
+        } else {
+            let user = rows[0];
+            return (user.uPassword === hashStrings(user.uSalt, hashStrings(user.uSalt, credentials.password)));
+        }
     } catch (err) {
         console.log("getRowsErr: " + err);
         return false;
