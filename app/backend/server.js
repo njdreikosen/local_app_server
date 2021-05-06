@@ -91,7 +91,7 @@ routes.route('/getMonth').get(db.authenticateToken, function(req, res) {
     let year = req.query.year;
     let eUID = JSON.parse(db.decodeBase64(req.headers.authorization.split(' ')[1].split('.')[1])).user;
     //let queryString = `SELECT eName, eDate FROM events WHERE eDate LIKE '${month}__${year} OR eDate LIKE '${month}__....'`;
-    let queryString = `SELECT eName, eDate FROM events WHERE (eDate LIKE ? OR eDate LIKE ?) AND eUID = ?`;
+    let queryString = `SELECT eName, eDate FROM events WHERE (eDate LIKE ? OR eDate LIKE ?) AND (eUID = '' OR eUID = ?)`;
     let vals = [month + "__" + year, month + "__....", eUID];
     console.log("getMonthQuery: " + queryString);
     db.getRows(queryString, vals).then(rows => {
