@@ -89,7 +89,7 @@ class FolderPanel extends React.Component {
     if (dirList.length === 0) {
       return (
         <div className='folder-panel-empty'>
-          <p>X</p>
+          <p>No Folders Found</p>
         </div>
       )
     }
