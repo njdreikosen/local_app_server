@@ -86,7 +86,7 @@ async function getRows(queryString) {
 async function insertRow(queryString, vals) {
     try {
         let [rows, fields] = await pool.execute(queryString, vals);
-        return [rows, fields];
+        return rows;
     } catch (err) {
         console.log("insertRowErr: " + err);
         return "insertRowErr: " + err;

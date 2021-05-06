@@ -28,7 +28,6 @@ function Login({setToken}) {
         }
       }).catch(error => {
         console.log("loginErr: " + error);
-        console.log(error.response.status);
         setLoginErr(true);
       });
     } else {
@@ -46,7 +45,6 @@ function Login({setToken}) {
         }
       }).catch(error => {
         console.log("signupErr: " + error);
-        console.log(error.response.status);
         setLoginErr(true);
       });
     }

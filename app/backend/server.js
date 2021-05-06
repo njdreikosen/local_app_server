@@ -51,16 +51,14 @@ routes.route('/login').post(function(req, res) {
 });
 
 routes.route('/signup').post(function(req, res) {
-    console.log("Signup");
-    const userToken = db.generateToken(req.body.credentials.username);
-    console.log("userToken: " + userToken);
     let credentials = req.body.credentials;
     let salt = db.genBytes();
     let queryString = `INSERT INTO users (uName, uSalt, uPassword) VALUES (?, ?, ?)`;
     let vals = [credentials.username, salt, db.hashStrings(salt, db.hashStrings(salt, credentials.password))];
     db.insertRow(queryString, vals).then(rows => {
-        console.log(rows);
-        console.log(JSON.stringify(rows));
+        if (typeof(rows) === 'string') {
+            res.sendStatus(401);
+        }
         const userToken = db.generateToken(req.body.credentials.username);
         console.log("userToken: " + userToken);
         res.send({
@@ -82,7 +80,7 @@ routes.route('/insertEvent').post(db.authenticateToken, function(req, res) {
     let vals = [eventHash, eventName, eventDate];
     console.log("insertEventQuery: " + queryString);
     db.insertRow(queryString, vals).then(rows => {
-        res.json(rows.rows);
+        res.json(rows);
     });
 });
 
