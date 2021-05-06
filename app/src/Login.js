@@ -65,12 +65,14 @@ function Login({setToken}) {
       </label>
       <div>
         <button
+          className='login-buttons'
           type="submit"
           onClick={() => setButtonType('login')}
         >
           Login
         </button>
         <button
+          className='login-buttons'
           type="submit"
           onClick={() => setButtonType('signup')}
         >
