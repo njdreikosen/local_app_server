@@ -57,7 +57,7 @@ body {
   margin: 20px;
 }
 
-button:hover {
+.login-buttons:hover {
   color: #32506e;
   background-color: peru;
 }
