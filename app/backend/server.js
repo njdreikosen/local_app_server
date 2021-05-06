@@ -90,7 +90,6 @@ routes.route('/getMonth').get(db.authenticateToken, function(req, res) {
     let month = req.query.month;
     let year = req.query.year;
     let eUID = JSON.parse(db.decodeBase64(req.headers.authorization.split(' ')[1].split('.')[1])).user;
-    //let queryString = `SELECT eName, eDate FROM events WHERE eDate LIKE '${month}__${year} OR eDate LIKE '${month}__....'`;
     let queryString = `SELECT eName, eDate FROM events WHERE (eDate LIKE ? OR eDate LIKE ?) AND (eUID = '' OR eUID = ?)`;
     let vals = [month + "__" + year, month + "__....", eUID];
     console.log("getMonthQuery: " + queryString);
@@ -108,37 +107,37 @@ routes.route('/getModules').get(db.authenticateToken, function(req, res) {
     res.json(mods);
 });
 
-routes.route('/createFolder').get(db.authenticateToken, function(req, res) {
+routes.route('/createFolder').get(db.authenticateToken, db.checkUserAccess, function(req, res) {
     let newFiles = filesystem.createFolder(req.query.filePath, req.query.folderName);
     res.json(newFiles);
 });
 
-routes.route('/renameFile').get(db.authenticateToken, function(req, res) {
+routes.route('/renameFile').get(db.authenticateToken, db.checkUserAccess, function(req, res) {
     let newFiles = filesystem.renameFile(req.query.filePath, req.query.newFilePath, req.query.oldName, req.query.newName);
     res.json(newFiles);
 });
 
-routes.route('/deleteFile').get(db.authenticateToken, function(req, res) {
+routes.route('/deleteFile').get(db.authenticateToken, db.checkUserAccess, function(req, res) {
     let newFiles = filesystem.deleteFile(req.query.filePath, req.query.fileName, req.query.isFolder);
     res.json(newFiles);
 });
 
-routes.route('/moveFile').get(db.authenticateToken, function(req, res) {
+routes.route('/moveFile').get(db.authenticateToken, db.checkUserAccess, function(req, res) {
     let newFiles = filesystem.moveFile(req.query.oldFilePath, req.query.newFilePath, req.query.currFilePath);
     res.json(newFiles);
 });
 
-routes.route('/getDrives').get(db.authenticateToken, async function(req, res) {
+routes.route('/getDrives').get(db.authenticateToken, db.checkUserAccess, async function(req, res) {
     const drives = await filesystem.getDrives();
     res.json(drives);
 });
 
-routes.route('/getFiles').get(db.authenticateToken, function(req, res) {
+routes.route('/getFiles').get(db.authenticateToken, db.checkUserAccess, function(req, res) {
     let files = filesystem.getFiles(req.query.folder);
     res.json(files);
 });
 
-routes.route('/downloadFile').get(db.authenticateToken, function(req, res) {
+routes.route('/downloadFile').get(db.authenticateToken, db.checkUserAccess, function(req, res) {
     let isFolder = req.query.isFolder;
     let filePath = req.query.path;
     let fileName = req.query.file;
@@ -159,7 +158,7 @@ routes.route('/downloadFile').get(db.authenticateToken, function(req, res) {
     res.download(fp, req.query.file);
 });
 
-routes.route('/uploadFile').post(db.authenticateToken, uploadDisk.single('file'), function(req, res) {
+routes.route('/uploadFile').post(db.authenticateToken, db.checkUserAccess, uploadDisk.single('file'), function(req, res) {
     console.log("File uploaded to disk")
     res.send("Success")
 });

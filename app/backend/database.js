@@ -111,7 +111,6 @@ async function authenticateUser(credentials) {
     }
 }
 
-
 function generateToken(username) {
     const token = jwt.sign({user: username}, API_KEY);
     console.log(token);
@@ -136,6 +135,15 @@ function authenticateToken(req, res, next) {
     });
 }
 
+function checkUserAccess(req, res, next) {
+    const validUsers = ['1bbbc5af50a20a390fa5db6d53c9c0acde8fc1c3cf6c67179b92548bd6aabcb1'];
+    const user = JSON.parse(db.decodeBase64(req.headers.authorization.split(' ')[1].split('.')[1])).user;
+    if (!validUsers.includes(hashStrings('', user))) {
+        return res.sendStatus(418);
+    }
+    next();
+}
+
 function decodeBase64(str) {
     return Buffer.from(str, 'base64').toString('utf8');
 }
@@ -154,6 +162,7 @@ exports.closeDatabase = closeDatabase;
 exports.getRows = getRows;
 exports.insertRow = insertRow;
 exports.authenticateUser = authenticateUser;
+exports.checkUserAccess = checkUserAccess;
 exports.decodeBase64 = decodeBase64;
 exports.hashStrings = hashStrings;
 exports.genBytes = genBytes;
