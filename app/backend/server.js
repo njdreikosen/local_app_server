@@ -37,7 +37,7 @@ routes.route('/').get(function(req, res) {
 
 routes.route('/login').post(function(req, res) {
     console.log("Login");
-    db.verifyUser(req.body.credentials).then(valid => {
+    db.authenticateUser(req.body.credentials).then(valid => {
         if (valid) {
             const userToken = db.generateToken(req.body.credentials.username);
             console.log("userToken: " + userToken);

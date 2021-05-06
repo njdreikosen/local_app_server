@@ -39,7 +39,7 @@ async function initDB() {
         console.log("Database already created: " + err);
     }
     try {
-        await pool.query("CREATE TABLE users (uName varchar(50) NOT NULL, uSalt char(20) NOT NULL, uPassword char(44) NOT NULL, PRIMARY KEY (uName))");
+        await pool.query("CREATE TABLE users (uName varchar(50) NOT NULL, uSalt char(32) NOT NULL, uPassword char(44) NOT NULL, PRIMARY KEY (uName))");
     } catch (err) {
         console.log("Event Table already created: " + err);
     }
@@ -140,7 +140,7 @@ function hashStrings(str1, str2) {
 }
 
 function genBytes() {
-    return crypto.randomBytes(20).toString('base64');
+    return crypto.randomBytes(24).toString('base64');
 }
 
 exports.authenticateToken = authenticateToken;
