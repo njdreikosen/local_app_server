@@ -111,7 +111,7 @@ button {
 .calendar-panel {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 60px 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 60px repeat(auto-fill, 1fr);
   column-gap: 10px;
   row-gap: 10px;
   background-color: #bfbfbf;
