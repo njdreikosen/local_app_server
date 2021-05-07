@@ -111,12 +111,12 @@ button {
 .calendar-panel {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 40px repeat(auto-fill, 1fr);
+  /*grid-template-rows: 30px repeat(auto-fit, 1fr);*/
   column-gap: 10px;
   row-gap: 10px;
   background-color: #bfbfbf;
-  height: calc(100vh - 125px);
-  border: solid 20px #bfbfbf;
+  height: calc(100vh - 105px);
+  border: solid 10px #bfbfbf;
 }
 
 .day-names {

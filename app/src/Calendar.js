@@ -294,9 +294,11 @@ class Calendar extends React.Component {
 
   /* Event handler to popup the Popup when a day is clicked */
   handleDayClick(day) {
-    this.setState({
-      popup: ['display', day]
-    });
+    if (day.day !== '') {
+      this.setState({
+        popup: ['display', day]
+      });
+    }
   }
 
   /* Event handler for clicking one of the buttons on the Popup */
@@ -357,8 +359,6 @@ class Calendar extends React.Component {
     // Calculate the number of 'blank' day spots in the first week
     // by getting the index of the weekday of the first day of the month, and subtracting 1
     let startingBlanks = new Date(year, month, 1).getDay();
-    // Calculate the number of 'blank' day spots in the last week
-    let endingBlanks = 7 - ((startingBlanks + numDaysInMonth) % 7);
     
     // Iterable to create each week
     let i;
@@ -392,10 +392,6 @@ class Calendar extends React.Component {
     for (i = 0; i < startingBlanks; i ++) {
       days.unshift({day: "", events: []});
     }
-    // Append 'blank' days for the last week
-    for (i = 0; i < endingBlanks; i ++) {
-      days.push({day: "", events: []});
-    }
 
     let index = 0;
     const dayButtons = days.map((day) => {
@@ -413,8 +409,9 @@ class Calendar extends React.Component {
         </button>
       )
     });
+
     return (
-      <div className='calendar-panel'>
+      <div className='calendar-panel' style={{gridTemplateRows: days.length/7 <= 5? '30px repeat(5, 1fr)' : '30px repeat(6, 1fr)'}} >
         <div className='day-names'>Sunday</div>
         <div className='day-names'>Monday</div>
         <div className='day-names'>Tuesday</div>
