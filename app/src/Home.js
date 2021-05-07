@@ -1,11 +1,13 @@
-import React from 'react';
+/* External Imports */
 import axios from 'axios';
-//import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import './css/Home.css';
 import { NavLink } from 'react-router-dom';
+/* Style Imports */
+import './css/Home.css';
 
+
+// Home Page component
 class Home extends React.Component {
   /* Home Page component constructor */
   constructor(props) {
@@ -15,7 +17,8 @@ class Home extends React.Component {
     }
   }
 
-  /* When the component mounts, get the drives from the server */
+  /* When the component mounts, get the installed applications */
+  // NOT IMPLEMENTED YET
   componentDidMount() {
     /*/ Define drives in case an error occurs
     let drives;

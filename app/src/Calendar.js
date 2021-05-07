@@ -1,12 +1,13 @@
-import React from 'react';
+/* External Imports */
 import axios from 'axios';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
-import { faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
-
+import { faArrowCircleLeft, faArrowCircleRight } from '@fortawesome/free-solid-svg-icons';
+/* Style Imports */
 import './css/Calendar.css';
 
+// Header for the Calendar module
 class CalendarHeader extends React.Component {
   render() {
     const leftArrow = <FontAwesomeIcon icon={faArrowCircleLeft} size="1x" />;
@@ -62,6 +63,7 @@ class CalendarHeader extends React.Component {
   }
 }
 
+// Popup for the Calendar module
 class PopUp extends React.Component {
   handleFocus(e) {
     e.target.select();
@@ -79,7 +81,7 @@ class PopUp extends React.Component {
             <div className='popup-title'>
               Enter New Event Name:
             </div>
-            <input type='text' name='eventName' placeholder='New-Event-Name' autoComplete='off' className='event-input'/>
+            <input type='text' name='eventName' placeholder='New-Event-Name' autoComplete='off' onFocus={this.handleFocus} className='event-input'/>
             <div className='day-buttons'>
               <button type='submit'>
                 Add
@@ -173,6 +175,7 @@ class PopUp extends React.Component {
   }
 }
 
+// Main Calendar module
 class Calendar extends React.Component {
   /* Calendar component constructor */
   constructor(props) {
@@ -187,13 +190,12 @@ class Calendar extends React.Component {
     }
   }
 
-  /* When the component mounts, get the drives from the server */
   componentDidMount() {
     // Get todays date in order to get data for the current month
     let today = new Date();
-    // Define drives in case an error occurs
+    // Define monthEvents in case an error occurs
     let monthEvents;
-    // Get drives on remote server
+    // Get events for the current month
     axios.get('/getMonth', {
       params: {
         month: String(today.getMonth()).padStart(2, '0'),
@@ -210,6 +212,7 @@ class Calendar extends React.Component {
     });
   }
 
+  /* Event handler for adding a new event */
   handleAddEvent(day, e) {
     e.preventDefault();
     axios.post('/insertEvent', {
@@ -237,7 +240,6 @@ class Calendar extends React.Component {
           console.log("Calendar.handleEvent Error: " + error);
         });
       } else {
-        console.log("FAILED TO ADD EVENT");
         this.setState({
           popup: ["Failure", "Failed to add event. :("]
         });
@@ -250,9 +252,11 @@ class Calendar extends React.Component {
     });
   }
 
+  /* Event handler for clicking one of the arrows in the header */
   handleArrowClick(direction) {
     let month = parseInt(this.state.month.slice(0, 2), 10);
     let year = parseInt(this.state.month.slice(2));
+    // Calculate the month number and year based on which arrow is clicked
     if (direction === 'prev') {
       month = month - 1;
       if (month < 0) {
@@ -270,6 +274,7 @@ class Calendar extends React.Component {
       return;
     }
 
+    // Get the events for the new month
     let monthEvents;
     axios.get('/getMonth', {
       params: {
@@ -287,12 +292,14 @@ class Calendar extends React.Component {
     });
   }
 
+  /* Event handler to popup the Popup when a day is clicked */
   handleDayClick(day) {
     this.setState({
       popup: ['display', day]
     });
   }
 
+  /* Event handler for clicking one of the buttons on the Popup */
   handlePopupButtonClick(action, day, e) {
     e.preventDefault();
     if (action === 'add') {
@@ -316,6 +323,7 @@ class Calendar extends React.Component {
     return new Date(year, month+1, 0).getDate();
   }
 
+  /* Render the list of events in a day */
   renderEvents(events) {
     if (events.length > 1) {
       return (
@@ -338,9 +346,8 @@ class Calendar extends React.Component {
     }
   }
 
+  /* Render each week in the month */
   renderWeeks() {
-    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
     let month = parseInt(this.state.month.slice(0,2), 10);
     let year = this.state.month.slice(2);
     let events = this.state.events;

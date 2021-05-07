@@ -1,10 +1,13 @@
-import React, {useState } from 'react';
+/* External Imports */
 import axios from 'axios';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignInAlt, faUserPlus } from '@fortawesome/free-solid-svg-icons';
-
+/* Style Imports */
 import './css/Login.css';
 
+
+// Login Page component
 function Login({setToken}) {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
@@ -13,9 +16,11 @@ function Login({setToken}) {
   const loginIcon = <FontAwesomeIcon icon={faSignInAlt} size="1x" />
   const signupIcon = <FontAwesomeIcon icon={faUserPlus} size="1x" />
 
+  // onSubmit handler for the Login form
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log("buttonType: " + buttonType);
+    // If the button wasn't the signup button, login the user instead
+    // (includes if the user hits 'Enter' instead of clicking a button)
     if (buttonType !== 'signup') {
       axios.post('/login', {
         credentials: {
@@ -34,6 +39,7 @@ function Login({setToken}) {
         setLoginErr(true);
       });
     } else {
+      // Signup the user instead
       axios.post('/signup', {
         credentials: {
           username: username,

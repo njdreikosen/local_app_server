@@ -1,4 +1,4 @@
-/* Styling for Remote File Server */
+/* Styling for File Server Page */
 
 /*============================================================================*/
 /*                              GENERAL STYLING                               */
@@ -6,12 +6,14 @@
 body {
   overflow: hidden;
 }
+
 /* Overall section, contains the entire HTML body */
 .ui {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
+
 button {
   outline: none;
   border: none;
@@ -42,9 +44,11 @@ button {
 .icon-block:hover .connection-circle {
   border: solid 5px peru;
 }
+
 .icon-block:hover .connection-line {
   background: peru;
 }
+
 .icon-block:hover g {
   fill: peru;
 }
@@ -58,6 +62,7 @@ button {
   border: solid 5px #e6e6e6;
   flex: 0;
 }
+
 .connection-line {
   min-width: 5px;
   height: 5px;
@@ -65,6 +70,7 @@ button {
   margin: -2px;
   flex: 1;
 }
+
 /* Overall navbar section, including title and breadcrumbs */
 .navbar {
   flex: 1;
@@ -73,6 +79,7 @@ button {
   background-color: #32506e;
   border-bottom: solid 5px #32506e;
 }
+
 /* Title text */
 .nav-title {
   flex: 1;
@@ -80,6 +87,7 @@ button {
   text-align: center;
   font-size: 35px;
 }
+
 /* Overall breadcrumb styling */
 .breadcrumbs {
   font-size: 100px;
@@ -90,10 +98,12 @@ button {
   height: 30px;
   display: relative;
 }
+
 /* Overall for each individual breadcrumb */
 .breadcrumbs li {
   float: left;
 }
+
 /* Button styling for each breadcrumb */
 .breadcrumbs li button {
   color: #32506e;
@@ -105,6 +115,7 @@ button {
   display: block;
   height: 30px;
 }
+
 /* Additional triangle and gap pixel */
 .breadcrumbs li button:before,
 .breadcrumbs li button:after {
@@ -119,26 +130,31 @@ button {
   margin-top: -15px;
   left: 100%;
 }
+
 /* Additional triangle on right of button */
 .breadcrumbs li button:before { 
   border-left: 15px solid #32506e;
   margin-left: 1px;
   z-index: 1; 
 }
+
 /* Pixel wide gap between each breadcrumb */
 .breadcrumbs li button:after { 
   border-left: 15px solid #bfbfbf;
   z-index: 2; 
-}	
+}
+
 /* Padding in first breadcrumb button */
 .breadcrumbs li:first-child button {
   padding-left: 10px;
 }
+
 /* Breadcrumb hover effects */
 .breadcrumbs li button:hover {
   background-color: peru;
   border-color: peru;
 }
+
 .breadcrumbs li button:hover:after {
   border-left-color: peru;
 }
@@ -153,6 +169,7 @@ button {
   display: flex;
   flex-direction: row;
 }
+
 /* Folder and file styling */
 .folder-panel,
 .file-panel {
@@ -163,6 +180,7 @@ button {
   background-color: #bfbfbf;
   flex: 1;
 }
+
 .folder-panel {
   justify-content: space-evenly;
   max-height: calc(100vh - 205px);
@@ -174,24 +192,29 @@ button {
   border-bottom: solid 5px #bfbfbf;
   border-right: solid 5px #32506e;
 }
+
 .file-panel {
   align-content: flex-start;
   max-height: calc(100vh - 185px);
 }
+
 /* Scrollbar styling */
 .folder-panel::-webkit-scrollbar,
 .file-panel::-webkit-scrollbar {
   width: 10px;
 }
+
 .folder-panel::-webkit-scrollbar-track
 .file-panel::-webkit-scrollbar-track {
   background-color: #bfbfbf;  
 }
+
 .folder-panel::-webkit-scrollbar-thumb,
 .file-panel::-webkit-scrollbar-thumb {
   background-color: #32506e;
   border-radius: 5px;
 }
+
 /* Folder and File Buttons */
 .folder,
 .file {
@@ -210,15 +233,18 @@ button {
   flex: 1;
   flex-basis: 120px;
 }
+
 .folder {
   margin-bottom: 10px;
   min-width: 180px;
 }
+
 .file {
   align-self: flex-start;
   margin: 20px;
   min-width: 120px;
 }
+
 /* File button hover effect */
 .folder:hover,
 .file:hover {
@@ -245,6 +271,7 @@ button {
   background-color: #bfbfbf;
   flex: 1;
 }
+
 /* Empty file panel */
 .folder-panel-empty {
   font-size: 50px;
@@ -259,14 +286,13 @@ button {
   max-height: calc(100vh - 205px);
   max-width: calc(20vw + 5px);
   flex: 1;
-
-  /*padding-top: 10px;*/
   padding-left: 5px;
   padding-right: 5px;
   border-top: solid 5px #bfbfbf;
   border-bottom: solid 5px #bfbfbf;
   border-right: solid 5px #32506e;
 }
+
 /* Brackets around no files message */
 .file-panel-empty p,
 .folder-panel-empty p {
@@ -294,6 +320,7 @@ button {
   height: 100px;
   background-color: #32506e;
 }
+
 /* Bottom folder and file panels */
 .folder-panel-bottom,
 .file-panel-bottom {
@@ -303,6 +330,7 @@ button {
   padding-right: 10px;
   overflow: hidden;
 }
+
 /* Bottom of folder panel, includes new folder and upload folder buttons */
 .folder-panel-bottom {
   display: flex;
@@ -310,12 +338,14 @@ button {
   width: calc(20vw + 5px);
   border-right: solid 5px #bfbfbf;
 }
+
 /* Bottom of the file panel, including file data and buttons */
 .file-panel-bottom {
   display: flex;
   padding-left: 10px;
   flex: 1;
 }
+
 .folder-panel-bottom button,
 .file-buttons button {
   color: #32506e;
@@ -328,6 +358,7 @@ button {
   align-items: center;
   justify-content: space-evenly;
 }
+
 /* New Folder and Upload File Buttons */
 .folder-panel-bottom button {
   padding-left: 12px;
@@ -336,6 +367,7 @@ button {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
 /* Individual file buttons */
 .file-buttons button {
   padding-left: 10px;
@@ -344,6 +376,7 @@ button {
   margin-bottom: 10px;
   flex: 1;
 }
+
 /* File data, including icon, name, size, and creation date */
 .file-data,
 .file-data-empty {
@@ -358,11 +391,13 @@ button {
 .file-data {
   padding: 10px;
 }
+
 /* Empty file data */
 .file-data-empty {
   font-size: 30px;
   text-align: center;
 }
+
 /* Brackets around no file selected message */
 .file-data-empty p {
   background-image: linear-gradient(#bfbfbf, #bfbfbf),
@@ -377,6 +412,7 @@ button {
   margin: 2px;
   padding: 10px;
 }
+
 /* Overall file info */
 .fileinfo {
   margin-left:10px;
@@ -384,12 +420,14 @@ button {
   flex-direction: column;
   align-items: flex-start;
 }
+
 /* File name */
 .filename {
   font-size: 35px;
   margin-left: 0px;
   flex: 0;
 }
+
 /* File statistics */
 .file-stats {
   font-size: 15px;
@@ -398,15 +436,18 @@ button {
   flex-direction: column;
   align-items: flex-start;
 }
+
 /* Individual file statistics */
 .file-stats div {
   flex: 1;
 }
+
 /* Overall file buttons */
 .file-buttons {
   flex: 0;
   padding-left: 10px;
 }
+
 /* Folder and file button hover effects */
 .folder-panel-bottom button:hover,
 .file-buttons button:hover {
@@ -428,6 +469,7 @@ button {
   margin: auto;
   background-color: rgba(191,191,191,0.6);
 }
+
 .popup-modal {
   position: absolute;
   top: 50%;

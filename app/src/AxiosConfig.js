@@ -1,5 +1,8 @@
+/* External Imports */
 import axios from 'axios';
 
+// Axios Interceptor for prepending the server base URL and including authentication
+// in the request header via a JWT
 const axiosInterceptor = axios.interceptors.request.use(
   function (config) {
     // If the user is just logging in, the token is still undefined

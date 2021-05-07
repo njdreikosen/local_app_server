@@ -1,23 +1,20 @@
+/* External Imports */
 import React from 'react';
 import axios from 'axios';
 import fileDownload from 'js-file-download'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolder, faFile, faCloudUploadAlt, faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
-//import { faFile } from '@fortawesome/free-solid-svg-icons';
-//import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
-//import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-//import { faEdit } from '@fortawesome/free-solid-svg-icons';
-
 import { NavLink } from 'react-router-dom';
-
+/* Style Imports */
 import './css/FileServer.css';
 
 
+// File upload functionality
 const FileUpload = (props) => {
-
   const uploadIcon = <FontAwesomeIcon icon={faCloudUploadAlt} size="1x" />
   const hiddenFileUpload = React.useRef(null);
   
+  // onClick handler for the upload button
   const handleUploadFile = e => {
     console.log("Upload file");
     console.log("Props: " + JSON.stringify(props));
@@ -25,6 +22,7 @@ const FileUpload = (props) => {
     hiddenFileUpload.current.click();
   }
 
+  // onChange handler for the upload input field
   const handleChange = e => {
     const upFile = e.target.files[0];
     props.handleUpload(upFile);
@@ -39,15 +37,19 @@ const FileUpload = (props) => {
       <input type='file'
              ref={hiddenFileUpload}
              onChange={handleChange}
-             style={{display:'none'}}/>
+             style={{display:'none'}}
+      />
     </>
   )
 }
 
+
+// Panel that displays the files in the current directory
 class FilePanel extends React.Component {
   render() {
     const fileIcon = <FontAwesomeIcon icon={faFile} size="4x" />;
     const fileList = this.props.contents;
+    // If there are no files, display the empty message
     if (fileList.length === 0) {
       return (
         <div className='file-panel-empty'>
@@ -55,8 +57,10 @@ class FilePanel extends React.Component {
         </div>
       )
     }
+    // Map the files to buttons, which will be rendered
     const files = fileList.map((file) => {
       let fname = file.name;
+      // If the file name is longer than 15 characters, cut it down
       if (fname.length > 15) {
         fname = file.name.substring(0, 15);
       }
@@ -82,6 +86,8 @@ class FilePanel extends React.Component {
   }
 }
 
+
+// Panel that displays the folders in the current directory
 class FolderPanel extends React.Component {
   render() {
     const folderIcon = <FontAwesomeIcon icon={faFolder} size="4x" />
@@ -93,7 +99,13 @@ class FolderPanel extends React.Component {
         </div>
       )
     }
+    // Map the folders to buttons, which will be rendered
     const dirs = dirList.map((dir) => {
+      let dname = dir.name;
+      // If the folder name is longer than 15 characters, cut it down
+      if (dname.length > 15) {
+        dname = dir.name.substring(0, 15);
+      }
       return (
         <button
           className='folder'
@@ -101,7 +113,7 @@ class FolderPanel extends React.Component {
           key={dir.name}
         >
           <div>{folderIcon}</div>
-          <div>{dir.name}</div>
+          <div>{dname}</div>
         </button>
       );
     });
@@ -113,6 +125,8 @@ class FolderPanel extends React.Component {
   }
 }
 
+
+// Popup for the File Server component
 class PopUp extends React.Component {
   handleFocus(e) {
     e.target.select();
@@ -126,7 +140,7 @@ class PopUp extends React.Component {
             <div className='popup-msg'>
               New Folder
             </div>
-            <input type='text' name='folderName' placeholder='New-Folder-Name' autoComplete='off' className='popup-input'/>
+            <input type='text' name='folderName' placeholder='New-Folder-Name' autoComplete='off' onFocus={this.handleFocus} className='popup-input'/>
             <div className='popup-buttons'>
               <button type='submit'>
                 Create
@@ -215,6 +229,8 @@ class PopUp extends React.Component {
   }
 }
 
+
+// Header for the File Server module
 class UIHeader extends React.Component {
   render() {
     let path = this.props.path;
@@ -226,6 +242,7 @@ class UIHeader extends React.Component {
     } else {
       size = 90;
     }
+    // Create breadcrumbs from the current file path
     const breadcrumbs = path.map((breadcrumb, index, path) => {
       return (
         <li key={index}>
@@ -278,6 +295,7 @@ class UIHeader extends React.Component {
   }
 }
 
+// Main File Server component
 class FileServer extends React.Component {
   /* FileServer component constructor */
   constructor(props) {

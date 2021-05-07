@@ -1,7 +1,23 @@
+/* External Imports */
+const child_process = require('child_process');
 const drivelist = require('drivelist');
-const child_process = require("child_process")
-const fs = require("fs");
+const fs = require('fs');
 
+
+// Compress all the files in a given directory, so the zip can be downloaded
+function compressFiles(filePath, folder, zipFilePath) {
+    let zipCommand = "pushd " + filePath + " && zip -r " + zipFilePath + " ./" + folder + "/ && popd";
+    console.log("Zipping with command: " + zipCommand);
+    try {
+        child_process.execSync(zipCommand, {shell: '/bin/bash'});
+    } catch (error) {
+        console.log("ERROR ZIPPING FILE: " + error);
+        return false;
+    }
+    return true;
+}
+
+// Create a new directory
 function createFolder(filePath, folderName) {
     let path = filePath;
     let originalPath = path.join('/');
@@ -19,35 +35,7 @@ function createFolder(filePath, folderName) {
     }
 }
 
-function compressFiles(filePath, folder, zipFilePath) {
-    let zipCommand = "pushd " + filePath + " && zip -r " + zipFilePath + " ./" + folder + "/ && popd";
-    console.log("Zipping with command: " + zipCommand);
-    try {
-        child_process.execSync(zipCommand, {shell: '/bin/bash'});
-    } catch (error) {
-        console.log("ERROR ZIPPING FILE: " + error);
-        return false;
-    }
-    return true;
-}
-
-function renameFile(filePath, newFilePath, oldName, newName) {
-    let originalPath = newFilePath.join('/');
-    let oldPath = filePath.concat(oldName).join('/');
-    let newPath = filePath.concat(newName).join('/');
-    try {
-        if (!fs.existsSync(newPath)) {
-            fs.renameSync(oldPath, newPath);
-            return getFiles(originalPath);
-        } else {
-            return "That file name already exists.";
-        }
-    } catch(err) {
-        console.log(err);
-        return "An unexpected error occured.";
-    }
-}
-
+// Delete a file or directory
 function deleteFile(filePath, fileName, isFolder) {
     console.log(typeof isFolder);
     let originalPath = filePath.join('/');
@@ -80,30 +68,7 @@ function deleteFile(filePath, fileName, isFolder) {
     }
 }
 
-function moveFile(oldFilePath, newFilePath, currFilePath) {
-    try {
-        if (!fs.existsSync(newFilePath)) {
-            fs.renameSync(oldFilePath, newFilePath);
-            return getFiles(currFilePath);
-        } else {
-            return "That file already exists at that location.";
-        }
-    } catch(err) {
-        if (err.code === "EXDEV") {
-          let inStream = fs.createReadStream(oldFilePath);
-          let outStream = fs.createWriteStream(newFilePath);
-          inStream.pipe(outStream);
-          inStream.on('end', function() {
-            fs.unlinkSync(oldFilePath);
-          });
-          return getFiles(currFilePath);
-        } else {
-          console.log(err);
-          return "An unexpected error occured.";
-        }
-    }
-}
-
+// Get the drives attached to the system
 async function getDrives() {
     let hddList = []
     const drives = await drivelist.list();
@@ -124,6 +89,7 @@ async function getDrives() {
     return hddList;
 };
 
+// Get all the files and directories at a given path
 function getFiles(directoryPath) {
     let files = [];
     console.log(directoryPath);
@@ -190,6 +156,7 @@ function getFiles(directoryPath) {
     return files;
 }
 
+// Yet to be implemented
 function getModules() {
     let mods = [];
     let modsPath = __dirname + "/../src/modules"
@@ -202,11 +169,55 @@ function getModules() {
     return mods;
 }
 
-exports.createFolder = createFolder;
+// Move a file to a new directory
+function moveFile(oldFilePath, newFilePath, currFilePath) {
+    try {
+        if (!fs.existsSync(newFilePath)) {
+            fs.renameSync(oldFilePath, newFilePath);
+            return getFiles(currFilePath);
+        } else {
+            return "That file already exists at that location.";
+        }
+    } catch(err) {
+        if (err.code === "EXDEV") {
+          let inStream = fs.createReadStream(oldFilePath);
+          let outStream = fs.createWriteStream(newFilePath);
+          inStream.pipe(outStream);
+          inStream.on('end', function() {
+            fs.unlinkSync(oldFilePath);
+          });
+          return getFiles(currFilePath);
+        } else {
+          console.log(err);
+          return "An unexpected error occured.";
+        }
+    }
+}
+
+// Rename a file or directory
+function renameFile(filePath, newFilePath, oldName, newName) {
+    let originalPath = newFilePath.join('/');
+    let oldPath = filePath.concat(oldName).join('/');
+    let newPath = filePath.concat(newName).join('/');
+    try {
+        if (!fs.existsSync(newPath)) {
+            fs.renameSync(oldPath, newPath);
+            return getFiles(originalPath);
+        } else {
+            return "That file name already exists.";
+        }
+    } catch(err) {
+        console.log(err);
+        return "An unexpected error occured.";
+    }
+}
+
+
 exports.compressFiles = compressFiles;
-exports.renameFile = renameFile;
+exports.createFolder = createFolder;
 exports.deleteFile = deleteFile;
-exports.moveFile = moveFile;
 exports.getDrives = getDrives;
 exports.getFiles = getFiles;
 exports.getModules = getModules;
+exports.moveFile = moveFile;
+exports.renameFile = renameFile;

@@ -1,4 +1,4 @@
-/* Styling for Remote File Server */
+/* Styling for Calendar Page */
 
 /*============================================================================*/
 /*                              GENERAL STYLING                               */
@@ -74,13 +74,6 @@ button {
   background-color: #32506e;
   border-bottom: solid 5px #32506e;
 }
-/* Title text 
-.nav-title {
-  flex: 1;
-  color: #bfbfbf;
-  text-align: center;
-  font-size: 10px;
-}*/
 
 /* Month Name in Title Block */
 .month {
@@ -107,14 +100,14 @@ button {
 /*============================================================================*/
 /*                            MAIN CONTENT SECTION                            */
 /*============================================================================*/
-/* Main content section, includes folder and file panels */
+/* Main content section */
 .ui-contents {
   flex: 1;
   display: flex;
   flex-direction: row;
 }
 
-/* Folder and file styling */
+/* Calendar Week styling */
 .calendar-panel {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -123,12 +116,6 @@ button {
   row-gap: 10px;
   background-color: #bfbfbf;
   height: calc(100vh - 125px);
-  /*background-color: #bfbfbf;
-
-  justify-content: space-evenly;
-  height: calc(100vh - 150px);
-  /*border-bottom: solid 5px #b;
-  border-right: solid 5px #32506e;*/
   border: solid 20px #bfbfbf;
 }
 
@@ -158,7 +145,7 @@ button {
   overflow: hidden; 
 }
 
-/* File button hover effect */
+/* Day button hover effect */
 .day:hover {
   background-color: #f2f2f2;
 }

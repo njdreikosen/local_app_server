@@ -1,21 +1,19 @@
-const express = require('express');
-const db = require('./database');
-const filesystem = require('./filesystem');
-const app = express();
+/* External Imports */
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const routes = express.Router();
+const express = require('express');
 const multer = require('multer');
-const PORT = 4000;
+
+/* Internal imports */
+const db = require('./database');
+const filesystem = require('./filesystem');
 
 /* General setup */
+const app = express();
+const routes = express.Router();
+const PORT = 4000;
 app.use(cors())
 app.use(bodyParser.json());
-
-/* Get API Key */
-API_KEY = process.env.LAS_API_KEY;
-console.log("API KEY: " + API_KEY);
-console.log(db.genBytes());
 
 /* File Server storage setup */
 var storage = multer.diskStorage({
@@ -29,18 +27,16 @@ var storage = multer.diskStorage({
 var uploadDisk = multer({ storage: storage });
 
 /*===========================================================================*/
-/*                              General Routes                               */
+/*                         General and Login Routes                          */
 /*===========================================================================*/
 routes.route('/').get(function(req, res) {
     res.json({});
 });
 
 routes.route('/login').post(function(req, res) {
-    console.log("Login");
     db.authenticateUser(req.body.credentials).then(valid => {
         if (valid) {
             const userToken = db.generateToken(req.body.credentials.username);
-            console.log("userToken: " + userToken);
             res.send({
                 token: userToken
             });
@@ -60,7 +56,6 @@ routes.route('/signup').post(function(req, res) {
             res.sendStatus(401);
         }
         const userToken = db.generateToken(req.body.credentials.username);
-        console.log("userToken: " + userToken);
         res.send({
             token: userToken
         });
@@ -69,72 +64,45 @@ routes.route('/signup').post(function(req, res) {
     });
 });
 
+
 /*===========================================================================*/
 /*                              Database Routes                              */
 /*===========================================================================*/
-routes.route('/insertEvent').post(db.authenticateToken, function(req, res) {
-    let eventName = req.body.name;
-    let eventDate = req.body.date;
-    let eventHash = db.hashStrings(eventName, eventDate);
-    let eventUID = JSON.parse(db.decodeBase64(req.headers.authorization.split(' ')[1].split('.')[1])).user;
-    console.log("eUID: " + eventUID);
-    let queryString = `INSERT INTO events (eID, eName, eDate, eUID) VALUES (?, ?, ?, ?)`;
-    let vals = [eventHash, eventName, eventDate, eventUID];
-    console.log("insertEventQuery: " + queryString);
-    db.insertRow(queryString, vals).then(rows => {
-        res.json(rows);
-    });
-});
-
 routes.route('/getMonth').get(db.authenticateToken, function(req, res) {
     let month = req.query.month;
     let year = req.query.year;
     let eUID = JSON.parse(db.decodeBase64(req.headers.authorization.split(' ')[1].split('.')[1])).user;
     let queryString = `SELECT eName, eDate FROM events WHERE (eDate LIKE ? OR eDate LIKE ?) AND (eUID = '' OR eUID = ?)`;
     let vals = [month + "__" + year, month + "__....", eUID];
-    console.log("getMonthQuery: " + queryString);
     db.getRows(queryString, vals).then(rows => {
         res.json(rows);
     });
 });
 
+routes.route('/insertEvent').post(db.authenticateToken, function(req, res) {
+    let eventName = req.body.name;
+    let eventDate = req.body.date;
+    let eventHash = db.hashStrings(eventName, eventDate);
+    let eventUID = JSON.parse(db.decodeBase64(req.headers.authorization.split(' ')[1].split('.')[1])).user;
+    let queryString = `INSERT INTO events (eID, eName, eDate, eUID) VALUES (?, ?, ?, ?)`;
+    let vals = [eventHash, eventName, eventDate, eventUID];
+    db.insertRow(queryString, vals).then(rows => {
+        res.json(rows);
+    });
+});
+
+
 /*===========================================================================*/
 /*                         Remote File Server Routes                         */
 /*===========================================================================*/
-
-routes.route('/getModules').get(db.authenticateToken, function(req, res) {
-    let mods = filesystem.getModules();
-    res.json(mods);
-});
-
 routes.route('/createFolder').get(db.authenticateToken, db.checkUserAccess, function(req, res) {
     let newFiles = filesystem.createFolder(req.query.filePath, req.query.folderName);
-    res.json(newFiles);
-});
-
-routes.route('/renameFile').get(db.authenticateToken, db.checkUserAccess, function(req, res) {
-    let newFiles = filesystem.renameFile(req.query.filePath, req.query.newFilePath, req.query.oldName, req.query.newName);
     res.json(newFiles);
 });
 
 routes.route('/deleteFile').get(db.authenticateToken, db.checkUserAccess, function(req, res) {
     let newFiles = filesystem.deleteFile(req.query.filePath, req.query.fileName, req.query.isFolder);
     res.json(newFiles);
-});
-
-routes.route('/moveFile').get(db.authenticateToken, db.checkUserAccess, function(req, res) {
-    let newFiles = filesystem.moveFile(req.query.oldFilePath, req.query.newFilePath, req.query.currFilePath);
-    res.json(newFiles);
-});
-
-routes.route('/getDrives').get(db.authenticateToken, db.checkUserAccess, async function(req, res) {
-    const drives = await filesystem.getDrives();
-    res.json(drives);
-});
-
-routes.route('/getFiles').get(db.authenticateToken, db.checkUserAccess, function(req, res) {
-    let files = filesystem.getFiles(req.query.folder);
-    res.json(files);
 });
 
 routes.route('/downloadFile').get(db.authenticateToken, db.checkUserAccess, function(req, res) {
@@ -158,6 +126,31 @@ routes.route('/downloadFile').get(db.authenticateToken, db.checkUserAccess, func
     res.download(fp, req.query.file);
 });
 
+routes.route('/getDrives').get(db.authenticateToken, db.checkUserAccess, async function(req, res) {
+    const drives = await filesystem.getDrives();
+    res.json(drives);
+});
+
+routes.route('/getFiles').get(db.authenticateToken, db.checkUserAccess, function(req, res) {
+    let files = filesystem.getFiles(req.query.folder);
+    res.json(files);
+});
+
+routes.route('/getModules').get(db.authenticateToken, function(req, res) {
+    let mods = filesystem.getModules();
+    res.json(mods);
+});
+
+routes.route('/moveFile').get(db.authenticateToken, db.checkUserAccess, function(req, res) {
+    let newFiles = filesystem.moveFile(req.query.oldFilePath, req.query.newFilePath, req.query.currFilePath);
+    res.json(newFiles);
+});
+
+routes.route('/renameFile').get(db.authenticateToken, db.checkUserAccess, function(req, res) {
+    let newFiles = filesystem.renameFile(req.query.filePath, req.query.newFilePath, req.query.oldName, req.query.newName);
+    res.json(newFiles);
+});
+
 routes.route('/uploadFile').post(db.authenticateToken, db.checkUserAccess, uploadDisk.single('file'), function(req, res) {
     console.log("File uploaded to disk")
     res.send("Success")
@@ -169,9 +162,13 @@ const appServer = app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);
 });
 
+
+/*===========================================================================*/
+/*                    Graceful Shutdown Functionality                        */
+/*===========================================================================*/
+// Gracefully shutdown the Express server
 function GracefulShutdown() {
     console.log("Closing server gracefully...");
-
     appServer.close(() => {
         console.log("Server closing...");
         db.closeDatabase().then(res => {
@@ -180,7 +177,7 @@ function GracefulShutdown() {
         });
     })
 }
-
+// When the server receieves a shutdown signal, gracefully shutdown the server
 process.on('SIGTERM', GracefulShutdown);
 process.on('SIGINT', GracefulShutdown);
 process.on('SIGHUP', GracefulShutdown);
