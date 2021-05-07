@@ -415,13 +415,13 @@ class Calendar extends React.Component {
     });
     return (
       <div className='calendar-panel'>
-        <div className='day-names'>Sun.</div>
-        <div className='day-names'>Mon.</div>
-        <div className='day-names'>Tues.</div>
-        <div className='day-names'>Wed.</div>
-        <div className='day-names'>Thurs.</div>
-        <div className='day-names'>Fri.</div>
-        <div className='day-names'>Sat.</div>
+        <div className='day-names'>Sunday</div>
+        <div className='day-names'>Monday</div>
+        <div className='day-names'>Tuesday</div>
+        <div className='day-names'>Wednesday</div>
+        <div className='day-names'>Thursday</div>
+        <div className='day-names'>Friday</div>
+        <div className='day-names'>Saturday</div>
         {dayButtons}
       </div>
     )
